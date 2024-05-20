@@ -34,15 +34,14 @@
         style="background-color:  #42cd10; height: 100%;">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'nomina:index' %}">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center mt-2" href="{% url 'nomina:index' %}">
             <div class="sidebar-brand-icon">
-                <img src="{% static 'nomina/img/logo_sena.png' %}" alt="" width="35" height="35">
+                <img src="{% static 'nomina/img/logo-press-horizontal.png' %}" alt="" width="220" height="60">
             </div>
-            <div class="sidebar-brand-text mx-3">Nómina SENA</div>
         </a>
 
         <!-- Divider -->
-        <hr class="sidebar-divider my-0">
+        <hr class="sidebar-divider my-0 mt-2">
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
@@ -263,7 +262,7 @@
                             </h6>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="../img/undraw_profile_1.svg" alt="...">
+                                    <img class="rounded-circle" src="{% static 'nomina/img/undraw_profile_1.svg' %}" alt="...">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div class="font-weight-bold">
@@ -275,7 +274,7 @@
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="../img/undraw_profile_2.svg" alt="...">
+                                    <img class="rounded-circle" src="{% static 'nomina/img/undraw_profile_2.svg' %}" alt="...">
                                     <div class="status-indicator"></div>
                                 </div>
                                 <div>
@@ -287,7 +286,7 @@
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="../img/undraw_profile_3.svg" alt="...">
+                                    <img class="rounded-circle" src="{% static 'nomina/img/undraw_profile_3.svg' %}" alt="...">
                                     <div class="status-indicator bg-warning"></div>
                                 </div>
                                 <div>
@@ -321,7 +320,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                            <img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" src="{% static 'nomina/img/undraw_profile.svg' %}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -354,9 +353,9 @@
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-            {% block contenedor %}
+                {% block contenedor %}
 
-            {% endblock %}
+                {% endblock %}
 
             </div>
             <!-- /.container-fluid -->
@@ -416,10 +415,13 @@
 
 <!-- Page level plugins -->
 <script src="{% static 'nomina/vendor/chart.js/Chart.min.js' %}"></script>
+<script src="{% static 'nomina/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'nomina/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
 <!-- Page level custom scripts -->
 <script src="{% static 'nomina/js/demo/chart-area-demo.js' %}"></script>
 <script src="{% static 'nomina/js/demo/chart-pie-demo.js' %}"></script>
+<script src="{% static 'nomina/js/demo/datatables-demo.js' %}"></script>
 
 <script src="https://kit.fontawesome.com/e6f2e65c4b.js" crossorigin="anonymous"></script>
 
