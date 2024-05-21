@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="primer commit, desarrollo de software de nomina de escritorio">
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press-horizontal.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press.png" afterDir="false" />
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="inclusión de logo y cambio de nombre a press prestigio en crecimiento">
+      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-presentacion-blanco.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-presentacion.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press-horizontal-blanco.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press-horizontal.png" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press-horizontal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press.png" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/documentacion.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/documentacion.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,16 +52,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/Administrador/PycharmProjects/nomina-sena-django/sena/nomina/static/nomina/img"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrador/PycharmProjects/nomina-sena-django/sena/nomina/static/nomina/img&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor\fonts" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
     </key>
   </component>
@@ -87,11 +93,20 @@
       <option name="project" value="LOCAL" />
       <updated>1715979503658</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="inclusión de logo y cambio de nombre a press prestigio en crecimiento">
+      <option name="closed" value="true" />
+      <created>1716237941467</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1716237941467</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="primer commit, desarrollo de software de nomina de escritorio" />
-    <option name="LAST_COMMIT_MESSAGE" value="primer commit, desarrollo de software de nomina de escritorio" />
+    <MESSAGE value="inclusión de logo y cambio de nombre a press prestigio en crecimiento" />
+    <option name="LAST_COMMIT_MESSAGE" value="inclusión de logo y cambio de nombre a press prestigio en crecimiento" />
   </component>
 </project>

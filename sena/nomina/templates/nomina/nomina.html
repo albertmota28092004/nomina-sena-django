@@ -8,69 +8,115 @@
 <p class="mb-4">Aquí encontrarás las nóminas que han sido creadas, podrás añadir las que sean necesarias y editar las
     que ya han sido creadas. Recuerda que no pueden ser borradas por políticas de la empresa.</p>
 
-<div class="nomina_filtro">
-    <h6>Filtrar por:</h6>
+<div class="navbar  navbar-expand  nomina_filtro">
+    <h6 class="nav-item">Filtrar por: </h6>
+    <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+    </div>
 </div>
 
-<div class="nomina_container">
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 1</h3>
-        <p>Fecha de creación: 01/01/2024</p>
-        <button class="btn btn-success">Ingresar</button>
+<div class="nomina_container row">
+    <div class="nomina_item">
+        <div class="col-12 nomina_titulo" style="">
+            <h3 style="padding-top: 10px;">#1</h3>
+        </div>
+        <div class="col-12" style="border: 2px dashed #FFFFFF; border-top: 0; background-color: #102530;">
+            <p style="padding-top: 20px;">Desde: 01/01/2024 Hasta: 15/01/2024</p>
+            <button class="btn" style="margin-bottom: 20px; background-color:  #85EA00; color: #FFFFFF;">Ingresar
+            </button>
+        </div>
     </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 2</h3>
-        <p>Fecha de creación: </p>
-        <button class="btn btn-success">Ingresar</button>
+    <div class="nomina_item">
+        <div class="col-12 nomina_titulo" style="">
+            <h3 style="padding-top: 10px;">#2</h3>
+        </div>
+        <div class="col-12" style="border: 2px dashed #FFFFFF; border-top: 0; background-color: #102530;">
+            <p style="padding-top: 20px;">Desde: 15/01/2024 Hasta: 01/02/2024</p>
+            <button class="btn" style="margin-bottom: 20px; background-color:  #85EA00; color: #FFFFFF;">Ingresar
+            </button>
+        </div>
     </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 3</h3>
-        <p>Fecha de creación</p>
-        <button class="btn btn-success">Ingresar</button>
+    <div class="nomina_item">
+        <div class="col-12 nomina_titulo" style="">
+            <h3 style="padding-top: 10px;">#3</h3>
+        </div>
+        <div class="col-12" style="border: 2px dashed #FFFFFF; border-top: 0; background-color: #102530;">
+            <p style="padding-top: 20px;">Desde: 01/02/2024 Hasta: 15/02/2024</p>
+            <button class="btn" style="margin-bottom: 20px; background-color:  #85EA00; color: #FFFFFF;">Ingresar
+            </button>
+        </div>
     </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 4</h3>
-        <p>Fecha de creación</p>
-        <button class="btn btn-success">Ingresar</button>
+    <div class="nomina_item">
+        <div class="col-12 nomina_titulo" style="">
+            <h3 style="padding-top: 10px;">#4</h3>
+        </div>
+        <div class="col-12" style="border: 2px dashed #FFFFFF; border-top: 0; background-color: #102530;">
+            <p style="padding-top: 20px;">Desde: 15/02/2024 Hasta: 01/03/2024</p>
+            <button class="btn" style="margin-bottom: 20px; background-color:  #85EA00; color: #FFFFFF;">Ingresar
+            </button>
+        </div>
     </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 5</h3>
-        <p>Fecha de creación</p>
-        <button class="btn btn-success">Ingresar</button>
+    <!---
+    <div class="nomina_item">
+        <div class="col-12 nomina_titulo" style="">
+            <h3 style="padding-top: 10px;">#5</h3>
+        </div>
+        <div class="col-12" style="border: 2px dashed #FFFFFF; border-top: 0; background-color: #102530;">
+            <p style="padding-top: 20px;">Desde: 01/03/2024 Hasta: 15/03/2024</p>
+            <button class="btn" style="margin-bottom: 20px; background-color:  #85EA00; color: #FFFFFF;">Ingresar
+            </button>
+        </div>
     </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 6</h3>
-        <p>Fecha de creación</p>
-        <button class="btn btn-success">Ingresar</button>
-    </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 7</h3>
-        <p>Fecha de creación</p>
-        <button class="btn btn-success">Ingresar</button>
-    </div>
+        <div class="nomina_item">
+            <h3>Nómina # 6</h3>
+            <h6>Desde - Hasta</h6>
+            <p>15/03/2024 - 01/04/2024</p>
+            <button class="btn btn-success">Ingresar</button>
+        </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 8</h3>
-        <p>Fecha de creación</p>
-        <button class="btn btn-success">Ingresar</button>
-    </div>
+        <div class="nomina_item">
+            <h3>Nómina # 7</h3>
+            <h6>Desde - Hasta</h6>
+            <p>01/04/2024 - 15/04/2024</p>
+            <button class="btn btn-success boton-ingresar">Ingresar</button>
+        </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 9</h3>
-        <p>Fecha de creación</p>
-        <button class="btn btn-success">Ingresar</button>
-    </div>
+        <div class="nomina_item">
+            <h3>Nómina # 8</h3>
+            <h6>Desde - Hasta</h6>
+            <p>15/04/2024 - 01/05/2024</p>
+            <button class="btn btn-success">Ingresar</button>
+        </div>
 
-    <div class="nomina_item bg-gradient-success">
-        <h3>Nómina # 10</h3>
-        <p>Fecha de creación</p>
-        <button class="btn btn-success">Ingresar</button>
+        <div class="nomina_item">
+            <h3>Nómina # 9</h3>
+            <h6>Desde - Hasta</h6>
+            <p>01/05/2024 - 15/05/2024</p>
+            <button class="btn btn-success">Ingresar</button>
+        </div>
+
+        <div class="nomina_item">
+            <h3>Nómina # 10</h3>
+            <h6>Desde - Hasta</h6>
+            <p>15/05/2024 - 1/06/2024</p>
+            <button class="btn btn-success">Ingresar</button>
+        </div>
+    -->
+    <div class="nomina_item_mas">
+        <button class="btn" style="font-size: 100px; height: 230px;">+</button>
     </div>
 </div>
 
