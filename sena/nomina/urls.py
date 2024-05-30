@@ -5,8 +5,9 @@ from . import views
 app_name = 'nomina'
 
 urlpatterns = [
-    path('', views.login, name='login'),
+    path('', views.landing_page, name='landing_page'),
     path('index/', views.index, name='index'),
+    path('login/', views.login, name='login'),
     path('colaboradores/', views.colaboradores, name='colaboradores'),
     path('contacto/', views.contacto, name='contacto'),
     path('documentacion/', views.documentacion, name='documentacion'),

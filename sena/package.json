@@ -1,0 +1,25 @@
+{
+  "name": "play-tailwind",
+  "version": "2.0.0",
+  "description": "",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "build-css": "tailwindcss -i .sena/nomina/static/src/tailwind.css -o ./sena/nomina/static/nomina/css/styles.css -w",
+    "build": "postcss ./sena/nomina/static/nomina/src/tailwind.css -o ./sena/nomina/static/nomina/css/styles.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uideck/play-tailwind.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "tailwindcss": "^3.3.5"
+  },
+  "tailwindcss": {
+    "config": "./sena/nomina/tailwind.config.js"
+  }
+}
