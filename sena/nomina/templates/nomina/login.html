@@ -1,41 +1,11 @@
+{% extends 'nomina/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SB Admin 2 - Login</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="{% static 'nomina/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="{% static 'nomina/css/sb-admin-2.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'nomina/vendor/bootstrap-icons/font/bootstrap-icons.min.css' %}">
-    <link rel="shortcut icon" href="{% static 'nomina/img/favicon.ico' %}" type="image/x-icon" />
-
-    <link rel="stylesheet" href="{% static 'nomina/css/styles.css' %}" />
-
-    <!-- ==== WOW JS ==== -->
-    <script src="{% static 'nomina/js/wow.min.js' %}"></script>
-    <script>
-        new WOW().init();
-    </script>
-
-</head>
+{% block titulo %}Iniciar Sesión{% endblock %}
+{% block contenedor %}
 
 <body style="background-color: #102530;">
 
-    <a class="regresar transition duration-300 ease-in-out font-medium" href="landing-page.html" >
+    <a class="regresar transition duration-300 ease-in-out font-medium" href="{% url 'nomina:landing_page' %}" >
         Regresar <i class="fa-solid fa-reply"></i>
     </a>
     <div class="container">
@@ -50,18 +20,19 @@
               class="mb-3 text-dark" style="font-size: 30px; font-weight: bold;">
               Iniciar Sesión
             </h1>
-            <form>
+            <form method="post" action="{% url 'nomina:login' %}" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="mb-[22px]">
-                    <input type="email" placeholder="Email"
-                        class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" />
+                    <input type="email" placeholder="Correo electrónico"
+                        class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" name="correo_login"/>
                 </div>
                 <div class="mb-[22px]">
-                    <input type="password" placeholder="Password"
-                        class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" />
+                    <input type="password" placeholder="Contraseña"
+                        class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" name="contrasena_login"/>
                 </div>
                 <div class="mb-4">
-                    <a href="{% url 'nomina:index' %}" value="Sign Up"
-                        class="w-full px-5 py-3 text-base transition duration-300 ease-in-out border rounded-md cursor-pointer botones_landing">Ingresar</a>
+                    <button type="submit" value="Sign Up"
+                        class="w-full px-5 py-3 text-base transition duration-300 ease-in-out border rounded-md cursor-pointer botones_landing">Ingresar</button>
                 </div>
             </form>
             <span class="relative block text-center z-1 mb-3">
@@ -109,20 +80,16 @@
                 </a>
             </p>
 
+            <p class="mb-4 text-base text-body-secondary">
+                ¿No estás registrado?
+                <a href="{% url 'nomina:register' %}" class="text-primary hover:underline">
+                    Regístrate gratis
+                </a>
+            </p>
+
 
         </div>
 
     </div>
 
-    <script src="https://kit.fontawesome.com/e6f2e65c4b.js" crossorigin="anonymous"></script>
-    <script src="{% static 'nomina/vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'nomina/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'nomina/js/swiper-bundle.min.js' %}"></script>
-    <script src="{% static 'nomina/js/main.js' %}"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="{% static 'nomina/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-    <script src="{% static 'nomina/js/landing-page-scripts.js' %}"></script>
-</body>
-
-</html>
+{% endblock %}

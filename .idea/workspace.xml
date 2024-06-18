@@ -4,92 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="mejorassssssssss">
-      <change afterPath="$PROJECT_DIR$/sena/.browserslistrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/.travis.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/PRO_UPGRADE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/gulpfile.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/animate.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/swiper-bundle.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/404.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/about/about-image-01.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/about/about-image-02.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/banners/1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/banners/2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/banners/3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/article-author-01.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/article-author-02.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/article-author-03.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/article-author-04.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/author-01.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/bannder-ad.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/blog-01.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/blog-02.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/blog-03.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/blog-details-01.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/blog-footer-01.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/blog-footer-02.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/dotted-shape.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/blog/quote-bg.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/ayroui-white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/ayroui.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/graygrids-white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/graygrids.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/lineicons-white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/lineicons.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/tailgrids-white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/tailgrids.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/uideck-white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/brands/uideck.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/empresario1.1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/empresario1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/empresario2.1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/empresario2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/favicon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/footer/logo-presentacion.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/footer/shape-1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/footer/shape-3.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/hero/brand.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/hero/dashboard.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/hero/hero-image.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/favicon.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-presentacion-blanco-removebg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press-horizontal.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-white.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/team/dotted-shape.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/team/shape-2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/team/team-01.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/team/team-02.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/team/team-03.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/team/team-04.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/testimonials/author-01.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/testimonials/author-02.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/testimonials/author-03.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/testimonials/icon-star.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/js/landing-page-scripts.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/js/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/js/swiper-bundle.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/js/wow.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/vendor/jquery/jquery.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/src/tailwind.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/postcss.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/tailwind.config.js" afterDir="false" />
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="se hicieron cosas...">
+      <change afterPath="$PROJECT_DIR$/sena/nomina/signals.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/img3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index2.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templatetags/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templatetags/custom_filters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaboradores.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaboradores.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedades_nomina.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/package.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,8 +35,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -133,23 +69,23 @@
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrador/PycharmProjects/nomina-sena-django/sena&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrador/PycharmProjects/nomina-sena-django/sena/nomina/static/nomina/img&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor\bootstrap\js" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor\jquery" />
-      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina\nomina" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor\bootstrap5-3" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina" />
-      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor\bootstrap" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -208,7 +144,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716580675512</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="se hicieron cosas...">
+      <option name="closed" value="true" />
+      <created>1717100630649</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1717100630649</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -217,6 +161,7 @@
     <MESSAGE value="mejoras color logo etc" />
     <MESSAGE value="mejoras" />
     <MESSAGE value="mejorassssssssss" />
-    <option name="LAST_COMMIT_MESSAGE" value="mejorassssssssss" />
+    <MESSAGE value="se hicieron cosas..." />
+    <option name="LAST_COMMIT_MESSAGE" value="se hicieron cosas..." />
   </component>
 </project>
