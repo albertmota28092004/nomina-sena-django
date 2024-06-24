@@ -1,0 +1,189 @@
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo de Nómina</title>
+    <style>
+        /* Estilos CSS para el recibo */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .recibo {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .datos-personales {
+            border: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .conceptos-table {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .conceptos-table div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .conceptos-table h6 {
+            margin: 0;
+        }
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div class="recibo">
+    <h1>Recibo de Nómina</h1>
+    <table class="datos-personales">
+        <tr>
+            <th>Cédula</th>
+            <th>Nombre completo</th>
+            <th>Cargo</th>
+        </tr>
+        <tr>
+            <td>{{ nomina.novedad.usuario.cedula }}</td>
+            <td>{{ nomina.novedad.usuario.nombre }} {{ nomina.novedad.usuario.apellido }}</td>
+            <td>{{ nomina.novedad.usuario.get_cargo_display }}</td>
+        </tr>
+    </table>
+    <div class="conceptos-table">
+        <div>
+            <h6><strong>Concepto</strong></h6>
+            <h6 class="text-right"><strong>Valor</strong></h6>
+        </div>
+        <div>
+            <h6>Salario</h6>
+            <h6 class="text-right">{{ nomina.novedad.salario|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Días trabajados</h6>
+            <h6 class="text-right">{{ nomina.novedad.dias_trabajados }}</h6>
+        </div>
+        <div>
+            <h6>Días de incapacidad</h6>
+            <h6 class="text-right">{{ nomina.novedad.dias_incapacidad }}</h6>
+        </div>
+        <div>
+            <h6>IBC</h6>
+            <h6 class="text-right">{{ nomina.devengado.ibc|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Valor incapacidad</h6>
+            <h6 class="text-right">{{ nomina.devengado.valor_incapacidad|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Sueldo</h6>
+            <h6 class="text-right">{{ nomina.devengado.sueldo|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Auxilio de Transporte</h6>
+            <h6 class="text-right">{{ nomina.devengado.auxilio_transporte|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Valor H.E. Diurnas</h6>
+            <h6 class="text-right">{{ nomina.devengado.valor_horas_extras_diurnas|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Valor H.E. Diurnas Dom/Fes</h6>
+            <h6 class="text-right">{{ nomina.devengado.valor_horas_extras_diurnas_dom_fes|round_number:2|intcomma
+                }}</h6>
+        </div>
+        <div>
+            <h6>Valor H.E. Nocturnas</h6>
+            <h6 class="text-right">{{ nomina.devengado.valor_horas_extras_nocturnas|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Valor H.E. Nocturnas Dom/Fes</h6>
+            <h6 class="text-right">{{ nomina.devengado.valor_horas_extras_nocturnas_dom_fes|round_number:2|intcomma
+                }}</h6>
+        </div>
+        <div>
+            <h6>Valor Recargo Nocturno</h6>
+            <h6 class="text-right">{{ nomina.devengado.valor_horas_recargo_nocturno|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Valor Recargo Nocturno Dom/Fes</h6>
+            <h6 class="text-right">{{ nomina.devengado.valor_horas_recargo_nocturno_dom_fes|round_number:2|intcomma
+                }}</h6>
+        </div>
+        <div>
+            <h6>Valor Recargo Diurno Dom/Fes</h6>
+            <h6 class="text-right">{{ nomina.devengado.valor_horas_recargo_diurno_dom_fes|round_number:2|intcomma
+                }}</h6>
+        </div>
+        <div>
+            <h6>Total H.E. y Recargos</h6>
+            <h6 class="text-right">{{ nomina.devengado.total_horas_extras_recargo|round_number:2|intcomma }}</h6>
+        </div>
+        <div>
+            <h6>Comisiones</h6>
+            <h6 class="text-right">{{ nomina.devengado.comisiones_valor|round_number:2|intcomma }}</h6>
+        </div>
+        <div
+        ">
+        <h6>Bonificaciones</h6>
+        <h6 class="text-right">{{ nomina.novedad.bonificaciones|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Total Devengado</h6>
+        <h6 class="text-right">{{ nomina.devengado.total_devengado|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Salud</h6>
+        <h6 class="text-right">{{ nomina.deduccion.salud|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Pensión</h6>
+        <h6 class="text-right">{{ nomina.deduccion.pension|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>F.S.P</h6>
+        <h6 class="text-right">{{ nomina.deduccion.fsp|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Retefuente</h6>
+        <h6 class="text-right">{{ nomina.deduccion.retefuente|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Embargos Judiciales</h6>
+        <h6 class="text-right">{{ nomina.deduccion.embargos_judiciales|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Libranzas</h6>
+        <h6 class="text-right">{{ nomina.deduccion.libranzas|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Cooperativas</h6>
+        <h6 class="text-right">{{ nomina.deduccion.cooperativas|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Otros</h6>
+        <h6 class="text-right">{{ nomina.deduccion.otros|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6>Total Deducciones</h6>
+        <h6 class="text-right">{{ nomina.deduccion.total_deduccion|round_number:2|intcomma }}</h6>
+    </div>
+    <div>
+        <h6><strong>Total a Pagar:</strong></h6>
+        <h6 class="text-right"><strong>{{ nomina.total_a_pagar|round_number:2|intcomma }}</strong></h6>
+    </div>
+</div>
+</div>
+</body>
+</html>
