@@ -26,4 +26,5 @@ urlpatterns = [
     path("usuario_guardar/", views.usuario_guardar, name="usuario_guardar"),
     path('recibo/<int:nomina_id>/', views.recibo_view, name='recibo_view'),
     path('descargar/<int:nomina_id>/', views.descargar_recibo, name='descargar_recibo'),
+    path('practica/', views.practica, name="practica")
 ]
