@@ -3,107 +3,50 @@
 {% block titulo %}Nóminas{% endblock %}
 {% block contenedor %}
 <style>
-        .contenedor-tarjeta-nomina {
-                    display: grid;
-                    grid-template-columns: auto auto auto auto auto auto;
-                    margin: 30px 50px ;
-                    gap: 20px;
-                    border: 2px solid #000000;
-                }
+    .regresar {
+        text-decoration: none;
+        border-radius: 10px;
+    }
 
-                .tarjeta-nomina {
-                    border: 2px solid #000;
-                    max-height: 400px;
-                    max-width: 280px;
-                    border-radius: 30px;
-                    background-color: #FFFFFF;
-                    color: #000000;
-                    text-align: center;
-                }
+    .regresar:focus,
+    .regresar:active {
+        border: 0 solid #00000000;
+    }
 
-                .tarjeta-nomina-nueva {
-                    border: 2px dashed #000;
-                    min-height: 400px;
-                    max-height: 400px;
-                    width: 280px;
-                    border-radius: 30px;
-                    background-color: #FFFFFF;
-                    color: #000000;
-                }
-
-                .mas {
-                    color: #000000;
-                    margin-top: 100px;
-                    font-size: 100px;
-                    justify-content: center;
-                    margin-left: 95px;
-                }
-
-                .mas:focus,
-                .mas:active {
-                    border: 0 solid #00000000;
-                }
-
-                .mas:hover {
-                    color: #999999;
-                }
-
-                .titulo_nomina {
-                    margin-right: 700px;
-                    color: #FFFFFF;
-                }
-
-                .regresar {
-                    text-decoration: none;
-                    border-radius: 10px;
-                    padding: 10px;
-                }
-
-                .regresar:focus,
-                .regresar:active {
-                    border: 0 solid #00000000;
-                }
+    .contenedor {
+            border: 2px solid #000000;
+            margin: 0 auto !important;
+            width: 450px !important;
+            display: flex;
+            align-items: center;
+            padding: 50px;
+            border-radius: 50px;
+            height: 100%;
+        }
 
 
-                .offcanvas_nomina {
-                    color: #FFFFFF;
-                    background-color: #102530;
-                }
+        h3 {
+            text-align: center;
+            margin-top: 10px;
+        }
 
-                .offcanvas_nomina:focus,
-                .offcanvas_nomina:active {
-                    border: 0 solid #00000000;
-                }
 
-                .offcanvas_nomina:hover {
-                    color: #000000;
-                    background-color: #FFFFFF;
-                }
 
-                .offcanvas-body,
-                .offcanvas-header {
-                    background-color: #102530;
-                }
+    .table-container {
+        margin-top: 30px;
+    }
 
-                .equis,
-                .offcanvas-body,
-                .offcanvas-header {
-                    color: #FFFFFF;
-                }
+    .no-results {
+        margin-top: 30px;
+        color: red;
+        text-align: center;
+        font-weight: bold;
+    }
 
-                .ingresar_nomina {
-                    margin-top: 60%;
-                }
-
-                .calendario_nomina {
-                    border: 2px solid #0000000;
-                }
-
-                .calendario_nomina_titulo {
-                    width: 100%;
-                    border: 2px solid #000000;
-                    text-align: center;
-                }
+    .buscar_usuario {
+        text-align: center;
+        align-items: center !important;
+    }
     </style>
 </head>
 
@@ -111,45 +54,42 @@
 
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-        <a class="btn btn-light regresar transition duration-300 ease-in-out" href="{% url 'nomina:index' %}">
+        <a class="btn btn-light transition duration-300 ease-in-out" href="{% url 'nomina:index' %}">
             Regresar <i class="fa-solid fa-reply"></i>
         </a>
-        <h1 class="titulo_nomina m-0 flex-grow-1 text-center">Nómina</h1>
-        <button class="btn offcanvas_nomina" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight">
-            <i class="bi bi-list" style="font-size: 30px;"></i>
+        <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#nominaModal">
+            Crear nómina
         </button>
     </div>
 </nav>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
-        <button type="button" class="btn-close btn-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        ...
-    </div>
-</div>
-
-
-<div class="contenedor-tarjeta-nomina">
+<div class="contenedor-tarjeta-nomina row">
 {% if request.session.logueo.nombre_rol == "Administrador" %}
-    <div class="calendario_nomina">
-        <div class="calendario_nomina_titulo">Nómina</div>
-        {% if data %}
-            {% for n in data %}
-                <div class="tarjeta-nomina">
-                    <h1>#{{ n.id }}</h1>
-                    <p>{{ n.fecha_inicio }} - {{ n.fecha_fin }}</p>
-                    <a href="{% url 'nomina:nomina_listar' n.id %}" class="btn btn-dark ingresar_nomina">
-                        Ingresar
-                    </a>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
+<div class="contenedor row">
+    <h3>Buscar nómina</h3>
+    <form id="search-form" action="{% url 'nomina:nomina_buscar' %}" method="get" class="row">
+            <div class="mb-3 buscar_usuario">
+                <label class="form-label">Usuario: </label>
+                <select class="form-control" name="usuario">
+                    <option value="">--Seleccionar usuario--</option>
+                    {% for n in nomina %}
+                    <option value="{{ n.id }}">{{ n }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!--<div class="v-line"></div>
+            <div class="mb-4 fechas">
+                <h6>O puedes buscar por:</h6>
+                <label class="form-label">Fecha inicio: </label>
+                <input type="date" class="form-control mb-3" name="fecha_inicio" placeholder="Ingresa la fecha de inicio...">
+                <label class="form-label">Fecha fin: </label>
+                <input type="date" class="form-control" name="fecha_fin" placeholder="Ingresa la fecha de fin...">
+            </div>-->
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+</div>
+<div id="messages-container"></div>
+<div id="result-container"></div>
     <!--<div class="tarjeta-nomina-nueva">
         <button class="btn mas" data-bs-toggle="modal" data-bs-target="#nominaModal">+</button>
     </div>-->
@@ -203,5 +143,51 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#search-form').on('submit', function(event){
+            event.preventDefault();
+            $.ajax({
+                url: "{% url 'nomina:nomina_buscar' %}",
+                data: $(this).serialize(),
+                method: 'GET',
+                success: function(response){
+                    $('#result-container').html(response.html);
+                    // Show messages from server
+                    $('.messages').html(response.messages_html);
+                },
+                error: function(response){
+                    $('#result-container').html('<div class="no-results">Error en la búsqueda.</div>');
+                }
+            });
+        });
+    });
+</script>
+<script>
+document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var form = event.target;
+    var formData = new FormData(form);
+
+    fetch(form.action, {
+        method: form.method,
+        body: new URLSearchParams(formData),
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('result-container').innerHTML = data.html;
+        if (data.messages && data.messages.length > 0) {
+            document.getElementById('messages-container').innerHTML = '<div class="alert alert-danger">' + data.messages.join('<br>') + '</div>';
+        } else {
+            document.getElementById('messages-container').innerHTML = '';
+        }
+    });
+});
+</script>
 
 {% endblock %}
