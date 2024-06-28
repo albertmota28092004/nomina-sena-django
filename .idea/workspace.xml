@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit reciente">
-      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/tabla_nominas.html" afterDir="false" />
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="creado casi todo backend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedades_nomina.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/tabla_nominas.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/tabla_nominas.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +159,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719435049650</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="creado casi todo backend">
+      <option name="closed" value="true" />
+      <created>1719522026275</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1719522026275</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -174,6 +180,7 @@
     <MESSAGE value="commit desde hace mucho tiempo..." />
     <MESSAGE value="commit reciente brou aja llave" />
     <MESSAGE value="commit reciente" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit reciente" />
+    <MESSAGE value="creado casi todo backend" />
+    <option name="LAST_COMMIT_MESSAGE" value="creado casi todo backend" />
   </component>
 </project>
