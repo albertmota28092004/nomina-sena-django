@@ -4,10 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="creado casi todo backend">
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/tabla_nominas.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/tabla_nominas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press-horizontal.png" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press-horizontal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press.png" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index2.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,29 +54,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Python.prueba.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrador/Desktop/senanomina&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Python.prueba.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/Administrador/PycharmProjects/nomina-sena-django/sena/nomina/static/nomina/img"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor\bootstrap\js" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img\logo" />
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina\nomina" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor" />
-      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor\bootstrap5-3" />
-      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -167,7 +175,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719522026275</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="commit">
+      <option name="closed" value="true" />
+      <created>1719600124187</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1719600124187</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -181,6 +197,7 @@
     <MESSAGE value="commit reciente brou aja llave" />
     <MESSAGE value="commit reciente" />
     <MESSAGE value="creado casi todo backend" />
-    <option name="LAST_COMMIT_MESSAGE" value="creado casi todo backend" />
+    <MESSAGE value="commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit" />
   </component>
 </project>

@@ -1320,6 +1320,7 @@ body {
 
 .border{
   border-width: 1px;
+  border-color: #442B1C;
 }
 
 .border-0{
@@ -1373,7 +1374,15 @@ body {
 
 .bg-footer{
   --tw-bg-opacity: 1;
-  background-color: #85EA00;
+  background-color: #EBECE4;
+}
+
+.bg-cream {
+    background-color: #EBECE4;
+}
+
+.bg-cafe{
+    background-color: #744728;
 }
 
 .bg-\[\#1C9CEA\]{
@@ -1413,7 +1422,7 @@ body {
 
 .bg-primary{
   --tw-bg-opacity: 1;
-  background-color: #85EA00;
+  background-color: #442B1C;
   border: 0 solid transparent;
 }
 
@@ -1844,7 +1853,7 @@ body {
 
 .text-dark{
   --tw-text-opacity: 1;
-  color: #102530 !important;
+  color: #EBECE4 !important;
 }
 
 .text-dark-3{
@@ -1869,12 +1878,16 @@ body {
 
 .text-primary{
   --tw-text-opacity: 1;
-  color: #85EA00;
+  color: #442B1C;
 }
 
 .text-white{
   --tw-text-opacity: 1;
   color: #FFFFFF;
+}
+
+.text-cream{
+    color: #EBECE4 !important;
 }
 
 .text-white\/60{
@@ -1938,8 +1951,8 @@ body {
 }
 
 .shadow-contact {
-  --tw-shadow: 0px 20px 20px 0px rgb(173, 171, 171);
-  --tw-shadow-colored: 0px 30px 30px 0px #000000;
+  --tw-shadow: 0px 10px 10px 0px #ccc;
+  --tw-shadow-colored: 0px 10px 10px 0px #000000;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
@@ -2004,7 +2017,7 @@ body {
 .sticky{
   position: fixed;
   z-index: 9999;
-  background-color: #85EA00;
+  background-color: #442B1C;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
@@ -2039,7 +2052,7 @@ body {
 
 .sticky.light-mode #navbarCollapse li > a {
   --tw-text-opacity: 1;
-  color: #102530 !important; /* Color oscuro para modo claro */
+  color: #EBECE4 !important; /* Color oscuro para modo claro */
 }
 
 .sticky.dark-mode #navbarCollapse li > a {
@@ -2086,7 +2099,7 @@ body {
 
 .sticky .loginBtn:hover{
   --tw-text-opacity: 1;
-  color: #102530;
+  color: #442B1C;
   border: 2px solid #102530;
   opacity: 1;
 }
@@ -2106,25 +2119,25 @@ body {
 }
 
 .signUpBtn {
-  background-color: #102530 !important;
-  color: #FFFFFF !important;
+  background-color: #EBECE4 !important;
+  color: #442B1C !important;
 }
 
 .signUpBtn:hover {
-  background-color: #FFFFFF !important;
+  background-color: #ccc !important;
   color: #000000 !important;
 }
 
 :is(.dark .sticky .signUpBtn) {
   --tw-bg-opacity: 1;
-  background-color: #85EA00 !important;
+  background-color: #442B1C; !important;
   --tw-text-opacity: 1;
   color: #102530 !important;
 }
 
 .sticky .signUpBtn{
   --tw-bg-opacity: 1;
-  background-color: #85EA00;
+  background-color: #442B1C;
   --tw-text-opacity: 1;
   color: #102530;
 }
@@ -2298,7 +2311,7 @@ body {
 
 .hover\:text-primary:hover{
   --tw-text-opacity: 1;
-  color: rgb(55 88 249 / var(--tw-text-opacity));
+  color: #180F0A;
 }
 
 .hover\:text-white:hover{
@@ -3124,16 +3137,16 @@ body {
 }
 
 .botones_landing {
-  background-color: #85EA00;
+  background-color: #442B1C;
   border: 0 solid transparent;
-  color: #102530;
+  color: #442B1C;
   border-radius: 10px;
 }
 
 .botones_landing:hover {
-  background-color: #5da102;
-  border: 0 solid transparent;
-  color: #ffffff;
+  border: 2px dashed #442B1C !important;
+  background-color: #00000000 !important;
+  color: #442B1C !important;
 }
 
 .regresar {
@@ -3145,7 +3158,7 @@ body {
 }
 
 .regresar:hover {
-  color: #000000;
+  color:  #442B1C;
   background-color: #FFFFFF;
 }
 
@@ -3235,7 +3248,7 @@ body {
   left: 0;
   width: 5vw;
   height: 4px; 
-  background-color: #85EA00; 
+  background-color: #442B1C;
 }
 
 .carousel .carousel-inner .carousel-item img {
@@ -3310,4 +3323,8 @@ body {
   left: 0; /* Alinea la etiqueta a la izquierda */
   width: 100%; /* Ocupa todo el ancho del contenedor */
   padding: 10px; /* Agrega relleno para separar del borde */
+}
+
+.contenedor_login {
+    background-color: #EBECE4;
 }
