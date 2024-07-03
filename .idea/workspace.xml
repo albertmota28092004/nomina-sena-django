@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit">
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commiteado bum">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/favicon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo-press.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press-horizontal.png" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press-horizontal.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press.png" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index2.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/img/footer/logo-presentacion.png" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/footer/logo-presentacion.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaboradores.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaboradores.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,16 +56,16 @@
     "Python.prueba.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/Administrador/PycharmProjects/nomina-sena-django/sena/nomina/static/nomina/img"
+    "last_opened_file_path": "C:/Users/Administrador/PycharmProjects/nomina-sena-django/sena/nomina/static/nomina/img/footer"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img\footer" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina" />
-      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor\bootstrap\js" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img\logo" />
@@ -183,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719600124187</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="commiteado bum">
+      <option name="closed" value="true" />
+      <created>1719953882838</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1719953882839</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -198,6 +202,7 @@
     <MESSAGE value="commit reciente" />
     <MESSAGE value="creado casi todo backend" />
     <MESSAGE value="commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit" />
+    <MESSAGE value="commiteado bum" />
+    <option name="LAST_COMMIT_MESSAGE" value="commiteado bum" />
   </component>
 </project>

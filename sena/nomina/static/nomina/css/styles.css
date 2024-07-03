@@ -1374,7 +1374,7 @@ body {
 
 .bg-footer{
   --tw-bg-opacity: 1;
-  background-color: #EBECE4;
+  background-color: #442B1C;
 }
 
 .bg-cream {
@@ -1755,6 +1755,7 @@ body {
 .text-base{
   font-size: 1rem;
   line-height: 1.5rem;
+  color: #442B1C !important;
 }
 
 .text-lg{

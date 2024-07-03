@@ -15,7 +15,13 @@
         }
 
         .contenedor_info {
+            align-items: center;
+            text-align: center !important;
             background-color: #EBECE4;
+        }
+
+        .logo_press {
+            margin: 50px auto;
         }
 
         .titulo_bienvenido {
@@ -56,7 +62,7 @@
         }
 
         .cerrar_sesion {
-            margin-top: 50px;
+            margin-top: 80px;
         }
 
     </style>
@@ -68,6 +74,7 @@
             <img class="img-bienvenido" src="{% static 'nomina/img/img3.jpg' %}" alt="">
         </div>
         <div class="contenedor_info col-sm-6">
+            <img class="logo_press" src="{% static 'nomina/img/logo/logo-press.png' %}" width="100" height="100">
             <h1 class="titulo_bienvenido">¡Bienvenido!</h1>
             <div class="contenedor_botones_bienvenido">
                 {% if request.session.logueo.nombre_rol == "Administrador" %}
