@@ -1,0 +1,275 @@
+{% extends 'nomina/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block titulo %}Novedades{% endblock %}
+{% block contenedor %}
+
+<style>
+    .boton_regresar, .boton_mas {
+        background-color: #EBECE4;
+    }
+
+    .boton_regresar:hover, .boton_mas:hover {
+        background-color: #000000;
+        color: #EBECE4;
+    }
+</style>
+
+<body style="background-color: #442B1C;">
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="btn btn-light transition duration-300 ease-in-out boton_regresar" href="{% url 'nomina:index' %}">
+            Regresar <i class="fa-solid fa-reply"></i>
+        </a>
+        <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Novedades</h1>
+        <button class="btn rounded btn-light boton_mas" data-bs-toggle="modal" data-bs-target="#novedadModal">
+            <i class="bi bi-plus"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Modal -->
+<div class="modal fade" id="novedadModal" tabindex="-1" aria-labelledby="novedadModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="novedadModalLabel">Crear Novedad</h1>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                        aria-label="Close">X
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'nomina:novedad_guardar' %}" method="post">
+                    {% csrf_token %}
+                    <div id="step1">
+                        <p><strong style="color:red;">*</strong>: Obligatorio</p>
+                        <div class="mb-3">
+                            <label class="form-label">Usuario: <strong style="color:red;">*</strong></label>
+                            <select class="form-control" name="usuario" required>
+                                {% for usuario in usuarios %}
+                                <option value="{{ usuario.id }}">{{ usuario }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Salario: <strong style="color:red;">*</strong></label>
+                            <input type="number" class="form-control" name="salario" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Clase de Salario: <strong style="color:red;">*</strong></label>
+                            <select class="form-control" name="clase_salario" required>
+                                <option value="1">Básico</option>
+                                <option value="2">Integral</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Días de Incapacidad:</label>
+                            <input type="number" class="form-control" name="dias_incapacidad">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Días Trabajados: <strong style="color:red;">*</strong></label>
+                            <input type="number" class="form-control" name="dias_trabajados" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Horas Extras Diurnas:</label>
+                            <input type="number" class="form-control" name="horas_extras_diurnas">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Horas Extras Diurnas Dom/Fes:</label>
+                            <input type="number" class="form-control"
+                                   name="horas_extras_diurnas_dom_fes">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Horas Extras Nocturnas:</label>
+                            <input type="number" class="form-control" name="horas_extras_nocturnas">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Horas Extras Nocturnas Dom/Fes:</label>
+                            <input type="number" class="form-control"
+                                   name="horas_extras_nocturnas_dom_fes">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Horas Recargo Nocturno:</label>
+                            <input type="number" class="form-control" name="horas_recargo_nocturno">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Horas Recargo Nocturno Dom/Fes:</label>
+                            <input type="number" class="form-control"
+                                   name="horas_recargo_nocturno_dom_fes">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Horas Recargo Diurno Dom/Fes:</label>
+                            <input type="number" class="form-control"
+                                   name="horas_recargo_diurno_dom_fes">
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="nextStep">Siguiente</button>
+                    </div>
+
+                    <div id="step2" style="display: none;">
+                        <p><strong style="color:red;">*</strong>: Obligatorio</p>
+                        <div class="mb-3">
+                            <label class="form-label">Comisiones:</label>
+                            <input type="number" class="form-control" name="comisiones">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comisiones Porcentaje:</label>
+                            <input type="number" step="0.01" class="form-control"
+                                   name="comisiones_porcentaje">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Embargos Judiciales:</label>
+                            <input type="number" class="form-control" name="embargos_judiciales">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Libranzas:</label>
+                            <input type="number" class="form-control" name="libranzas">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Otros:</label>
+                            <input type="number" class="form-control" name="otros">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
+                            <select class="form-control" name="riesgo" required>
+                                <option value="1">Riesgo I</option>
+                                <option value="2">Riesgo II</option>
+                                <option value="3">Riesgo III</option>
+                                <option value="4">Riesgo IV</option>
+                                <option value="5">Riesgo V</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha de Ingreso: <strong style="color:red;">*</strong></label>
+                            <input type="date" class="form-control" name="fecha_ingreso" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha Fin de Contrato:</label>
+                            <input type="date" class="form-control" name="fecha_fin_contrato">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Contrato: <strong style="color:red;">*</strong></label>
+                            <select class="form-control" name="tipo_contrato" required>
+                                <option value="1">Término fijo inferior a 1 año</option>
+                                <option value="2">Término fijo superior a 1 año</option>
+                                <option value="3">Contrato por obra y labor</option>
+                                <option value="4">Contrato indefinido</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha de Retiro:</label>
+                            <input type="date" class="form-control" name="fecha_retiro">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Motivo de Retiro:</label>
+                            <input type="text" class="form-control" name="motivo_retiro">
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="prevStep">Anterior</button>
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenido principal -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Fecha Novedad</th>
+                    <th>Usuario</th>
+                    <th>Salario</th>
+                    <th>Clase de Salario</th>
+                    <th>Días de Incapacidad</th>
+                    <th>Días Trabajados</th>
+                    <th>H.E. Diurnas</th>
+                    <th>H.E. Diurnas Dom/Fes</th>
+                    <th>H.E. Nocturnas</th>
+                    <th>H.E. Nocturnas Dom/Fes</th>
+                    <th>H.R. Nocturno</th>
+                    <th>H.R. Nocturno Dom/Fes</th>
+                    <th>H.R. Diurno Dom/Fes</th>
+                    <th>Comisiones</th>
+                    <th>Comisiones (%)</th>
+                    <th>Bonificaciones</th>
+                    <th>Embargos Judiciales</th>
+                    <th>Libranzas</th>
+                    <th>Cooperativas</th>
+                    <th>Otros</th>
+                    <th>Riesgo</th>
+                    <th>Riesgo (%)</th>
+                    <th>Fecha ingreso</th>
+                    <th>Fecha fin contrato</th>
+                    <th>Tipo contrato</th>
+                    <th>Fecha retiro</th>
+                    <th>Motivo retiro</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if data %}
+                {% for i in data %}
+                <tr>
+                    <td>{{ i.fecha_novedad }}</td>
+                    <td>{{ i.usuario }}</td>
+                    <td>{{ i.salario|intcomma }}</td>
+                    <td>{{ i.get_clase_salario_display }}</td>
+                    <td>{{ i.dias_incapacidad|default:"" }}</td>
+                    <td>{{ i.dias_trabajados }}</td>
+                    <td>{{ i.horas_extras_diurnas|default:"" }}</td>
+                    <td>{{ i.horas_extras_diurnas_dom_fes|default:"" }}</td>
+                    <td>{{ i.horas_extras_nocturnas|default:"" }}</td>
+                    <td>{{ i.horas_extras_nocturnas_dom_fes|default:"" }}</td>
+                    <td>{{ i.horas_recargo_nocturno|default:"" }}</td>
+                    <td>{{ i.horas_recargo_nocturno_dom_fes|default:"" }}</td>
+                    <td>{{ i.horas_recargo_diurno_dom_fes|default:"" }}</td>
+                    <td>{{ i.comisiones|default:"" }}</td>
+                    <td>{{ i.comisiones_porcentaje|default:"" }}</td>
+                    <td>{{ i.bonificaciones|default:"" }}</td>
+                    <td>{{ i.embargos_judiciales|default:"" }}</td>
+                    <td>{{ i.libranzas|default:"" }}</td>
+                    <td>{{ i.cooperativas|default:"" }}</td>
+                    <td>{{ i.otros|default:"" }}</td>
+                    <td>{{ i.riesgo }}</td>
+                    <td>{{ i.riesgo_porcentaje }}</td>
+                    <td>{{ i.fecha_ingreso }}</td>
+                    <td>{{ i.fecha_fin_contrato|default:"" }}</td>
+                    <td>{{ i.tipo_contrato }}</td>
+                    <td>{{ i.fecha_retiro|default:"" }}</td>
+                    <td>{{ i.motivo_retiro|default:"" }}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const nextStep = document.getElementById('nextStep');
+        const prevStep = document.getElementById('prevStep');
+
+        nextStep.addEventListener('click', () => {
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+        });
+
+        prevStep.addEventListener('click', () => {
+            step1.style.display = 'block';
+            step2.style.display = 'none';
+        });
+    });
+</script>
+
+
+</body>
+
+{% endblock %}

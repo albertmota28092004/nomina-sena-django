@@ -4,16 +4,29 @@
 {% block contenedor %}
 
 <style>
+        .boton_regresar, .boton_mas {
+            background-color: #EBECE4;
+        }
+
+        .boton_regresar:hover, .boton_mas:hover {
+            background-color: #000000;
+            color: #EBECE4;
+        }
+
         .contenedor_colaboradores {
             display: grid;
-            grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto;
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 70px;
         }
 
         .contenedor_colaborador {
             text-align: center;
-            border: 2px solid black;
             width: 200px;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0px;
+            --tw-shadow: 0px 10px 10px 0px #ccc;
+            --tw-shadow-colored: 0px 10px 10px 0px #000000;
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
         }
 
         .img-colaborador {
@@ -23,29 +36,61 @@
         }
 
         #ver_mas_info {
+            background-color: #EBECE4;
             text-align: center;
             flex-direction: column;
+            width: 200px !important;
             display: none;
+            position: absolute;
+            padding: 20px;
+            --tw-shadow: 0px 10px 10px 0px #ccc;
+            --tw-shadow-colored: 0px 10px 10px 0px #000000;
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+            border-radius: 0 0px 20px 20px;
+        }
+
+        h4 {
+            width: 100% !important;
+            white-space: nowrap;
+
         }
 
         h6 {
             font-weight: normal !important;
+            font-size: 14px;
+        }
+
+        .info_colaborador {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background-color: #EBECE4;
+        }
+
+        .modal-content {
+            background-color: #EBECE4 !important;
         }
 </style>
 
+<body style="background-color: #442B1C;">
 
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-        <a class="btn btn-light transition duration-300 ease-in-out" href="{% url 'nomina:index' %}">
+        <a class="btn btn-light transition duration-300 ease-in-out boton_regresar" href="{% url 'nomina:index' %}">
             Regresar <i class="fa-solid fa-reply"></i>
         </a>
-        <h1 class="h3 mb-2 text-gray-800">Colaboradores</h1>
-        <button class="btn rounded btn-primary" data-bs-toggle="modal" data-bs-target="#colaboradorModal">+</button>
+        <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Colaboradores</h1>
+        <button class="btn btn-light rounded boton_mas" data-bs-toggle="modal" data-bs-target="#colaboradorModal" >
+            <i class="bi bi-plus"></i>
+        </button>
     </div>
 </nav>
 
 
-<!-- Modal -->
+<!-- Modal Crear Colaborador -->
 <div class="modal fade" id="colaboradorModal" tabindex="-1" aria-labelledby="colaboradorModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -59,6 +104,11 @@
             <div class="modal-body">
                 <form action="{% url 'nomina:colaborador_guardar' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
+                    <div class="mb-3" hidden>
+                        <label for="nombre" class="form-label">ID:</label>
+                        <input type="text" class="form-control" id="id"
+                               placeholder="Ingresa nombre" name="id" value="{{ data.id }}">
+                    </div>
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre:</label>
                         <input type="text" class="form-control" id="nombre"
@@ -68,6 +118,11 @@
                         <label class="form-label">Apellido:</label>
                         <input type="text" class="form-control" id="apellido"
                                placeholder="Ingresa apellido" name="apellido">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cédula:</label>
+                        <input type="number" class="form-control" id="cedula"
+                               placeholder="Ingresa cédula" name="cedula">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Correo:</label>
@@ -99,7 +154,8 @@
         </div>
     </div>
 </div>
-<!-- DataTales Example -->
+
+<!-- Contenido principal -->
     <div class="card shadow mb-4">
         <div class="card-body contenedor_colaboradores">
             {% if data %}
@@ -110,9 +166,13 @@
                         </div>
                         <div class="info_colaborador">
                             <h4>{{ c.nombre }} {{ c.apellido }}</h4>
+                            <div>
+                                <button id="abrirModal" class="btn" data-bs-toggle="modal" data-bs-target="#editarModal{{ c.id }}"><i class="bi bi-pencil-fill"></i></button>
+                                <a href="javascript:confirmar_eliminar('{{ c.id }}', '{% url 'nomina:colaborador_eliminar' c.id %}');" class="btn"><i class="bi bi-trash-fill"></i></a>
+                            </div>
                         </div>
                         <div>
-                            <button id="verMas" class="mb-4 link-dark" onclick="verMasButton()">
+                            <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
                                 Ver más <i class="fa-solid fa-angle-down"></i>
                             </button>
                             <div id="ver_mas_info">
@@ -122,24 +182,42 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Modal Editar Colaborador -->
+                    <div class="modal fade" id="editarModal{{ c.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ c.id }}"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="editarModalLabel{{ c.id }}">Crear Colaborador</h1>
+                                    <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="contenidoModalBody">
+                                    {% include 'nomina/colaborador/colaborador-editar.html' with data=c %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
             {% endif %}
         </div>
     </div>
 
 <script>
-    function verMasButton(){
-        info = document.getElementById("ver_mas_info");
-        boton = document.getElementById("verMas").value;
-
-        if (info.style.display = "none") {
-            info.style.display = "flex"
-            boton.innerHTML = "Ver más <i class="fa-solid fa-angle-up"></i>"
+    function verMasButton(button) {
+        var info = button.nextElementSibling;
+        if (info.style.display === "none" || info.style.display === "") {
+            info.style.display = "flex";
+            button.innerHTML = "Ver menos <i class='fa-solid fa-angle-up'></i>";
         } else {
-            info.style.display = "none"
-            boton.innerHTML = "Ver más <i class="fa-solid fa-angle-down"></i>"
+            info.style.display = "none";
+            button.innerHTML = "Ver más <i class='fa-solid fa-angle-down'></i>";
         }
     }
 </script>
 
+
+
+</body>
 {% endblock %}

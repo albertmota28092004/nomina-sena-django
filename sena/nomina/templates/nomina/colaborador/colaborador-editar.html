@@ -1,0 +1,56 @@
+{% load static %}
+{% if data %}
+<form action="{% url 'nomina:colaborador_editar' data.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3" hidden>
+        <label class="form-label">ID:</label>
+        <input type="text" class="form-control" id="id"
+               placeholder="Ingresa nombre" name="id" value="{{ data.id }}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Nombre:</label>
+        <input type="text" class="form-control"
+               placeholder="Ingresa nombre" value="{{ data.nombre }}" name="nombre_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Apellido:</label>
+        <input type="text" class="form-control"
+               placeholder="Ingresa apellido" value="{{ data.apellido }}" name="apellido_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Cédula:</label>
+        <input type="number" class="form-control"
+               placeholder="Ingresa cédula" value="{{ data.cedula }}" name="cedula_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Correo:</label>
+        <input type="text" class="form-control"
+               placeholder="Ingresa correo" value="{{ data.correo }}" name="correo_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <input type="text" class="form-control"
+               placeholder="Ingresa contraseña" value="{{ data.contrasena }}" name="contrasena_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label col-sm-6">Foto:</label>
+        <div class="row">
+            <img src="{{ data.foto.url }}" style="width: 200px !important; height: 200px !important;">
+            <p class="col-sm-6">
+                Cambiar imagen: <input type="file" class="form-control"
+                   placeholder="Ingresa foto" name="foto_editar" accept="image/*">
+            </p>
+        </div>
+
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Cargo:</label>
+        <select class="form-control" name="cargo_editar">
+            {% for key, value in CARGOS %}
+            <option value="{{ key }}" {% if data.cargo == key %} selected {% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+</form>
+{% endif %}
