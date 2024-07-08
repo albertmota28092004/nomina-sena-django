@@ -15,19 +15,19 @@
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'nomina/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
     <link rel="shortcut icon" href="{% static 'nomina/img/favicon.ico' %}" type="image/x-icon" />
+    <link href="{% static 'nomina/vendor/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="{% static 'nomina/css/index.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'nomina/vendor/bootstrap-icons/font/bootstrap-icons.min.css' %}">
-        <link href="{% static 'nomina/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
     <link rel="stylesheet" href="{% static 'nomina/css/styles.css' %}" />
 
     <!-- Custom styles for this template-->
@@ -87,7 +87,6 @@
 <script src="{% static 'nomina/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'nomina/vendor/bootstrap5-3/js/bootstrap.bundle.min.js' %}"></script>
 
-
 <!-- Core plugin JavaScript-->
 <script src="{% static 'nomina/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
@@ -107,7 +106,7 @@
         crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
            // Mostrar el spinner cuando se inicia una solicitud de página
@@ -133,6 +132,10 @@
             window.location.href = url;
         }
     }
+
+    $(document).ready(function() {
+      $('#dataTable').DataTable();
+    });
 </script>
 <!-- ==== WOW JS ==== -->
 <script src="{% static 'nomina/js/wow.min.js' %}"></script>

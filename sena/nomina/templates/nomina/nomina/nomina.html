@@ -3,14 +3,17 @@
 {% block titulo %}Nóminas{% endblock %}
 {% block contenedor %}
 <style>
-    .regresar {
-        text-decoration: none;
-        border-radius: 10px;
+    body {
+        background-color: #442B1C !important;
     }
 
-    .regresar:focus,
-    .regresar:active {
-        border: 0 solid #00000000;
+    .boton_regresar, .boton_crear_nomina {
+        background-color: #EBECE4;
+    }
+
+    .boton_regresar:hover, .boton_crear_nomina:hover {
+        background-color: #000000;
+        color: #EBECE4;
     }
 
     .tarjeta_nomina {
@@ -26,15 +29,15 @@
             padding: 50px;
             border-radius: 50px;
             height: 100%;
+            background-color: #EBECE4;
         }
 
 
         h3 {
             text-align: center;
             margin-top: 10px;
+            color: #442B1C;
         }
-
-
 
     .table-container {
         margin-top: 30px;
@@ -51,6 +54,16 @@
         text-align: center;
         align-items: center !important;
     }
+
+    .buscar, .buscar:active, .buscar:focus {
+        background-color: #442B1C;
+        color: #EBECE4;
+    }
+
+    .buscar:hover{
+        color: #442B1C;
+        border: 2px dashed #442B1C;
+    }
     </style>
 </head>
 
@@ -58,10 +71,11 @@
 
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-        <a class="btn btn-light transition duration-300 ease-in-out" href="{% url 'nomina:index' %}">
+        <a class="btn btn-light transition duration-300 ease-in-out boton_regresar" href="{% url 'nomina:index' %}">
             Regresar <i class="fa-solid fa-reply"></i>
         </a>
-        <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#nominaModal">
+        <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Nóminas</h1>
+        <button class="boton_crear_nomina btn btn-light" data-bs-toggle="modal" data-bs-target="#nominaModal">
             Crear nómina
         </button>
     </div>
@@ -89,7 +103,7 @@
                 <label class="form-label">Fecha fin: </label>
                 <input type="date" class="form-control" name="fecha_fin" placeholder="Ingresa la fecha de fin...">
             </div>-->
-        <button type="submit" class="btn btn-primary">Buscar</button>
+        <button type="submit" class="btn buscar">Buscar</button>
     </form>
 </div>
 <div id="messages-container"></div>
@@ -193,5 +207,5 @@ document.getElementById('search-form').addEventListener('submit', function(event
     });
 });
 </script>
-
+</body>
 {% endblock %}
