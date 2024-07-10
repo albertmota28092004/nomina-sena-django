@@ -4,20 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="melo colaboradores, falta el resto">
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="esto no estaba en el repo xd">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/js/landing-page-scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/js/landing-page-scripts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/js/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/tabla_nominas.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/tabla_nominas.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager" show_ignored="true" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -211,7 +208,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720472637318</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="esto no estaba en el repo xd">
+      <option name="closed" value="true" />
+      <created>1720625929080</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1720625929080</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -229,6 +234,7 @@
     <MESSAGE value="commiteado bum" />
     <MESSAGE value="commiteado nuevodia" />
     <MESSAGE value="melo colaboradores, falta el resto" />
-    <option name="LAST_COMMIT_MESSAGE" value="melo colaboradores, falta el resto" />
+    <MESSAGE value="esto no estaba en el repo xd" />
+    <option name="LAST_COMMIT_MESSAGE" value="esto no estaba en el repo xd" />
   </component>
 </project>
