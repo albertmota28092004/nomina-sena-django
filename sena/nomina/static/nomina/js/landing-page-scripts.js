@@ -66,46 +66,6 @@ const testimonialSwiper = new Swiper(".testimonial-carousel", {
   },
 });
 
-let slideIndex = 0;
-const slides = document.getElementsByClassName("carousel-item");
-const dots = document.getElementsByClassName("dot");
-
-function showSlides(n) {
-  if (n >= slides.length) { slideIndex = 0 }
-  if (n < 0) { slideIndex = slides.length - 1 }
-
-  for (let i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-    slides[i].classList.remove("active");
-  }
-
-  for (let i = 0; i < dots.length; i++) {
-    dots[i].classList.remove("active");
-  }
-
-  slides[slideIndex].style.display = "block";
-  slides[slideIndex].classList.add("active");
-  dots[slideIndex].classList.add("active");
-}
-
-function moveSlide(n) {
-  showSlides(slideIndex += n);
-}
-
-function currentSlide(n) {
-  showSlides(slideIndex = n - 1);
-}
-
-function autoSlide() {
-  slideIndex++;
-  showSlides(slideIndex);
-  setTimeout(autoSlide, 2500); // Cambia cada 5 segundos
-}
-
-// Inicializar carrusel
-showSlides(slideIndex);
-autoSlide();
-
 // ------------------------------- 
 
 

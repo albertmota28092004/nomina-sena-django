@@ -33,11 +33,15 @@
         }
 
 
-        h3 {
-            text-align: center;
-            margin-top: 10px;
-            color: #442B1C;
-        }
+    h3 {
+       text-align: center;
+       margin-top: 10px;
+       color: #442B1C;
+    }
+
+    h6 {
+        text-align: center;
+    }
 
     .table-container {
         margin-top: 30px;
@@ -82,50 +86,32 @@
 </nav>
 
 <div class="contenedor-tarjeta-nomina row">
-{% if request.session.logueo.nombre_rol == "Administrador" %}
-<div class="contenedor row">
-    <h3>Buscar nómina</h3>
-    <form id="search-form" action="{% url 'nomina:nomina_buscar' %}" method="get" class="row">
-            <div class="mb-3 buscar_usuario">
-                <label class="form-label">Usuario: </label>
-                <select class="form-control" name="usuario">
-                    <option value="">--Seleccionar usuario--</option>
-                    {% for n in nomina %}
-                    <option value="{{ n.id }}">{{ n }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!--<div class="v-line"></div>
-            <div class="mb-4 fechas">
-                <h6>O puedes buscar por:</h6>
-                <label class="form-label">Fecha inicio: </label>
-                <input type="date" class="form-control mb-3" name="fecha_inicio" placeholder="Ingresa la fecha de inicio...">
-                <label class="form-label">Fecha fin: </label>
-                <input type="date" class="form-control" name="fecha_fin" placeholder="Ingresa la fecha de fin...">
-            </div>-->
-        <button type="submit" class="btn buscar">Buscar</button>
-    </form>
-</div>
-<div id="messages-container"></div>
-<div id="result-container"></div>
-    <!--<div class="tarjeta-nomina-nueva">
-        <button class="btn mas" data-bs-toggle="modal" data-bs-target="#nominaModal">+</button>
-    </div>-->
-{% else %}
-    {% if data %}
-        {% for nq in data %}
-            <div class="tarjeta-nomina">
-                <h1>#{{ nq.id }}</h1>
-                <p>{{ nq.fecha_inicio }} - {{ nq.fecha_fin }}</p>
-                <h5>Total a recibir: {{ total_a_pagar_usuario }}</h5>
-                <a href="{% url 'nomina:nomina_listar' nq.id %}" class="btn btn-dark ingresar_nomina">
-                    Ingresar
-                </a>
-            </div>
-        {% endfor %}
-    {% endif %}
-{% endif %}
-
+    <div class="contenedor row">
+        <h3>Buscar nómina</h3>
+        <form id="search-form" action="{% url 'nomina:nomina_buscar' %}" method="get" class="row">
+                <div class="mb-3 buscar_usuario">
+                    <label class="form-label">Colaborador: </label>
+                    <select class="form-control" name="usuario">
+                        <option value="">--Seleccionar colaborador--</option>
+                        {% for n in nomina %}
+                        <option value="{{ n.id }}">{{ n }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="v-line"></div>
+                <div class="mb-4 fechas">
+                    <h6>O puedes buscar por:</h6>
+                    <label class="form-label">Periodo: </label>
+                    <select class="form-control" name="periodo">
+                        <option value="">--Seleccionar periodo--</option>
+                        {% for periodo in periodos %}
+                        <option value="{{ periodo.fecha_inicio }} - {{ periodo.fecha_fin }}">{{ periodo.fecha_inicio }} - {{ periodo.fecha_fin }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            <button type="submit" class="btn buscar">Buscar</button>
+        </form>
+    </div>
 </div>
 
 <!-- Modal -->
@@ -162,50 +148,5 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $('#search-form').on('submit', function(event){
-            event.preventDefault();
-            $.ajax({
-                url: "{% url 'nomina:nomina_buscar' %}",
-                data: $(this).serialize(),
-                method: 'GET',
-                success: function(response){
-                    $('#result-container').html(response.html);
-                    // Show messages from server
-                    $('.messages').html(response.messages_html);
-                },
-                error: function(response){
-                    $('#result-container').html('<div class="no-results">Error en la búsqueda.</div>');
-                }
-            });
-        });
-    });
-</script>
-<script>
-document.getElementById('search-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    var form = event.target;
-    var formData = new FormData(form);
-
-    fetch(form.action, {
-        method: form.method,
-        body: new URLSearchParams(formData),
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('result-container').innerHTML = data.html;
-        if (data.messages && data.messages.length > 0) {
-            document.getElementById('messages-container').innerHTML = '<div class="alert alert-danger">' + data.messages.join('<br>') + '</div>';
-        } else {
-            document.getElementById('messages-container').innerHTML = '';
-        }
-    });
-});
-</script>
 </body>
 {% endblock %}

@@ -165,20 +165,6 @@
     localStorage.setItem('theme', 'dark');
   };
 
-  // call theme switch on clicking buttons
-  themeSwitcher.addEventListener('click', () => {
-    themeSwitch();
-
-    // Comprobar condiciones de modo oscuro y tamaño de pantalla
-    const isDarkMode = document.documentElement.classList.contains("dark");
-    const isSmallScreen = window.innerWidth <= 540;
-
-    if (isDarkMode && isSmallScreen) {
-      navbarCollapse.classList.add("dark-navbar-collapse");
-    } else {
-      navbarCollapse.classList.remove("dark-navbar-collapse");
-    }
-  });
 
   // invoke theme check on initial load
   themeCheck();

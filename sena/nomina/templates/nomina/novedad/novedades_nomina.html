@@ -63,7 +63,7 @@
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="novedadModalLabel">Crear Novedad</h1>
                 <button type="button" class="btn btn-close" data-bs-dismiss="modal"
-                        aria-label="Close">X
+                        aria-label="Close">
                 </button>
             </div>
             <div class="modal-body">
@@ -207,6 +207,7 @@
             <table id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>Foto</th>
                     <th>Fecha Novedad</th>
                     <th>Usuario</th>
@@ -241,6 +242,9 @@
                 {% if data %}
                 {% for i in data %}
                 <tr>
+                    <td>
+                        <a href="">Añadir novedad</a>
+                    </td>
                     <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}"></td>
                     <td>{{ i.fecha_novedad }}</td>
                     <td>{{ i.usuario }}</td>
