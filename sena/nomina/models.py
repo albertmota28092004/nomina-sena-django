@@ -351,5 +351,6 @@ class NominaQuincena(models.Model):
         return f'Colaborador: {", ".join(nominas_info)}. Fecha: {self.fecha_inicio} - {self.fecha_fin}'
 
 
+
 # Ensure signals are imported
 from . import signals

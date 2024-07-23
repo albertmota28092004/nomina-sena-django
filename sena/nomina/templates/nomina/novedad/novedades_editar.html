@@ -1,0 +1,156 @@
+{% load static %}
+{% load humanize %}
+{% if data %}
+<form action="{% url 'nomina:novedad_editar' data.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p><strong style="color:red;">*</strong>: Obligatorio</p>
+    <div class="mb-3" hidden>
+        <label class="form-label">ID:</label>
+        <input type="text" class="form-control" id="id"
+               placeholder="Ingresa id" name="id" value="{{ data.id }}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Usuario: <strong style="color:red;">*</strong></label>
+        <select class="form-control" name="usuario_editar" required>
+            {% for usuario in usuarios %}
+            <option value="{{ usuario.id }}" {% if data.usuario.id == usuario.id %} selected {% endif %}>{{ usuario.nombre }} {{ usuario.apellido }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Salario: <strong style="color:red;">*</strong></label>
+        <input value="{{ data.salario }}" type="number" class="form-control" name="salario_editar" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Clase de Salario: <strong style="color:red;">*</strong></label>
+        <select class="form-control" name="clase_salario_editar" required>
+            {% for key, value in CLASE_SALARIO %}
+            <option value="{{ key }}" {% if data.clase_salario == key %} selected {% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Días de Incapacidad:</label>
+        <input value="{{ data.dias_incapacidad }}" type="number" class="form-control" name="dias_incapacidad_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Días Trabajados: <strong style="color:red;">*</strong></label>
+        <input value="{{ data.dias_trabajados }}" type="number" class="form-control" name="dias_trabajados_editar" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Horas Extras Diurnas:</label>
+        <input value="{{ data.horas_extras_diurnas }}" type="number" class="form-control" name="horas_extras_diurnas_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Horas Extras Diurnas Dom/Fes:</label>
+        <input value="{{ data.horas_extras_diurnas_dom_fes }}" type="number" class="form-control"
+               name="horas_extras_diurnas_dom_fes_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Horas Extras Nocturnas:</label>
+        <input value="{{ data.horas_extras_nocturnas }}" type="number" class="form-control" name="horas_extras_nocturnas_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Horas Extras Nocturnas Dom/Fes:</label>
+        <input value="{{ data.horas_extras_nocturnas_dom_fes }}" type="number" class="form-control"
+               name="horas_extras_nocturnas_dom_fes_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Horas Recargo Nocturno:</label>
+        <input value="{{ data.horas_recargo_nocturno }}" type="number" class="form-control" name="horas_recargo_nocturno_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Horas Recargo Nocturno Dom/Fes:</label>
+        <input value="{{ data.horas_recargo_nocturno_dom_fes }}" type="number" class="form-control"
+               name="horas_recargo_nocturno_dom_fes_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Horas Recargo Diurno Dom/Fes:</label>
+        <input value="{{ data.horas_recargo_diurno_dom_fes }}" type="number" class="form-control"
+               name="horas_recargo_diurno_dom_fes_editar">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Comisiones:</label>
+        <input value="{{ data.comisiones }}" type="number" class="form-control" name="comisiones_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Comisiones Porcentaje:</label>
+        <input value="{{ data.comisiones_porcentaje }}" type="number" step="0.01" class="form-control"
+               name="comisiones_porcentaje_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Embargos Judiciales:</label>
+        <input value="{{ data.embargos_judiciales }}" type="number" class="form-control" name="embargos_judiciales_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Libranzas:</label>
+        <input value="{{ data.libranzas }}" type="number" class="form-control" name="libranzas_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Otros:</label>
+        <input value="{{ data.otros }}" type="number" class="form-control" name="otros_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
+        <select class="form-control" name="riesgo_editar" required>
+            {% for key, value in CLASE_RIESGO %}
+            <option value="{{ key }}" {% if data.riesgo == key %} selected {% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fecha de Ingreso: <strong style="color:red;">*</strong></label>
+        <p><strong>{{ data.fecha_ingreso }}</strong></p>
+        <div class="d-flex">
+            <br>
+            <h6 style="margin-top: 10px;">Cambiar:</h6>
+            <input value="{{ data.fecha_ingreso|date:'d-m-Y' }}" type="date" class="form-control w-50" name="fecha_ingreso_editar">
+        </div>
+
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fecha Fin de Contrato:</label>
+        {% if data.fecha_fin_contrato %}
+        <p><strong>{{ data.fecha_fin_contrato }}</strong></p>
+        <div class="d-flex">
+            <br>
+            <h6 style="margin-top: 10px;">Cambiar:</h6>
+            <input value="{{ data.fecha_fin_contrato|date:'d-m-Y' }}" type="date" class="form-control" name="fecha_fin_contrato_editar">
+        </div>
+        {% else %}
+        <input value="{{ data.fecha_fin_contrato|date:'d-m-Y' }}" type="date" class="form-control" name="fecha_fin_contrato_editar">
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Tipo de Contrato: <strong style="color:red;">*</strong></label>
+        <select class="form-control" name="tipo_contrato_editar" required>
+            {% for key, value in CLASE_CONTRATO %}
+            <option value="{{ key }}" {% if data.tipo_contrato == key %} selected {% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fecha de Retiro:</label>
+        {% if data.fecha_retiro %}
+        <p><strong>{{ data.fecha_retiro }}</strong></p>
+        <div class="d-flex">
+            <br>
+            <h6 style="margin-top: 10px;">Cambiar:</h6>
+            <input value="{{ data.fecha_retiro|date:'d-m-Y' }}" type="date" class="form-control" name="fecha_retiro_editar">
+        </div>
+        {% else %}
+        <input value="{{ data.fecha_retiro|date:'d-m-Y' }}" type="date" class="form-control" name="fecha_retiro_editar">
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Motivo de Retiro:</label>
+        {% if data.motivo_retiro == None %}
+        <input value="" type="text" class="form-control" name="motivo_retiro_editar">
+        {% else %}
+        <input value="{{ data.motivo_retiro }}" type="text" class="form-control" name="motivo_retiro_editar">
+        {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+</form>
+{% endif %}

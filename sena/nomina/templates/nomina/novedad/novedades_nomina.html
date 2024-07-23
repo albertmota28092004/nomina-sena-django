@@ -39,6 +39,11 @@
         height: 100px;
         object-fit: cover;
     }
+
+    h2 {
+        text-align: center;
+    }
+
 </style>
 
 <body style="background-color: #442B1C;">
@@ -50,7 +55,7 @@
         </a>
         <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Novedades</h1>
         <button class="btn rounded btn-light boton_mas" data-bs-toggle="modal" data-bs-target="#novedadModal">
-            <i class="bi bi-plus"></i>
+            Crear Novedad
         </button>
     </div>
 </nav>
@@ -74,6 +79,7 @@
                         <div class="mb-3">
                             <label class="form-label">Usuario: <strong style="color:red;">*</strong></label>
                             <select class="form-control" name="usuario" required>
+                                <option value="">Seleccionar...</option>
                                 {% for usuario in usuarios %}
                                 <option value="{{ usuario.id }}">{{ usuario }}</option>
                                 {% endfor %}
@@ -85,9 +91,11 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Clase de Salario: <strong style="color:red;">*</strong></label>
-                            <select class="form-control" name="clase_salario" required>
-                                <option value="1">Básico</option>
-                                <option value="2">Integral</option>
+                            <select class="form-control" id="clase_salario" name="clase_salario">
+                            {% for key, value in CLASE_SALARIO %}
+                                <option value="{{ key }}" {% if data.clase_salario == key %} selected {% endif %}>{{ value }}
+                                </option>
+                            {% endfor %}
                             </select>
                         </div>
                         <div class="mb-3">
@@ -158,12 +166,11 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
-                            <select class="form-control" name="riesgo" required>
-                                <option value="1">Riesgo I</option>
-                                <option value="2">Riesgo II</option>
-                                <option value="3">Riesgo III</option>
-                                <option value="4">Riesgo IV</option>
-                                <option value="5">Riesgo V</option>
+                            <select class="form-control" id="riesgo" name="riesgo">
+                                {% for key, value in CLASE_RIESGO %}
+                                <option value="{{ key }}" {% if data.riesgo == key %} selected {% endif %}>{{ value }}
+                                </option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="mb-3">
@@ -176,11 +183,11 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Tipo de Contrato: <strong style="color:red;">*</strong></label>
-                            <select class="form-control" name="tipo_contrato" required>
-                                <option value="1">Término fijo inferior a 1 año</option>
-                                <option value="2">Término fijo superior a 1 año</option>
-                                <option value="3">Contrato por obra y labor</option>
-                                <option value="4">Contrato indefinido</option>
+                            <select class="form-control" id="tipo_contrato" name="tipo_contrato">
+                                {% for key, value in CLASE_CONTRATO %}
+                                <option value="{{ key }}" {% if data.tipo_contrato == key %} selected {% endif %}>{{ value }}
+                                </option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="mb-3">
@@ -204,80 +211,124 @@
 <div class="card shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">
-            <table id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Foto</th>
-                    <th>Fecha Novedad</th>
-                    <th>Usuario</th>
-                    <th>Salario</th>
-                    <th>Clase de Salario</th>
-                    <th>Días de Incapacidad</th>
-                    <th>Días Trabajados</th>
-                    <th>H.E. Diurnas</th>
-                    <th>H.E. Diurnas Dom/Fes</th>
-                    <th>H.E. Nocturnas</th>
-                    <th>H.E. Nocturnas Dom/Fes</th>
-                    <th>H.R. Nocturno</th>
-                    <th>H.R. Nocturno Dom/Fes</th>
-                    <th>H.R. Diurno Dom/Fes</th>
-                    <th>Comisiones</th>
-                    <th>Comisiones (%)</th>
-                    <th>Bonificaciones</th>
-                    <th>Embargos Judiciales</th>
-                    <th>Libranzas</th>
-                    <th>Cooperativas</th>
-                    <th>Otros</th>
-                    <th>Riesgo</th>
-                    <th>Riesgo (%)</th>
-                    <th>Fecha ingreso</th>
-                    <th>Fecha fin contrato</th>
-                    <th>Tipo contrato</th>
-                    <th>Fecha retiro</th>
-                    <th>Motivo retiro</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% if data %}
-                {% for i in data %}
-                <tr>
-                    <td>
-                        <a href="">Añadir novedad</a>
-                    </td>
-                    <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}"></td>
-                    <td>{{ i.fecha_novedad }}</td>
-                    <td>{{ i.usuario }}</td>
-                    <td>{{ i.salario|intcomma }}</td>
-                    <td>{{ i.get_clase_salario_display }}</td>
-                    <td>{{ i.dias_incapacidad|default:"" }}</td>
-                    <td>{{ i.dias_trabajados }}</td>
-                    <td>{{ i.horas_extras_diurnas|default:"" }}</td>
-                    <td>{{ i.horas_extras_diurnas_dom_fes|default:"" }}</td>
-                    <td>{{ i.horas_extras_nocturnas|default:"" }}</td>
-                    <td>{{ i.horas_extras_nocturnas_dom_fes|default:"" }}</td>
-                    <td>{{ i.horas_recargo_nocturno|default:"" }}</td>
-                    <td>{{ i.horas_recargo_nocturno_dom_fes|default:"" }}</td>
-                    <td>{{ i.horas_recargo_diurno_dom_fes|default:"" }}</td>
-                    <td>{{ i.comisiones|default:"" }}</td>
-                    <td>{{ i.comisiones_porcentaje|default:"" }}</td>
-                    <td>{{ i.bonificaciones|default:"" }}</td>
-                    <td>{{ i.embargos_judiciales|default:"" }}</td>
-                    <td>{{ i.libranzas|default:"" }}</td>
-                    <td>{{ i.cooperativas|default:"" }}</td>
-                    <td>{{ i.otros|default:"" }}</td>
-                    <td>{{ i.riesgo }}</td>
-                    <td>{{ i.riesgo_porcentaje }}</td>
-                    <td>{{ i.fecha_ingreso }}</td>
-                    <td>{{ i.fecha_fin_contrato|default:"" }}</td>
-                    <td>{{ i.tipo_contrato }}</td>
-                    <td>{{ i.fecha_retiro|default:"" }}</td>
-                    <td>{{ i.motivo_retiro|default:"" }}</td>
-                </tr>
-                {% endfor %}
-                {% endif %}
-                </tbody>
-            </table>
+            {% for mes, novedades in novedades_por_mes.items %}
+                <h2>{{ mes|date:"F"|capfirst }}</h2>
+                <table class="mb-5" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Foto</th>
+                        <th>Fecha Novedad</th>
+                        <th>Usuario</th>
+                        <th>Salario</th>
+                        <th>Clase de Salario</th>
+                        <th>Días de Incapacidad</th>
+                        <th>Días Trabajados</th>
+                        <th>H.E. Diurnas</th>
+                        <th>H.E. Diurnas Dom/Fes</th>
+                        <th>H.E. Nocturnas</th>
+                        <th>H.E. Nocturnas Dom/Fes</th>
+                        <th>H.R. Nocturno</th>
+                        <th>H.R. Nocturno Dom/Fes</th>
+                        <th>H.R. Diurno Dom/Fes</th>
+                        <th>Comisiones</th>
+                        <th>Comisiones (%)</th>
+                        <th>Bonificaciones</th>
+                        <th>Embargos Judiciales</th>
+                        <th>Libranzas</th>
+                        <th>Cooperativas</th>
+                        <th>Otros</th>
+                        <th>Riesgo</th>
+                        <th>Riesgo (%)</th>
+                        <th>Fecha ingreso</th>
+                        <th>Fecha fin contrato</th>
+                        <th>Tipo contrato</th>
+                        <th>Fecha retiro</th>
+                        <th>Motivo retiro</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in novedades %}
+                    <tr>
+                        <td>
+                            <button class="btn" id="abrirModalEditarNovedad" data-bs-toggle="modal" data-bs-target="#editarModalNovedad{{ i.id }}"><i class="bi bi-pencil-fill"></i></button>
+                            <a href="javascript:confirmar_eliminar('{{ i.id }}', '{% url 'nomina:novedad_eliminar' i.id %}');" class="btn"><i class="bi bi-trash-fill"></i></a>
+                        </td>
+                        <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}"></td>
+                        <td>{{ i.fecha_novedad }}</td>
+                        <td>{{ i.usuario }}</td>
+                        <td>{{ i.salario|intcomma }}</td>
+                        <td>{{ i.get_clase_salario_display }}</td>
+                        <td>{{ i.dias_incapacidad|default:"" }}</td>
+                        <td>{{ i.dias_trabajados }}</td>
+                        <td>{{ i.horas_extras_diurnas|default:"" }}</td>
+                        <td>{{ i.horas_extras_diurnas_dom_fes|default:"" }}</td>
+                        <td>{{ i.horas_extras_nocturnas|default:"" }}</td>
+                        <td>{{ i.horas_extras_nocturnas_dom_fes|default:"" }}</td>
+                        <td>{{ i.horas_recargo_nocturno|default:"" }}</td>
+                        <td>{{ i.horas_recargo_nocturno_dom_fes|default:"" }}</td>
+                        <td>{{ i.horas_recargo_diurno_dom_fes|default:"" }}</td>
+                        {% if i.comisiones %}
+                            <td>${{ i.comisiones|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ i.comisiones_porcentaje|default:"" }}</td>
+
+                        {% if i.bonificaciones %}
+                            <td>${{ i.bonificaciones|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if i.embargos_judiciales %}
+                            <td>${{ i.embargos_judiciales|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if i.libranzas %}
+                            <td>${{ i.libranzas|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if i.cooperativas %}
+                            <td>${{ i.cooperativas|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if i.otros %}
+                            <td>${{ i.otros|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ i.get_riesgo_display }}</td>
+                        <td>{{ i.riesgo_porcentaje }}</td>
+                        <td>{{ i.fecha_ingreso }}</td>
+                        <td>{{ i.fecha_fin_contrato|default:"" }}</td>
+                        <td>{{ i.get_tipo_contrato_display }}</td>
+                        <td>{{ i.fecha_retiro|default:"" }}</td>
+                        <td>{{ i.motivo_retiro|default:"" }}</td>
+                    </tr>
+                    <!-- Modal Editar Novedad -->
+                    <div class="modal fade" id="editarModalNovedad{{ i.id }}" tabindex="-1" aria-labelledby="editarModalNovedadLabel{{ i.id }}"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="editarModalNovedadLabel{{ i.id }}">Editar Colaborador</h1>
+                                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" id="contenidoModalBody">
+                                        {% include 'nomina/novedad/novedades_editar.html' with data=i %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
         </div>
     </div>
 </div>

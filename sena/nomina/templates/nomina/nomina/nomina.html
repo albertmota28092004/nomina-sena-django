@@ -39,13 +39,6 @@
        color: #442B1C;
     }
 
-    h6 {
-        text-align: center;
-    }
-
-    .table-container {
-        margin-top: 30px;
-    }
 
     .no-results {
         margin-top: 30px;
@@ -68,6 +61,50 @@
         color: #442B1C;
         border: 2px dashed #442B1C;
     }
+
+    p {
+        color: #EBECE4;
+    }
+
+    .table thead {
+        background-color: #EBECE4 !important;
+    }
+
+    td, th {
+        border: 1px solid #C4C7C1;
+        text-align: center;
+        white-space: nowrap;
+        padding: 20px;
+    }
+
+    .card {
+        background-color: #EBECE4;
+        margin: 10px;
+    }
+
+    .filtro_nomina {
+        background-color: #EBECE4;
+        padding: 8px 8px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .periodo_titulo {
+        margin-left: 10px;
+    }
+
+    .periodo_titulo, .filtro_titulo {
+        margin-top: 8px;
+    }
+
+    .periodo_select {
+        width: 210px;
+    }
+
+    .btn-danger {
+        margin-left: 10px;
+    }
+
     </style>
 </head>
 
@@ -79,40 +116,102 @@
             Regresar <i class="fa-solid fa-reply"></i>
         </a>
         <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Nóminas</h1>
+        {% if request.session.logueo.nombre_rol == "Administrador" %}
         <button class="boton_crear_nomina btn btn-light" data-bs-toggle="modal" data-bs-target="#nominaModal">
             Crear nómina
         </button>
+        {% else %}
+        <button class="boton_regresar btn btn-light">
+            <i class="bi bi-info-lg"></i>
+        </button>
+        {% endif %}
     </div>
 </nav>
 
-<div class="contenedor-tarjeta-nomina row">
-    <div class="contenedor row">
-        <h3>Buscar nómina</h3>
-        <form id="search-form" action="{% url 'nomina:nomina_buscar' %}" method="get" class="row">
-                <div class="mb-3 buscar_usuario">
-                    <label class="form-label">Colaborador: </label>
-                    <select class="form-control" name="usuario">
-                        <option value="">--Seleccionar colaborador--</option>
-                        {% for n in nomina %}
-                        <option value="{{ n.id }}">{{ n }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="v-line"></div>
-                <div class="mb-4 fechas">
-                    <h6>O puedes buscar por:</h6>
-                    <label class="form-label">Periodo: </label>
-                    <select class="form-control" name="periodo">
-                        <option value="">--Seleccionar periodo--</option>
-                        {% for periodo in periodos %}
-                        <option value="{{ periodo.fecha_inicio }} - {{ periodo.fecha_fin }}">{{ periodo.fecha_inicio }} - {{ periodo.fecha_fin }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            <button type="submit" class="btn buscar">Buscar</button>
+{% if request.session.logueo.nombre_rol == "Administrador" %}
+<div class="card contenedor_nominas m-3">
+    <div class="filtro_nomina">
+        <h6 class="filtro_titulo">Filtrar por:</h6>
+        <h6 class="periodo_titulo">Periodo:</h6>
+        <form action="{% url 'nomina:nomina_buscar' %}" method="post" class="d-flex">
+            {% csrf_token %}
+            <select class="periodo_select form-control" name="periodo">
+                <option value="">Seleccionar...</option>
+                {% for p in periodos %}
+                    <option value="{{ p }}">{{ p }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-danger" type="submit">Buscar</button>
         </form>
     </div>
+
+    <table width="100%" cellspacing="0">
+        <thead>
+        <tr>
+            <th>ID Nómina</th>
+            <th>Periodo</th>
+            <th>Colaboradores</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for n in data %}
+        <tr>
+            <td>{{ n.id }}</td>
+            <td>{{ n.fecha_inicio }} - {{ n.fecha_fin }}</td>
+            <td>
+                {% for nomina in n.nomina.all %}
+                    {{ nomina.novedad.usuario.nombre }} {{ nomina.novedad.usuario.apellido }} <br>
+                {% endfor %}
+            </td>
+            <td>
+                <a href="{% url 'nomina:nomina_listar' n.id %}" class="btn btn-primary">Ingresar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
+{% else %}
+<div class="card contenedor_nominas m-3">
+    <div class="filtro_nomina">
+        <h6 class="filtro_titulo">Filtrar por:</h6>
+        <h6 class="periodo_titulo">Periodo:</h6>
+        <form action="{% url 'nomina:nomina_buscar' %}" method="post" class="d-flex">
+            {% csrf_token %}
+            <select class="periodo_select form-control" name="periodo">
+                <option value="">Seleccionar...</option>
+                {% for p in periodos %}
+                    <option value="{{ p }}">{{ p }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-danger" type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <table width="100%" cellspacing="0">
+        <thead>
+        <tr>
+            <th>ID Nómina</th>
+            <th>Periodo</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for n in data %}
+        <tr>
+            <td>{{ n.id }}</td>
+            <td>{{ n.fecha_inicio }} - {{ n.fecha_fin }}</td>
+            <td>
+                <a href="{% url 'nomina:nomina_listar' n.id %}" class="btn btn-primary">Ingresar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
 
 <!-- Modal -->
 <div class="modal fade" id="nominaModal" tabindex="-1" aria-labelledby="nominaModalLabel" aria-hidden="true">
