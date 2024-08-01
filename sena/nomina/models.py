@@ -118,22 +118,23 @@ class Novedad(models.Model):
     tipo_contrato = models.PositiveIntegerField(choices=CLASE_CONTRATO)
     fecha_retiro = models.DateField(null=True, blank=True)
     motivo_retiro = models.CharField(max_length=256, null=True, blank=True)
-    fecha_novedad = models.DateField(default=timezone.now)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
 
     def riesgo_porcentaje(self):
         if self.riesgo == 1:
-            return "0,552%"
+            return 0.552
         elif self.riesgo == 2:
-            return "1,044%"
+            return 1.044
         elif self.riesgo == 3:
-            return "2,436%"
+            return 2.436
         elif self.riesgo == 4:
-            return "4,350%"
+            return 4.350
         else:
-            return "6,960%"
+            return 6.960
 
     def __str__(self):
-        return f"{self.usuario}"
+        return f"{self.usuario} - {self.fecha_inicio} - {self.fecha_fin}"
 
 
 class Devengado(models.Model):
@@ -322,7 +323,6 @@ class Nomina(models.Model):
     devengado = models.ForeignKey('Devengado', on_delete=models.CASCADE)
     deduccion = models.ForeignKey('Deduccion', on_delete=models.CASCADE)
 
-
     @property
     def total_devengado(self):
         return self.devengado.total_devengado()
@@ -335,20 +335,49 @@ class Nomina(models.Model):
     def total_a_pagar(self):
         return self.total_devengado - self.total_deduccion
 
+    @property
+    def ibc(self):
+        return float(self.devengado.ibc())
+
+    @property
+    def riesgo_porcentaje(self):
+        return float(self.novedad.riesgo_porcentaje())
+
+    @property
+    def salud(self):
+        return self.ibc * 0.085
+
+    @property
+    def pension(self):
+        return self.ibc * 0.12
+
+    @property
+    def arl(self):
+        return self.ibc * self.riesgo_porcentaje
+
+    @property
+    def sena(self):
+        if self.ibc >= 13000000:
+            return self.ibc * 0.2
+        else:
+            return 0
+
+    @property
+    def icbf(self):
+        if self.ibc >= 13000000:
+            return self.ibc * 0.3
+        else:
+            return 0
+
+    @property
+    def caja_compensacion(self):
+        return self.ibc * 0.4
+
     def __str__(self):
         return f"{self.novedad}"
 
 
-class NominaQuincena(models.Model):
-    nomina = models.ManyToManyField('Nomina')
-    fecha_inicio = models.DateField()
-    fecha_fin = models.DateField()
 
-    def __str__(self):
-        nominas_info = [f"{nomina.novedad.usuario.nombre} - Total a pagar: {round(nomina.total_a_pagar, 2)}" for nomina
-                        in
-                        self.nomina.all()]
-        return f'Colaborador: {", ".join(nominas_info)}. Fecha: {self.fecha_inicio} - {self.fecha_fin}'
 
 
 

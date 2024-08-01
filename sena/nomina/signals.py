@@ -1,7 +1,6 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from .models import Novedad, Devengado, Deduccion, Nomina, NominaQuincena
-
+from .models import Novedad, Devengado, Deduccion, Nomina
 
 # Devengado Signals
 @receiver(post_save, sender=Novedad)
@@ -70,8 +69,10 @@ def delete_nomina_on_novedad_delete(sender, instance, **kwargs):
         nomina_instance.delete()
 
 
-@receiver(post_delete, sender=Novedad)
+"""@receiver(post_delete, sender=Novedad)
 def delete_nomina_quincena_on_novedad_delete(sender, instance, **kwargs):
     nomina_quincena_instance = NominaQuincena.objects.filter(novedad=instance).first()
     if nomina_quincena_instance:
-        nomina_quincena_instance.delete()
+        nomina_quincena_instance.delete()"""
+
+

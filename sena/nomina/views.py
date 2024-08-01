@@ -106,7 +106,8 @@ def recibo_view(request, nomina_id):
 
     html_string = render_to_string('nomina/recibo.html', contexto)
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="Recibo_{nomina.novedad.usuario}_{nominaquincena.fecha_fin}.pdf"'
+    response[
+        'Content-Disposition'] = f'inline; filename="Recibo_{nomina.novedad.usuario}_{nominaquincena.fecha_fin}.pdf"'
 
     pisa_status = pisa.CreatePDF(html_string, dest=response)
     if pisa_status.err:
@@ -236,22 +237,15 @@ def nomina(request):
             usuario = Usuario.objects.get(id=usuario_id)
 
             if usuario.rol == 2:  # Suponiendo que el rol 2 es para colaboradores
-                q = NominaQuincena.objects.filter(nomina__novedad__usuario=usuario)
+                q = Novedad.objects.filter(usuario=usuario)
                 q2 = Nomina.objects.filter(novedad__usuario=usuario)
                 # Calcular el total a pagar para el usuario logueado
                 total_a_pagar_usuario = sum(n.total_a_pagar for n in q2)
             else:
-                q = NominaQuincena.objects.all()
+                q = Novedad.objects.all()
                 q2 = Nomina.objects.all()
                 total_a_pagar_usuario = None
-
-            periodos_raw = q.values('fecha_inicio', 'fecha_fin').distinct()
-            periodos = [
-                f"{periodo['fecha_inicio'].strftime('%d/%m/%Y')} - {periodo['fecha_fin'].strftime('%d/%m/%Y')}"
-                for periodo in periodos_raw
-            ]
-            print(periodos)
-            contexto = {"data": q, "nomina": q2, "total_a_pagar_usuario": total_a_pagar_usuario, "periodos": periodos}
+            contexto = {"novedad": q, "nomina": q2, "total_a_pagar_usuario": total_a_pagar_usuario}
             return render(request, 'nomina/nomina/nomina.html', contexto)
         except Usuario.DoesNotExist:
             messages.error(request, "Usuario no encontrado")
@@ -260,7 +254,7 @@ def nomina(request):
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))
 
-
+"""
 def nomina_buscar(request):
     if request.method == "POST":
         periodo = request.POST.get("periodo")
@@ -374,10 +368,11 @@ def nomina_guardar(request):
     else:
         messages.warning(request, "No se enviaron datos...")
         return HttpResponseRedirect(reverse("nomina:nomina"))
-
+"""
 
 def novedades_nomina(request):
-    novedades = Novedad.objects.annotate(month=TruncMonth('fecha_novedad')).values('month').annotate(c=Count('id')).order_by('-month')
+    novedades = Novedad.objects.annotate(month=TruncMonth('fecha_novedad')).values('month').annotate(
+        c=Count('id')).order_by('-month')
     novedades_por_mes = {}
     for novedad in novedades:
         mes = novedad['month']
@@ -395,6 +390,7 @@ def novedades_nomina(request):
         'CLASE_CONTRATO': clase_contrato
     }
     return render(request, 'nomina/novedad/novedades_nomina.html', contexto)
+
 
 def novedad_guardar(request):
     if request.method == "POST":

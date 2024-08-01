@@ -21,7 +21,8 @@ class NovedadAdmin(admin.ModelAdmin):
                     'horas_extras_nocturnas_dom_fes', 'horas_recargo_nocturno', 'horas_recargo_nocturno_dom_fes',
                     'horas_recargo_diurno_dom_fes', 'comisiones', 'comisiones_porcentaje', 'bonificaciones',
                     'embargos_judiciales', 'libranzas', 'cooperativas', 'otros', 'riesgo', 'riesgo_porcentaje',
-                    'fecha_ingreso', 'fecha_fin_contrato', 'tipo_contrato', 'fecha_retiro', 'motivo_retiro', 'fecha_novedad']
+                    'fecha_ingreso', 'fecha_fin_contrato', 'tipo_contrato', 'fecha_retiro', 'motivo_retiro',
+                    'fecha_inicio', 'fecha_fin']
 
 
 class DevengadoAdmin(admin.ModelAdmin):
@@ -40,18 +41,8 @@ class DeduccionAdmin(admin.ModelAdmin):
 
 
 class NominaAdmin(admin.ModelAdmin):
-    list_display = ['id', 'novedad', 'total_a_pagar']
-
-
-class NominaQuincenaAdmin(admin.ModelAdmin):
-    list_display = ['id', 'mostrar_nominas', 'fecha_inicio', 'fecha_fin']
-
-    def mostrar_nominas(self, obj):
-        nominas_info = [f"{nomina.novedad.usuario.nombre} - Total a pagar: {round(nomina.total_a_pagar, 2)}" for nomina in
-                        obj.nomina.all()]
-        return " - ".join(nominas_info)
-
-    mostrar_nominas.short_description = 'Nominas'
+    list_display = ['id', 'novedad', 'salud', 'pension', 'arl', 'sena', 'icbf',
+                    'caja_compensacion', 'total_a_pagar']
 
 
 admin.site.register(Usuario, UsuarioAdmin)
@@ -59,4 +50,3 @@ admin.site.register(Novedad, NovedadAdmin)
 admin.site.register(Devengado, DevengadoAdmin)
 admin.site.register(Deduccion, DeduccionAdmin)
 admin.site.register(Nomina, NominaAdmin)
-admin.site.register(NominaQuincena, NominaQuincenaAdmin)

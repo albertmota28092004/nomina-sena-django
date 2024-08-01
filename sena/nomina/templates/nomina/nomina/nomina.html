@@ -130,10 +130,10 @@
 
 {% if request.session.logueo.nombre_rol == "Administrador" %}
 <div class="card contenedor_nominas m-3">
-    <div class="filtro_nomina">
+    <!--<div class="filtro_nomina">
         <h6 class="filtro_titulo">Filtrar por:</h6>
         <h6 class="periodo_titulo">Periodo:</h6>
-        <form action="{% url 'nomina:nomina_buscar' %}" method="post" class="d-flex">
+        <form action="" method="post" class="d-flex">
             {% csrf_token %}
             <select class="periodo_select form-control" name="periodo">
                 <option value="">Seleccionar...</option>
@@ -143,7 +143,7 @@
             </select>
             <button class="btn btn-danger" type="submit">Buscar</button>
         </form>
-    </div>
+    </div>-->
 
     <table width="100%" cellspacing="0">
         <thead>
@@ -155,17 +155,15 @@
         </tr>
         </thead>
         <tbody>
-        {% for n in data %}
+        {% for n in novedad %}
         <tr>
             <td>{{ n.id }}</td>
             <td>{{ n.fecha_inicio }} - {{ n.fecha_fin }}</td>
             <td>
-                {% for nomina in n.nomina.all %}
-                    {{ nomina.novedad.usuario.nombre }} {{ nomina.novedad.usuario.apellido }} <br>
-                {% endfor %}
+                {{ n.usuario }}
             </td>
             <td>
-                <a href="{% url 'nomina:nomina_listar' n.id %}" class="btn btn-primary">Ingresar</a>
+                <a href="" class="btn btn-primary">Ingresar</a>
             </td>
         </tr>
         {% endfor %}
@@ -198,7 +196,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for n in data %}
+        {% for n in novedad %}
         <tr>
             <td>{{ n.id }}</td>
             <td>{{ n.fecha_inicio }} - {{ n.fecha_fin }}</td>
@@ -222,7 +220,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'nomina:nomina_guardar' %}" method="post">
+                <form action="" method="post">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="nomina" class="form-label">Nómina:</label>
