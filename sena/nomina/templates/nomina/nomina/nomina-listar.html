@@ -302,13 +302,11 @@
 
 
 <script>
-
-        function showReciboModal(nominaId) {
-            const iframe = document.getElementById('reciboIframe');
-            iframe.src = '/recibo/' + nominaId + '/';
-            const descargarBtn = document.getElementById('descargarReciboBtn');
-            descargarBtn.href = '/descargar/' + nominaId + '/';
-        }
-
+    function showReciboModal(nominaId) {
+        const iframe = document.getElementById('reciboIframe');
+        iframe.src = '/recibo/' + nominaId + '/';
+        const descargarBtn = document.getElementById('descargarReciboBtn');
+        descargarBtn.href = '/descargar/' + nominaId + '/';
+    }
 </script>
 {% endblock %}

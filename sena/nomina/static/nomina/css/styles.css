@@ -1420,9 +1420,15 @@ body {
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
+.bg-brown {
+  --tw-bg-opacity: 1;
+  background-color:  #442B1C !important;
+  border: 0 solid transparent;
+}
+
 .bg-primary{
   --tw-bg-opacity: 1;
-  background-color: #EBECE4 !important;
+  background-color: #442B1C !important;
   border: 0 solid transparent;
 }
 

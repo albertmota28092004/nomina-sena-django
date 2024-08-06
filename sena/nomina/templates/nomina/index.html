@@ -78,10 +78,9 @@
             <h1 class="titulo_bienvenido">¡Bienvenido!</h1>
             <div class="contenedor_botones_bienvenido">
                 {% if request.session.logueo.nombre_rol == "Administrador" %}
+                    <a class="btn botones_bienvenido" href="{% url 'nomina:colaboradores' %}">Colaboradores</a>
                     <a class="btn botones_bienvenido" href="{% url 'nomina:novedades_nomina' %}">Novedades</a>
                     <a class="btn botones_bienvenido" href="{% url 'nomina:nomina' %}">Nóminas</a>
-                    <a class="btn botones_bienvenido" href="{% url 'nomina:colaboradores' %}">Colaboradores</a>
-
                 {% else %}
                     <a class="btn botones_bienvenido" href="{% url 'nomina:nomina' %}">Mi nómina</a>
                     <a class="btn botones_bienvenido" href="">Recibos</a>

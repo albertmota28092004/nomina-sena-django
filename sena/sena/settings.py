@@ -49,7 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'nomina.middleware.XFrameOptionsMiddleware'
+    'nomina.middleware.ContentSecurityPolicyMiddleware',
+    'nomina.middleware.DebugHeadersMiddleware',
 ]
 
 ROOT_URLCONF = 'sena.urls'
@@ -132,4 +133,3 @@ MEDIA_ROOT = BASE_DIR / 'uploads/'
 MEDIA_URL = '/media/'
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-

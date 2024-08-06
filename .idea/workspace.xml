@@ -5,52 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="solucionados los errores, está melo por ahora">
-      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/parafiscales.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/provisiones.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/Perfil-hombre-basico_738242395.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/perfil-mujer-vivo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion-archivo.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0002_usuario_cargo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0003_alter_usuario_cargo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0004_alter_usuario_cargo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0005_alter_usuario_cargo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0006_usuario_cedula_novedad.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0007_alter_novedad_dias_incapacidad_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0008_remove_novedad_riesgo_porcentaje.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/migrations/0003_remove_novedad_clase_salario.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0009_devengado.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0010_alter_novedad_comisiones_porcentaje.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0011_alter_novedad_comisiones_porcentaje.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0012_alter_novedad_comisiones_porcentaje_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0013_alter_novedad_comisiones_porcentaje.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0014_alter_novedad_comisiones_porcentaje.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0015_deduccion.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0016_nomina.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0017_alter_novedad_bonificaciones_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0018_alter_novedad_salario.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0019_alter_novedad_comisiones_porcentaje.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0020_alter_novedad_salario.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0021_remove_nomina_fecha_fin_remove_nomina_fecha_inicio.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0022_nominaquincena.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0023_alter_novedad_fecha_fin_contrato.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0024_alter_novedad_usuario.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0025_novedad_fecha_novedad.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/migrations/0002_remove_novedad_fecha_ingreso_usuario_fecha_ingreso.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0026_alter_usuario_cedula.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0027_alter_novedad_bonificaciones_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/middleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/middleware.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_editar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_editar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/recibo.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/recibo.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/sena/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/sena/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,8 +28,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -93,17 +60,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Python.prueba.executor": "Run",
-    "Python.x.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/alber/PycharmProjects/nomina-sena-django/sena/nomina/templates/nomina"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.prueba.executor&quot;: &quot;Run&quot;,
+    &quot;Python.x.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/alber/PycharmProjects/nomina-sena-django/sena/nomina/templates/nomina&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\alber\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina" />
@@ -113,11 +80,11 @@
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina\liquidacion" />
       <recent name="C:\Users\alber\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\css" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina\novedad" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina\colaborador" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina" />
-      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img\logo" />
     </key>
   </component>
   <component name="SharedIndexes">

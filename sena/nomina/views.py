@@ -135,10 +135,8 @@ def descargar_recibo(request, nomina_id):
 
 def practica(request):
     nomina = get_object_or_404(Nomina, novedad__usuario__id=2)
-    nominaquincena = get_object_or_404(NominaQuincena, nomina__novedad__usuario__id=2)
     contexto = {
-        "nomina": nomina,
-        "quincena": nominaquincena
+        "nomina": nomina
     }
     return render(request, 'nomina/recibo.html', contexto)
 
@@ -155,7 +153,49 @@ def provisiones(request, id):
         return render(request, 'nomina/provisiones.html', contexto)
 
 
+def liquidacion(request, id):
+    if request.session.get("logueo", False):
+        usuario = Usuario.objects.get(pk=id)
+        nomina = Nomina.objects.filter(novedad__usuario=usuario)
+        contexto = {'usuario': usuario, 'nomina': nomina}
+        return render(request, 'nomina/liquidacion/liquidacion.html', contexto)
 
+def liquidacion_view(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    contexto = {
+        "usuario": usuario,
+        # Añadir aquí cualquier otro dato necesario para la liquidación
+    }
+
+    html_string = render_to_string('nomina/liquidacion/liquidacion-archivo.html', contexto)
+    response = HttpResponse(content_type='application/pdf')
+    response[
+        'Content-Disposition'] = f'inline; filename="Liquidacion_{usuario.nombre}_{usuario.apellido}.pdf"'
+
+    pisa_status = pisa.CreatePDF(html_string, dest=response)
+    if pisa_status.err:
+        return HttpResponse(f'Error al generar el PDF: {pisa_status.err}')
+    return response
+
+def descargar_liquidacion(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    nombre_colaborador = usuario.nombre
+    apellido_colaborador = usuario.apellido
+
+    contexto = {
+        "usuario": usuario,
+        # Añadir aquí cualquier otro dato necesario para la liquidación
+    }
+    html_string = render_to_string('nomina/liquidacion/liquidacion-archivo.html', contexto)
+    response = HttpResponse(content_type='application/pdf')
+    response[
+        'Content-Disposition'] = f'attachment; filename="liquidacion_{slugify(nombre_colaborador)}_{slugify(apellido_colaborador)}.pdf"'
+
+    pisa_status = pisa.CreatePDF(html_string, dest=response)
+    if pisa_status.err:
+        return HttpResponse(f'Error al generar el PDF: {pisa_status.err}')
+    return response
 # -------------------- Modelos --------------------------
 
 def colaboradores(request):
