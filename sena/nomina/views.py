@@ -94,20 +94,18 @@ def convert_html_to_pdf(source_html):
 
 def recibo_view(request, nomina_id):
     nomina = get_object_or_404(Nomina, id=nomina_id)
-    nominaquincena = NominaQuincena.objects.filter(nomina__id=nomina_id).first()
 
     totalh = nomina.novedad.horas_extras_diurnas + nomina.novedad.horas_extras_diurnas_dom_fes + nomina.novedad.horas_extras_nocturnas + nomina.novedad.horas_extras_nocturnas_dom_fes + nomina.novedad.horas_recargo_diurno_dom_fes + nomina.novedad.horas_recargo_nocturno + nomina.novedad.horas_recargo_nocturno_dom_fes
 
     contexto = {
         "nomina": nomina,
-        "quincena": nominaquincena,
         "totalh": totalh
     }
 
     html_string = render_to_string('nomina/recibo.html', contexto)
     response = HttpResponse(content_type='application/pdf')
     response[
-        'Content-Disposition'] = f'inline; filename="Recibo_{nomina.novedad.usuario}_{nominaquincena.fecha_fin}.pdf"'
+        'Content-Disposition'] = f'inline; filename="Recibo_{nomina.novedad.usuario}_{nomina.novedad.fecha_fin}.pdf"'
 
     pisa_status = pisa.CreatePDF(html_string, dest=response)
     if pisa_status.err:
@@ -119,8 +117,7 @@ def descargar_recibo(request, nomina_id):
     nomina = get_object_or_404(Nomina, id=nomina_id)
     nombre_colaborador = nomina.novedad.usuario.nombre
     apellido_colaborador = nomina.novedad.usuario.apellido
-    nominaquincena = get_object_or_404(NominaQuincena, nomina__id=nomina_id)
-    fecha_inicio = nominaquincena.fecha_inicio
+    fecha_inicio = nomina.fecha_inicio
 
     contexto = {
         "nomina": nomina,
@@ -144,6 +141,19 @@ def practica(request):
         "quincena": nominaquincena
     }
     return render(request, 'nomina/recibo.html', contexto)
+
+def parafiscales(request, id):
+    if request.session.get("logueo", False):
+        nomina = Nomina.objects.get(pk=id)
+        contexto = {'data': nomina}
+        return render(request, 'nomina/parafiscales.html', contexto)
+
+def provisiones(request, id):
+    if request.session.get("logueo", False):
+        nomina = Nomina.objects.get(pk=id)
+        contexto = {'data': nomina}
+        return render(request, 'nomina/provisiones.html', contexto)
+
 
 
 # -------------------- Modelos --------------------------
@@ -237,15 +247,24 @@ def nomina(request):
             usuario = Usuario.objects.get(id=usuario_id)
 
             if usuario.rol == 2:  # Suponiendo que el rol 2 es para colaboradores
-                q = Novedad.objects.filter(usuario=usuario)
-                q2 = Nomina.objects.filter(novedad__usuario=usuario)
-                # Calcular el total a pagar para el usuario logueado
-                total_a_pagar_usuario = sum(n.total_a_pagar for n in q2)
+                novedades = Novedad.objects.filter(usuario=usuario)
+                total_a_pagar_usuario = sum(n.total_a_pagar for n in Nomina.objects.filter(novedad__usuario=usuario))
             else:
-                q = Novedad.objects.all()
-                q2 = Nomina.objects.all()
+                novedades = Novedad.objects.all()
                 total_a_pagar_usuario = None
-            contexto = {"novedad": q, "nomina": q2, "total_a_pagar_usuario": total_a_pagar_usuario}
+
+            # Agrupar nóminas por periodo
+            nominas_por_periodo = {}
+            for novedad in novedades:
+                periodo = (novedad.fecha_inicio, novedad.fecha_fin)
+                if periodo not in nominas_por_periodo:
+                    nominas_por_periodo[periodo] = []
+                nominas_por_periodo[periodo].append(novedad.usuario)
+
+            contexto = {
+                "nominas_por_periodo": nominas_por_periodo,
+                "total_a_pagar_usuario": total_a_pagar_usuario
+            }
             return render(request, 'nomina/nomina/nomina.html', contexto)
         except Usuario.DoesNotExist:
             messages.error(request, "Usuario no encontrado")
@@ -254,6 +273,59 @@ def nomina(request):
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))
 
+def nomina_listar(request, fecha_inicio, fecha_fin):
+    if request.session.get("logueo", False):
+        usuario_id = request.session["logueo"]["id"]
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+
+            nominas = Nomina.objects.filter(novedad__fecha_inicio=fecha_inicio, novedad__fecha_fin=fecha_fin)
+
+            contexto = {
+                "nominas": nominas
+            }
+            return render(request, 'nomina/nomina/nomina-listar.html', contexto)
+        except Usuario.DoesNotExist:
+            messages.error(request, "Usuario no encontrado")
+            return HttpResponseRedirect(reverse("nomina:nomina_listar"))
+    else:
+        messages.warning(request, "Debe iniciar sesión para ver esta página.")
+        return HttpResponseRedirect(reverse("nomina:login"))
+
+"""def nomina_listar(request, id):
+    if request.session.get("logueo", False):
+        usuario_id = request.session["logueo"]["id"]
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+
+            if usuario.rol == 2:  # Suponiendo que el rol 2 es para colaboradores
+                nominas = get_object_or_404(NominaQuincen, id=id)
+                usuarios = [nomina.novedad.usuario for nomina in nominas]
+                novedades = Novedad.objects.filter(usuario=usuario)
+                devengados = Devengado.objects.filter(novedad__usuario=usuario)
+                deducciones = Deduccion.objects.filter(novedad__usuario=usuario)
+            else:
+
+                nominas = Nomina.objects.all()
+                usuarios = [nomina.novedad.usuario for nomina in nominas]
+                novedades = Novedad.objects.filter(usuario__in=usuarios)
+                devengados = Devengado.objects.filter(novedad__usuario__in=usuarios)
+                deducciones = Deduccion.objects.filter(novedad__usuario__in=usuarios)
+
+            contexto = {
+                "usuarios": usuarios,
+                "devengado": devengados,
+                "deduccion": deducciones,
+                "novedad": novedades,
+                "nominas": nominas
+            }
+            return render(request, 'nomina/nomina/nomina-listar.html', contexto)
+        except Usuario.DoesNotExist:
+            messages.error(request, "Usuario no encontrado")
+            return HttpResponseRedirect(reverse("nomina:nomina_listar"))
+    else:
+        messages.warning(request, "Debe iniciar sesión para ver esta página.")
+        return HttpResponseRedirect(reverse("nomina:login"))"""
 """
 def nomina_buscar(request):
     if request.method == "POST":
@@ -293,43 +365,7 @@ def nomina_buscar(request):
     return redirect("nomina:nomina")
 
 
-def nomina_listar(request, id):
-    if request.session.get("logueo", False):
-        usuario_id = request.session["logueo"]["id"]
-        try:
-            usuario = Usuario.objects.get(id=usuario_id)
 
-            if usuario.rol == 2:  # Suponiendo que el rol 2 es para colaboradores
-                nomina_quincena = get_object_or_404(NominaQuincena, id=id)
-                nominas = nomina_quincena.nomina.filter(
-                    novedad__usuario=usuario)  # Filtrar las nominas del usuario logueado
-                usuarios = [nomina.novedad.usuario for nomina in nominas]
-                novedades = Novedad.objects.filter(usuario=usuario)
-                devengados = Devengado.objects.filter(novedad__usuario=usuario)
-                deducciones = Deduccion.objects.filter(novedad__usuario=usuario)
-            else:
-                nomina_quincena = get_object_or_404(NominaQuincena, id=id)
-                nominas = nomina_quincena.nomina.all()
-                usuarios = [nomina.novedad.usuario for nomina in nominas]
-                novedades = Novedad.objects.filter(usuario__in=usuarios)
-                devengados = Devengado.objects.filter(novedad__usuario__in=usuarios)
-                deducciones = Deduccion.objects.filter(novedad__usuario__in=usuarios)
-
-            contexto = {
-                "nomina_quincena": nomina_quincena,
-                "usuarios": usuarios,
-                "devengado": devengados,
-                "deduccion": deducciones,
-                "novedad": novedades,
-                "nominas": nominas
-            }
-            return render(request, 'nomina/nomina/nomina-listar.html', contexto)
-        except Usuario.DoesNotExist:
-            messages.error(request, "Usuario no encontrado")
-            return HttpResponseRedirect(reverse("nomina:nomina_listar"))
-    else:
-        messages.warning(request, "Debe iniciar sesión para ver esta página.")
-        return HttpResponseRedirect(reverse("nomina:login"))
 
 
 def nomina_guardar(request):
@@ -371,22 +407,18 @@ def nomina_guardar(request):
 """
 
 def novedades_nomina(request):
-    novedades = Novedad.objects.annotate(month=TruncMonth('fecha_novedad')).values('month').annotate(
+    novedades = Novedad.objects.annotate(month=TruncMonth('fecha_fin')).values('month').annotate(
         c=Count('id')).order_by('-month')
     novedades_por_mes = {}
     for novedad in novedades:
         mes = novedad['month']
-        novedades_mes = Novedad.objects.filter(fecha_novedad__month=mes.month, fecha_novedad__year=mes.year)
+        novedades_mes = Novedad.objects.filter(fecha_fin__month=mes.month, fecha_fin__year=mes.year)
         novedades_por_mes[mes] = novedades_mes
     usuarios = Usuario.objects.filter(rol=2)
-    clase_salario = Novedad.CLASE_SALARIO
-    clase_riesgo = Novedad.CLASE_RIESGO
     clase_contrato = Novedad.CLASE_CONTRATO
     contexto = {
         "novedades_por_mes": novedades_por_mes,
         'usuarios': usuarios,
-        'CLASE_SALARIO': clase_salario,
-        'CLASE_RIESGO': clase_riesgo,
         'CLASE_CONTRATO': clase_contrato
     }
     return render(request, 'nomina/novedad/novedades_nomina.html', contexto)
@@ -397,7 +429,6 @@ def novedad_guardar(request):
         usuario_id = request.POST.get("usuario")
         usuario = Usuario.objects.get(id=usuario_id)
         salario = request.POST.get("salario")
-        clase_salario = request.POST.get("clase_salario")
         dias_incapacidad = request.POST.get("dias_incapacidad") or 0
         dias_trabajados = request.POST.get("dias_trabajados")
         horas_extras_diurnas = request.POST.get("horas_extras_diurnas") or 0
@@ -415,17 +446,17 @@ def novedad_guardar(request):
         cooperativas = request.POST.get("libranzas") or 0
         otros = request.POST.get("otros") or 0
         riesgo = request.POST.get("riesgo")
-        fecha_ingreso = request.POST.get("fecha_ingreso")
         fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
         tipo_contrato = request.POST.get("tipo_contrato")
         fecha_retiro = request.POST.get("fecha_retiro") or None
         motivo_retiro = request.POST.get("motivo_retiro") or None
+        fecha_inicio = request.POST.get("fecha_inicio")
+        fecha_fin = request.POST.get("fecha_fin")
 
         try:
             nov = Novedad(
                 usuario=usuario,
                 salario=salario,
-                clase_salario=clase_salario,
                 dias_incapacidad=dias_incapacidad,
                 dias_trabajados=dias_trabajados,
                 horas_extras_diurnas=horas_extras_diurnas,
@@ -443,11 +474,12 @@ def novedad_guardar(request):
                 cooperativas=cooperativas,
                 otros=otros,
                 riesgo=riesgo,
-                fecha_ingreso=fecha_ingreso,
                 fecha_fin_contrato=fecha_fin_contrato,
                 tipo_contrato=tipo_contrato,
                 fecha_retiro=fecha_retiro,
                 motivo_retiro=motivo_retiro,
+                fecha_inicio=fecha_inicio,
+                fecha_fin=fecha_fin
             )
             nov.save()
             messages.success(request, "Guardado correctamente!!")
@@ -466,7 +498,6 @@ def novedad_editar(request, id):
         usuario_id = request.POST.get("usuario_editar")
         usuario = Usuario.objects.get(id=usuario_id)
         salario = request.POST.get("salario_editar")
-        clase_salario = request.POST.get("clase_salario_editar")
         dias_incapacidad = request.POST.get("dias_incapacidad_editar") or 0
         dias_trabajados = request.POST.get("dias_trabajados_editar")
         horas_extras_diurnas = request.POST.get("horas_extras_diurnas_editar") or 0
@@ -483,18 +514,18 @@ def novedad_editar(request, id):
         libranzas = request.POST.get("libranzas_editar") or 0
         cooperativas = request.POST.get("libranzas_editar") or 0
         otros = request.POST.get("otros_editar") or 0
-        riesgo = request.POST.get("riesgo_editar")
-        fecha_ingreso = request.POST.get("fecha_ingreso_editar") or novedad.fecha_ingreso
+        riesgo = request.POST.get("riesgo_editar") or novedad.riesgo
         fecha_fin_contrato = request.POST.get("fecha_fin_contrato_editar") or None
         tipo_contrato = request.POST.get("tipo_contrato_editar")
         fecha_retiro = request.POST.get("fecha_retiro_editar") or None
         motivo_retiro = request.POST.get("motivo_retiro_editar") or None
+        fecha_inicio = request.POST.get("fecha_inicio_editar") or novedad.fecha_inicio
+        fecha_fin = request.POST.get("fecha_fin_editar") or novedad.fecha_fin
 
         try:
             q = Novedad.objects.get(pk=id)
             q.usuario = usuario
             q.salario = salario
-            q.clase_salario = clase_salario
             q.dias_incapacidad = dias_incapacidad
             q.dias_trabajados = dias_trabajados
             q.horas_extras_diurnas = horas_extras_diurnas
@@ -512,11 +543,12 @@ def novedad_editar(request, id):
             q.cooperativas = cooperativas
             q.otros = otros
             q.riesgo = riesgo
-            q.fecha_ingreso = fecha_ingreso
             q.fecha_fin_contrato = fecha_fin_contrato
             q.tipo_contrato = tipo_contrato
             q.fecha_retiro = fecha_retiro
             q.motivo_retiro = motivo_retiro
+            q.fecha_inicio = fecha_inicio
+            q.fecha_fin = fecha_fin
             q.save()
             messages.success(request, "Actualizado correctamente!!")
         except Exception as e:

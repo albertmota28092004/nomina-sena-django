@@ -48,8 +48,7 @@
         </div>
     </nav>
 
-    {% if nomina_quincena %}
-    <h1 class="h3 mb-2 text-gray-800">Nómina #{{ nomina_quincena.id }}</h1>
+    {% if nominas %}
     {% if request.session.logueo.nombre_rol == "Administrador" %}
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -57,7 +56,13 @@
                     <table width="100%" cellspacing="0">
                         <thead>
                         <tr>
-                            <th>ID Usuario</th>
+                            <th colspan="11">Información del colaborador</th>
+                            <th colspan="11">Devengados</th>
+                            <th colspan="9">Deducciones</th>
+                            <th>Total</th>
+                            <th colspan="3">Acciones</th>
+                        </tr>
+                        <tr>
                             <th>Cédula</th>
                             <th>Nombre</th>
                             <th>Apellido</th>
@@ -91,12 +96,13 @@
                             <th>Total Deducciones</th>
                             <th>Total a Pagar</th>
                             <th>Recibo</th>
+                            <th>Parafiscales</th>
+                            <th>Provisiones</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for nomina in nominas %}
                         <tr>
-                            <td>{{ nomina.novedad.usuario.id }}</td>
                             <td>{{ nomina.novedad.usuario.cedula }}</td>
                             <td>{{ nomina.novedad.usuario.nombre }}</td>
                             <td>{{ nomina.novedad.usuario.apellido }}</td>
@@ -141,6 +147,16 @@
                                     <i class="fa-solid fa-file-pdf"></i>
 
                                 </button>
+                            </td>
+                            <td>
+                                <a href="{% url 'nomina:parafiscales' nomina.id %}" class="btn btn-primary">
+                                    Ver parafiscales
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'nomina:provisiones' nomina.id %}" class="btn btn-primary">
+                                    Ver provisiones
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}

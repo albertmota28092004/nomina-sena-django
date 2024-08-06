@@ -64,6 +64,7 @@ class Usuario(models.Model):
     foto = models.ImageField(null=True, blank=True, upload_to='fotos_usuarios')
     rol = models.PositiveIntegerField(choices=ROLES, default=2)
     cargo = models.PositiveIntegerField(null=True, blank=True, choices=CARGOS, default=1)
+    fecha_ingreso = models.DateField(default=timezone.now)
 
     def get_cargo_display(self):
         return dict(self.CARGOS).get(self.cargo, "Cargo desconocido")
@@ -76,17 +77,6 @@ class Usuario(models.Model):
 
 
 class Novedad(models.Model):
-    CLASE_SALARIO = (
-        (1, "Básico"),
-        (2, "Integral")
-    )
-    CLASE_RIESGO = (
-        (1, "Riesgo I"),
-        (2, "Riesgo II"),
-        (3, "Riesgo III"),
-        (4, "Riesgo IV"),
-        (5, "Riesgo V")
-    )
     CLASE_CONTRATO = (
         (1, "Término fijo inferior a 1 año"),
         (2, "Término fijo superior a 1 año"),
@@ -95,7 +85,6 @@ class Novedad(models.Model):
     )
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'rol': 2})
     salario = models.IntegerField()
-    clase_salario = models.PositiveIntegerField(choices=CLASE_SALARIO, default=1)
     dias_incapacidad = models.PositiveIntegerField(null=True, blank=True, default=0)
     dias_trabajados = models.PositiveIntegerField()
     horas_extras_diurnas = models.PositiveIntegerField(null=True, blank=True, default=0)
@@ -112,26 +101,13 @@ class Novedad(models.Model):
     libranzas = models.PositiveIntegerField(null=True, blank=True, default=0)
     cooperativas = models.PositiveIntegerField(null=True, blank=True, default=0)
     otros = models.PositiveIntegerField(null=True, blank=True, default=0)
-    riesgo = models.PositiveIntegerField(choices=CLASE_RIESGO)
-    fecha_ingreso = models.DateField()
+    riesgo = models.FloatField(default=0)
     fecha_fin_contrato = models.DateField(null=True, blank=True)
     tipo_contrato = models.PositiveIntegerField(choices=CLASE_CONTRATO)
     fecha_retiro = models.DateField(null=True, blank=True)
     motivo_retiro = models.CharField(max_length=256, null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
-
-    def riesgo_porcentaje(self):
-        if self.riesgo == 1:
-            return 0.552
-        elif self.riesgo == 2:
-            return 1.044
-        elif self.riesgo == 3:
-            return 2.436
-        elif self.riesgo == 4:
-            return 4.350
-        else:
-            return 6.960
 
     def __str__(self):
         return f"{self.usuario} - {self.fecha_inicio} - {self.fecha_fin}"
@@ -340,8 +316,8 @@ class Nomina(models.Model):
         return float(self.devengado.ibc())
 
     @property
-    def riesgo_porcentaje(self):
-        return float(self.novedad.riesgo_porcentaje())
+    def riesgo(self):
+        return self.novedad.riesgo
 
     @property
     def salud(self):
@@ -353,7 +329,7 @@ class Nomina(models.Model):
 
     @property
     def arl(self):
-        return self.ibc * self.riesgo_porcentaje
+        return self.ibc * self.riesgo
 
     @property
     def sena(self):
@@ -373,12 +349,24 @@ class Nomina(models.Model):
     def caja_compensacion(self):
         return self.ibc * 0.4
 
+    @property
+    def cesantias(self):
+        return self.ibc * 0.0833
+
+    @property
+    def intereses_cesantias(self):
+        return self.ibc * 0.01
+
+    @property
+    def primas_servicio(self):
+        return self.ibc * 0.0833
+
+    @property
+    def vacaciones(self):
+        return self.ibc * 0.0417
+
     def __str__(self):
         return f"{self.novedad}"
-
-
-
-
 
 
 # Ensure signals are imported

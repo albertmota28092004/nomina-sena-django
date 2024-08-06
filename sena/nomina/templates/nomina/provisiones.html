@@ -1,0 +1,109 @@
+{% extends 'nomina/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+{% block titulo %}Nóminas{% endblock %}
+{% block contenedor %}
+
+<style>
+    .boton_regresar, .boton_mas {
+        background-color: #EBECE4;
+    }
+
+    .boton_regresar:hover, .boton_mas:hover {
+        background-color: #000000;
+        color: #EBECE4;
+    }
+
+    .table thead {
+        background-color: #EBECE4 !important;
+    }
+
+    td, th {
+        border: 1px solid #C4C7C1;
+        text-align: center;
+        white-space: nowrap;
+        padding: 20px;
+    }
+
+    .card {
+        background-color: #EBECE4;
+        margin: 10px;
+    }
+
+    h1 {
+        color: #EBECE4 !important;
+    }
+
+</style>
+
+<body style="background-color: #442B1C;">
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <button class="btn btn-light transition duration-300 ease-in-out boton_regresar" onclick="window.history.back();">
+                Regresar <i class="fa-solid fa-reply"></i>
+            </button>
+            <h1 class="titulo_nomina m-0 flex-grow-1 text-center">Provisiones</h1>
+        </div>
+    </nav>
+
+    {% if data %}
+    {% if request.session.logueo.nombre_rol == "Administrador" %}
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Cesantías</th>
+                            <th>Intereses sobre Cesantías</th>
+                            <th>Primas de Servicio</th>
+                            <th>Vacaciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ data.cesantias }}</td>
+                            <td>{{ data.intereses_cesantias }}</td>
+                            <td>{{ data.primas_servicio }}</td>
+                            <td>{{ data.vacaciones }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Salud</th>
+                            <th>Pensión</th>
+                            <th>ARL</th>
+                            <th>Sena</th>
+                            <th>ICBF</th>
+                            <th>Caja de Compensación</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

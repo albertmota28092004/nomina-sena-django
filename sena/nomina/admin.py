@@ -6,7 +6,7 @@ from django.utils.html import mark_safe
 # Register your models here.
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo']
+    list_display = ['id', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso']
 
     def ver_foto(self, obj):
         try:
@@ -16,12 +16,12 @@ class UsuarioAdmin(admin.ModelAdmin):
 
 
 class NovedadAdmin(admin.ModelAdmin):
-    list_display = ['id', 'usuario', 'salario', 'clase_salario', 'dias_incapacidad', 'dias_trabajados',
+    list_display = ['id', 'usuario', 'salario', 'dias_incapacidad', 'dias_trabajados',
                     'horas_extras_diurnas', 'horas_extras_diurnas_dom_fes', 'horas_extras_nocturnas',
                     'horas_extras_nocturnas_dom_fes', 'horas_recargo_nocturno', 'horas_recargo_nocturno_dom_fes',
                     'horas_recargo_diurno_dom_fes', 'comisiones', 'comisiones_porcentaje', 'bonificaciones',
-                    'embargos_judiciales', 'libranzas', 'cooperativas', 'otros', 'riesgo', 'riesgo_porcentaje',
-                    'fecha_ingreso', 'fecha_fin_contrato', 'tipo_contrato', 'fecha_retiro', 'motivo_retiro',
+                    'embargos_judiciales', 'libranzas', 'cooperativas', 'otros', 'riesgo',
+                     'fecha_fin_contrato', 'tipo_contrato', 'fecha_retiro', 'motivo_retiro',
                     'fecha_inicio', 'fecha_fin']
 
 
@@ -42,7 +42,7 @@ class DeduccionAdmin(admin.ModelAdmin):
 
 class NominaAdmin(admin.ModelAdmin):
     list_display = ['id', 'novedad', 'salud', 'pension', 'arl', 'sena', 'icbf',
-                    'caja_compensacion', 'total_a_pagar']
+                    'caja_compensacion', "cesantias", "intereses_cesantias", "primas_servicio", "vacaciones", 'total_a_pagar']
 
 
 admin.site.register(Usuario, UsuarioAdmin)

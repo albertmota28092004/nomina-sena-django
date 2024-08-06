@@ -16,6 +16,8 @@ urlpatterns = [
     path('colaborador_eliminar/<int:id>/', views.colaborador_eliminar, name='colaborador_eliminar'),
     path('nomina/', views.nomina, name='nomina'),
     # path('nomina_buscar/', views.nomina_buscar, name='nomina_buscar'),
+    path('nomina/listar/<str:fecha_inicio>/<str:fecha_fin>/', views.nomina_listar, name='nomina_listar'),
+
     # path('nomina_listar/<int:id>/', views.nomina_listar, name='nomina_listar'),
     # path('nomina_guardar/', views.nomina_guardar, name='nomina_guardar'),
     path('novedades_nomina/', views.novedades_nomina, name='novedades_nomina'),
@@ -25,5 +27,7 @@ urlpatterns = [
     path("usuario_guardar/", views.usuario_guardar, name="usuario_guardar"),
     path('recibo/<int:nomina_id>/', views.recibo_view, name='recibo_view'),
     path('descargar/<int:nomina_id>/', views.descargar_recibo, name='descargar_recibo'),
-    path('practica/', views.practica, name="practica")
+    path('practica/', views.practica, name="practica"),
+    path('parafiscales/<int:id>/', views.parafiscales, name="parafiscales"),
+    path('provisiones/<int:id>/', views.provisiones, name="provisiones"),
 ]

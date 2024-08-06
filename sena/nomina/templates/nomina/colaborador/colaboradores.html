@@ -15,13 +15,13 @@
 
         .contenedor_colaboradores {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 70px;
         }
 
         .contenedor_colaborador {
             text-align: center;
-            width: 200px;
+            width: 300px;
             overflow: hidden;
             border-radius: 20px 20px 0 0px;
             --tw-shadow: 0px 10px 10px 0px #ccc;
@@ -31,7 +31,7 @@
 
         .img-colaborador {
             margin: auto;
-            width: 200px;
+            width: 300px !important;
             height: 300px;
         }
 
@@ -39,7 +39,7 @@
             background-color: #EBECE4;
             text-align: center;
             flex-direction: column;
-            width: 200px !important;
+            width: 300px !important;
             display: none;
             position: absolute;
             padding: 20px;
@@ -177,7 +177,6 @@
                             </button>
                             <div id="ver_mas_info">
                                 <h6>{{ c.correo }}</h6>
-                                <h6>{{ c.get_rol_display }}</h6>
                                 <h6>{{ c.get_cargo_display }}</h6>
                             </div>
                         </div>

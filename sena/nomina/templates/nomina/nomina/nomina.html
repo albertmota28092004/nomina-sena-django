@@ -116,54 +116,46 @@
             Regresar <i class="fa-solid fa-reply"></i>
         </a>
         <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Nóminas</h1>
-        {% if request.session.logueo.nombre_rol == "Administrador" %}
-        <button class="boton_crear_nomina btn btn-light" data-bs-toggle="modal" data-bs-target="#nominaModal">
-            Crear nómina
-        </button>
-        {% else %}
-        <button class="boton_regresar btn btn-light">
+        <button class="boton_regresar btn btn-light" data-bs-toggle="modal" data-bs-target="#infoModal">
             <i class="bi bi-info-lg"></i>
         </button>
-        {% endif %}
     </div>
 </nav>
+<!-- Info Modal -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModallLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Presionando en <strong>Ingresar</strong>, puedes visualizar los detalles de la nónima seleccionada y de cada colaborador.
+      </div>
+    </div>
+  </div>
+</div>
 
 {% if request.session.logueo.nombre_rol == "Administrador" %}
 <div class="card contenedor_nominas m-3">
-    <!--<div class="filtro_nomina">
-        <h6 class="filtro_titulo">Filtrar por:</h6>
-        <h6 class="periodo_titulo">Periodo:</h6>
-        <form action="" method="post" class="d-flex">
-            {% csrf_token %}
-            <select class="periodo_select form-control" name="periodo">
-                <option value="">Seleccionar...</option>
-                {% for p in periodos %}
-                    <option value="{{ p }}">{{ p }}</option>
-                {% endfor %}
-            </select>
-            <button class="btn btn-danger" type="submit">Buscar</button>
-        </form>
-    </div>-->
-
     <table width="100%" cellspacing="0">
         <thead>
         <tr>
-            <th>ID Nómina</th>
             <th>Periodo</th>
             <th>Colaboradores</th>
             <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
-        {% for n in novedad %}
+        {% for periodo, colaboradores in nominas_por_periodo.items %}
         <tr>
-            <td>{{ n.id }}</td>
-            <td>{{ n.fecha_inicio }} - {{ n.fecha_fin }}</td>
+            <td>{{ periodo.0 }} - {{ periodo.1 }}</td>
             <td>
-                {{ n.usuario }}
+                {% for colaborador in colaboradores %}
+                    {{ colaborador.nombre }} {{ colaborador.apellido }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
             </td>
             <td>
-                <a href="" class="btn btn-primary">Ingresar</a>
+                <a href="{% url 'nomina:nomina_listar' periodo.0 periodo.1 %}" class="btn btn-primary">Ingresar</a>
             </td>
         </tr>
         {% endfor %}
@@ -172,21 +164,6 @@
 </div>
 {% else %}
 <div class="card contenedor_nominas m-3">
-    <div class="filtro_nomina">
-        <h6 class="filtro_titulo">Filtrar por:</h6>
-        <h6 class="periodo_titulo">Periodo:</h6>
-        <form action="{% url 'nomina:nomina_buscar' %}" method="post" class="d-flex">
-            {% csrf_token %}
-            <select class="periodo_select form-control" name="periodo">
-                <option value="">Seleccionar...</option>
-                {% for p in periodos %}
-                    <option value="{{ p }}">{{ p }}</option>
-                {% endfor %}
-            </select>
-            <button class="btn btn-danger" type="submit">Buscar</button>
-        </form>
-    </div>
-
     <table width="100%" cellspacing="0">
         <thead>
         <tr>
@@ -196,12 +173,11 @@
         </tr>
         </thead>
         <tbody>
-        {% for n in novedad %}
+        {% for periodo, colaboradores in nominas_por_periodo.items %}
         <tr>
-            <td>{{ n.id }}</td>
-            <td>{{ n.fecha_inicio }} - {{ n.fecha_fin }}</td>
+            <td>{{ periodo.0 }} - {{ periodo.1 }}</td>
             <td>
-                <a href="{% url 'nomina:nomina_listar' n.id %}" class="btn btn-primary">Ingresar</a>
+                <a href="{% url 'nomina:nomina_listar' periodo.0 periodo.1 %}" class="btn btn-primary">Ingresar</a>
             </td>
         </tr>
         {% endfor %}
@@ -210,40 +186,6 @@
 </div>
 {% endif %}
 
-
-<!-- Modal -->
-<div class="modal fade" id="nominaModal" tabindex="-1" aria-labelledby="nominaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="nominaModalLabel">Crear nómina</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="nomina" class="form-label">Nómina:</label>
-                        <select class="form-control" id="nomina" name="nomina[]" multiple required>
-                            {% for n in nomina %}
-                                <option value="{{ n.id }}">{{ n }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Fecha inicio:</label>
-                        <input type="date" class="form-control" id="fecha_inicio" placeholder="Ingresa fecha inicio" name="fecha_inicio">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Fecha fin:</label>
-                        <input type="date" class="form-control" id="fecha_fin" placeholder="Ingresa fecha fin" name="fecha_fin">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Crear</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 </body>
 {% endblock %}

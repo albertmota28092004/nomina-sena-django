@@ -86,17 +86,16 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Salario: <strong style="color:red;">*</strong></label>
-                            <input type="number" class="form-control" name="salario" required>
+                            <label class="form-label">Fecha Inicio Novedad: <strong style="color:red;">*</strong></label>
+                            <input type="date" class="form-control" name="fecha_inicio" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Clase de Salario: <strong style="color:red;">*</strong></label>
-                            <select class="form-control" id="clase_salario" name="clase_salario">
-                            {% for key, value in CLASE_SALARIO %}
-                                <option value="{{ key }}" {% if data.clase_salario == key %} selected {% endif %}>{{ value }}
-                                </option>
-                            {% endfor %}
-                            </select>
+                            <label class="form-label">Fecha Fin Novedad: <strong style="color:red;">*</strong></label>
+                            <input type="date" class="form-control" name="fecha_fin">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Salario: <strong style="color:red;">*</strong></label>
+                            <input type="number" class="form-control" name="salario" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Días de Incapacidad:</label>
@@ -166,16 +165,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
-                            <select class="form-control" id="riesgo" name="riesgo">
-                                {% for key, value in CLASE_RIESGO %}
-                                <option value="{{ key }}" {% if data.riesgo == key %} selected {% endif %}>{{ value }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Fecha de Ingreso: <strong style="color:red;">*</strong></label>
-                            <input type="date" class="form-control" name="fecha_ingreso" required>
+                            <input type="number" id="decimalInput" step="0.00001" class="form-control" name="riesgo">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Fecha Fin de Contrato:</label>
@@ -218,10 +208,9 @@
                     <tr>
                         <th></th>
                         <th>Foto</th>
-                        <th>Fecha Novedad</th>
-                        <th>Usuario</th>
+                        <th>Fecha novedad</th>
+                        <th>Colaborador</th>
                         <th>Salario</th>
-                        <th>Clase de Salario</th>
                         <th>Días de Incapacidad</th>
                         <th>Días Trabajados</th>
                         <th>H.E. Diurnas</th>
@@ -238,7 +227,6 @@
                         <th>Libranzas</th>
                         <th>Cooperativas</th>
                         <th>Otros</th>
-                        <th>Riesgo</th>
                         <th>Riesgo (%)</th>
                         <th>Fecha ingreso</th>
                         <th>Fecha fin contrato</th>
@@ -255,10 +243,9 @@
                             <a href="javascript:confirmar_eliminar('{{ i.id }}', '{% url 'nomina:novedad_eliminar' i.id %}');" class="btn"><i class="bi bi-trash-fill"></i></a>
                         </td>
                         <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}"></td>
-                        <td>{{ i.fecha_novedad }}</td>
+                        <td>{{ i.fecha_fin }}</td>
                         <td>{{ i.usuario }}</td>
                         <td>{{ i.salario|intcomma }}</td>
-                        <td>{{ i.get_clase_salario_display }}</td>
                         <td>{{ i.dias_incapacidad|default:"" }}</td>
                         <td>{{ i.dias_trabajados }}</td>
                         <td>{{ i.horas_extras_diurnas|default:"" }}</td>
@@ -300,9 +287,8 @@
                         {% else %}
                             <td></td>
                         {% endif %}
-                        <td>{{ i.get_riesgo_display }}</td>
-                        <td>{{ i.riesgo_porcentaje }}</td>
-                        <td>{{ i.fecha_ingreso }}</td>
+                        <td>{{ i.riesgo }}</td>
+                        <td>{{ i.usuario.fecha_ingreso }}</td>
                         <td>{{ i.fecha_fin_contrato|default:"" }}</td>
                         <td>{{ i.get_tipo_contrato_display }}</td>
                         <td>{{ i.fecha_retiro|default:"" }}</td>

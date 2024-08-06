@@ -1422,7 +1422,7 @@ body {
 
 .bg-primary{
   --tw-bg-opacity: 1;
-  background-color: #442B1C;
+  background-color: #EBECE4 !important;
   border: 0 solid transparent;
 }
 
