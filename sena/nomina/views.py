@@ -20,6 +20,7 @@ import io
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
 from urllib.parse import urlencode
+from django.utils import timezone
 
 
 # Create your views here.
@@ -140,11 +141,13 @@ def practica(request):
     }
     return render(request, 'nomina/recibo.html', contexto)
 
+
 def parafiscales(request, id):
     if request.session.get("logueo", False):
         nomina = Nomina.objects.get(pk=id)
         contexto = {'data': nomina}
         return render(request, 'nomina/parafiscales.html', contexto)
+
 
 def provisiones(request, id):
     if request.session.get("logueo", False):
@@ -160,26 +163,86 @@ def liquidacion(request, id):
         contexto = {'usuario': usuario, 'nomina': nomina}
         return render(request, 'nomina/liquidacion/liquidacion.html', contexto)
 
-def liquidacion_view(request, usuario_id):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+def liquidacion_archivo(request, id):
+    usuario = get_object_or_404(Usuario, id=id)
+    nomina = Nomina.objects.get(novedad__usuario=usuario)
+
+    novedades = nomina.novedad_set.all()
+    dias_trabajados = sum(novedad.dias_trabajados for novedad in novedades)
+    cesantias = (nomina.novedad.salario * dias_trabajados) / 360
+    intereses_cesantias = (cesantias * 0.12 * dias_trabajados) / 360
+    prima_servicio = (nomina.novedad.salario * dias_trabajados) / 360
+    vacaciones = (nomina.novedad.salario * dias_trabajados) / 720
+    total_liquidacion = cesantias + intereses_cesantias + prima_servicio + vacaciones
+    neto_pagado = total_liquidacion + nomina.total_a_pagar
 
     contexto = {
-        "usuario": usuario,
-        # Añadir aquí cualquier otro dato necesario para la liquidación
+        'usuario': usuario,
+        'nomina': nomina,
+        'dias_trabajados': dias_trabajados,
+        "cesantias": cesantias,
+        "intereses_cesantias": intereses_cesantias,
+        "prima_servicio": prima_servicio,
+        "vacaciones": vacaciones,
+        "total_liquidacion": total_liquidacion,
+        "neto_pagado": neto_pagado,
+    }
+
+    return render(request, 'nomina/liquidacion/liquidacion-archivo.html', contexto)
+
+
+def liquidacion_view(request, id):
+    usuario = get_object_or_404(Usuario, id=id)
+
+    # Obtener todas las nóminas relacionadas con el usuario y ordenar por fecha de creación
+    nominas = Nomina.objects.filter(novedad__usuario=usuario).order_by(
+        '-fecha_fin')  # Asegúrate de que 'fecha_creacion' es el campo correcto
+
+    if not nominas:
+        return HttpResponse("No se encontraron nóminas para el usuario.", status=404)
+
+    # Obtener la última nómina
+    nomina = nominas.first()
+
+    # Obtener todas las novedades relacionadas con el usuario
+    novedades = nomina.novedad_set.all()
+
+    # Calcular días trabajados
+    dias_trabajados = sum(novedad.dias_trabajados for novedad in novedades)
+
+    # Calcular otros valores
+    cesantias = (nomina.novedad.salario * dias_trabajados) / 360
+    intereses_cesantias = (cesantias * 0.12 * dias_trabajados) / 360
+    prima_servicio = (nomina.novedad.salario * dias_trabajados) / 360
+    vacaciones = (nomina.novedad.salario * dias_trabajados) / 720
+    total_liquidacion = cesantias + intereses_cesantias + prima_servicio + vacaciones
+    neto_pagado = total_liquidacion + nomina.total_a_pagar
+
+    contexto = {
+        'usuario': usuario,
+        'nomina': nomina,
+        'dias_trabajados': dias_trabajados,
+        "cesantias": cesantias,
+        "intereses_cesantias": intereses_cesantias,
+        "prima_servicio": prima_servicio,
+        "vacaciones": vacaciones,
+        "total_liquidacion": total_liquidacion,
+        "neto_pagado": neto_pagado,
     }
 
     html_string = render_to_string('nomina/liquidacion/liquidacion-archivo.html', contexto)
     response = HttpResponse(content_type='application/pdf')
-    response[
-        'Content-Disposition'] = f'inline; filename="Liquidacion_{usuario.nombre}_{usuario.apellido}.pdf"'
+    response['Content-Disposition'] = f'inline; filename="Liquidacion_{usuario.nombre}_{usuario.apellido}.pdf"'
 
     pisa_status = pisa.CreatePDF(html_string, dest=response)
     if pisa_status.err:
         return HttpResponse(f'Error al generar el PDF: {pisa_status.err}')
     return response
 
-def descargar_liquidacion(request, usuario_id):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+def descargar_liquidacion(request, id):
+    usuario = get_object_or_404(Usuario, id=id)
     nombre_colaborador = usuario.nombre
     apellido_colaborador = usuario.apellido
 
@@ -196,14 +259,20 @@ def descargar_liquidacion(request, usuario_id):
     if pisa_status.err:
         return HttpResponse(f'Error al generar el PDF: {pisa_status.err}')
     return response
+
+
 # -------------------- Modelos --------------------------
 
 def colaboradores(request):
-    q = Usuario.objects.filter(rol=2)
-    cargos = Usuario.CARGOS
-    roles = Usuario.ROLES
-    contexto = {"data": q, 'CARGOS': cargos, 'ROLES': roles, }
-    return render(request, 'nomina/colaborador/colaboradores.html', contexto)
+    if request.session.get("logueo", False):
+        q = Usuario.objects.filter(rol=2)
+        cargos = Usuario.CARGOS
+        roles = Usuario.ROLES
+        contexto = {"data": q, 'CARGOS': cargos, 'ROLES': roles, }
+        return render(request, 'nomina/colaborador/colaboradores.html', contexto)
+    else:
+        messages.warning(request, "Debe iniciar sesión para ver esta página.")
+        return HttpResponseRedirect(reverse("nomina:login"))
 
 
 def colaborador_guardar(request):
@@ -217,6 +286,11 @@ def colaborador_guardar(request):
         rol = 2
         foto = request.FILES.get("foto")
         cargo = request.POST.get("cargo")
+        riesgo = request.POST.get("riesgo") or 0
+        fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
+        tipo_contrato = request.POST.get("tipo_contrato") or None
+        fecha_retiro = request.POST.get("fecha_retiro") or None
+        motivo_retiro = request.POST.get("motivo_retiro") or None
 
         if id == "":
             try:
@@ -229,6 +303,11 @@ def colaborador_guardar(request):
                     rol=rol,
                     foto=foto,
                     cargo=cargo,
+                    riesgo=riesgo,
+                    fecha_fin_contrato=fecha_fin_contrato,
+                    tipo_contrato=tipo_contrato,
+                    fecha_retiro=fecha_retiro,
+                    motivo_retiro=motivo_retiro,
                 )
                 usu.save()
                 messages.success(request, "Guardado correctamente!!")
@@ -250,6 +329,11 @@ def colaborador_editar(request, id):
         rol = 2
         foto = request.FILES.get("foto_editar")
         cargo = request.POST.get("cargo_editar")
+        riesgo = request.POST.get("riesgo_editar") or 0
+        fecha_fin_contrato = request.POST.get("fecha_fin_contrato_editar") or None
+        tipo_contrato = request.POST.get("tipo_contrato_editar") or None
+        fecha_retiro = request.POST.get("fecha_retiro_editar") or None
+        motivo_retiro = request.POST.get("motivo_retiro_editar") or None
 
         try:
             q = Usuario.objects.get(pk=id)
@@ -262,6 +346,11 @@ def colaborador_editar(request, id):
             if foto:
                 q.foto = foto
             q.cargo = cargo
+            q.riesgo = riesgo
+            q.fecha_fin_contrato = fecha_fin_contrato
+            q.tipo_contrato = tipo_contrato
+            q.fecha_retiro = fecha_retiro
+            q.motivo_retiro = motivo_retiro
             q.save()
             messages.success(request, "Actualizado correctamente!!")
         except Exception as e:
@@ -313,6 +402,7 @@ def nomina(request):
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))
 
+
 def nomina_listar(request, fecha_inicio, fecha_fin):
     if request.session.get("logueo", False):
         usuario_id = request.session["logueo"]["id"]
@@ -331,6 +421,7 @@ def nomina_listar(request, fecha_inicio, fecha_fin):
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))
+
 
 """def nomina_listar(request, id):
     if request.session.get("logueo", False):
@@ -446,22 +537,27 @@ def nomina_guardar(request):
         return HttpResponseRedirect(reverse("nomina:nomina"))
 """
 
+
 def novedades_nomina(request):
-    novedades = Novedad.objects.annotate(month=TruncMonth('fecha_fin')).values('month').annotate(
-        c=Count('id')).order_by('-month')
-    novedades_por_mes = {}
-    for novedad in novedades:
-        mes = novedad['month']
-        novedades_mes = Novedad.objects.filter(fecha_fin__month=mes.month, fecha_fin__year=mes.year)
-        novedades_por_mes[mes] = novedades_mes
-    usuarios = Usuario.objects.filter(rol=2)
-    clase_contrato = Novedad.CLASE_CONTRATO
-    contexto = {
-        "novedades_por_mes": novedades_por_mes,
-        'usuarios': usuarios,
-        'CLASE_CONTRATO': clase_contrato
-    }
-    return render(request, 'nomina/novedad/novedades_nomina.html', contexto)
+    if request.session.get("logueo", False):
+        novedades = Novedad.objects.annotate(month=TruncMonth('fecha_fin')).values('month').annotate(
+            c=Count('id')).order_by('-month')
+        novedades_por_mes = {}
+        for novedad in novedades:
+            mes = novedad['month']
+            novedades_mes = Novedad.objects.filter(fecha_fin__month=mes.month, fecha_fin__year=mes.year)
+            novedades_por_mes[mes] = novedades_mes
+        usuarios = Usuario.objects.filter(rol=2)
+        clase_contrato = Novedad.CLASE_CONTRATO
+        contexto = {
+            "novedades_por_mes": novedades_por_mes,
+            'usuarios': usuarios,
+            'CLASE_CONTRATO': clase_contrato
+        }
+        return render(request, 'nomina/novedad/novedades_nomina.html', contexto)
+    else:
+        messages.warning(request, "Debe iniciar sesión para ver esta página.")
+        return HttpResponseRedirect(reverse("nomina:login"))
 
 
 def novedad_guardar(request):
@@ -485,11 +581,6 @@ def novedad_guardar(request):
         libranzas = request.POST.get("libranzas") or 0
         cooperativas = request.POST.get("libranzas") or 0
         otros = request.POST.get("otros") or 0
-        riesgo = request.POST.get("riesgo")
-        fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
-        tipo_contrato = request.POST.get("tipo_contrato")
-        fecha_retiro = request.POST.get("fecha_retiro") or None
-        motivo_retiro = request.POST.get("motivo_retiro") or None
         fecha_inicio = request.POST.get("fecha_inicio")
         fecha_fin = request.POST.get("fecha_fin")
 
@@ -513,11 +604,6 @@ def novedad_guardar(request):
                 libranzas=libranzas,
                 cooperativas=cooperativas,
                 otros=otros,
-                riesgo=riesgo,
-                fecha_fin_contrato=fecha_fin_contrato,
-                tipo_contrato=tipo_contrato,
-                fecha_retiro=fecha_retiro,
-                motivo_retiro=motivo_retiro,
                 fecha_inicio=fecha_inicio,
                 fecha_fin=fecha_fin
             )
@@ -554,11 +640,6 @@ def novedad_editar(request, id):
         libranzas = request.POST.get("libranzas_editar") or 0
         cooperativas = request.POST.get("libranzas_editar") or 0
         otros = request.POST.get("otros_editar") or 0
-        riesgo = request.POST.get("riesgo_editar") or novedad.riesgo
-        fecha_fin_contrato = request.POST.get("fecha_fin_contrato_editar") or None
-        tipo_contrato = request.POST.get("tipo_contrato_editar")
-        fecha_retiro = request.POST.get("fecha_retiro_editar") or None
-        motivo_retiro = request.POST.get("motivo_retiro_editar") or None
         fecha_inicio = request.POST.get("fecha_inicio_editar") or novedad.fecha_inicio
         fecha_fin = request.POST.get("fecha_fin_editar") or novedad.fecha_fin
 
@@ -582,11 +663,6 @@ def novedad_editar(request, id):
             q.libranzas = libranzas
             q.cooperativas = cooperativas
             q.otros = otros
-            q.riesgo = riesgo
-            q.fecha_fin_contrato = fecha_fin_contrato
-            q.tipo_contrato = tipo_contrato
-            q.fecha_retiro = fecha_retiro
-            q.motivo_retiro = motivo_retiro
             q.fecha_inicio = fecha_inicio
             q.fecha_fin = fecha_fin
             q.save()
@@ -631,6 +707,11 @@ def usuario_guardar(request):
         rol = request.POST.get("rol")
         foto = request.FILES.get("foto")
         cargo = request.POST.get("cargo")
+        riesgo = request.POST.get("riesgo") or 0
+        fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
+        tipo_contrato = request.POST.get("tipo_contrato") or None
+        fecha_retiro = request.POST.get("fecha_retiro") or None
+        motivo_retiro = request.POST.get("motivo_retiro") or None
 
         if cargo is not None:
             try:
@@ -649,6 +730,11 @@ def usuario_guardar(request):
                     rol=rol,
                     foto=foto,
                     cargo=cargo,
+                    riesgo=riesgo,
+                    fecha_fin_contrato=fecha_fin_contrato,
+                    tipo_contrato=tipo_contrato,
+                    fecha_retiro=fecha_retiro,
+                    motivo_retiro=motivo_retiro,
                 )
                 usu.save()
                 messages.success(request, "Guardado correctamente!!")
@@ -665,6 +751,11 @@ def usuario_guardar(request):
                 q.rol = rol
                 q.foto = foto
                 q.cargo = cargo
+                q.riesgo = riesgo
+                q.fecha_fin_contrato = fecha_fin_contrato
+                q.tipo_contrato = tipo_contrato
+                q.fecha_retiro = fecha_retiro
+                q.motivo_retiro = motivo_retiro
                 q.save()
                 messages.success(request, "Actualizado correctamente!!")
             except Exception as e:

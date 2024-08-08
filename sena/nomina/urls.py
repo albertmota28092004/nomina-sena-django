@@ -31,5 +31,6 @@ urlpatterns = [
     path('parafiscales/<int:id>/', views.parafiscales, name="parafiscales"),
     path('provisiones/<int:id>/', views.provisiones, name="provisiones"),
     path('liquidacion/<int:id>/', views.liquidacion, name="liquidacion"),
-    path('descargar-liquidacion/<int:usuario_id>/', views.descargar_liquidacion, name='descargar_liquidacion'),
+    path('liquidacion-archivo/<int:id>/', views.liquidacion_view, name='liquidacion_view'),
+    path('descargar-liquidacion/<int:id>/', views.descargar_liquidacion, name='descargar_liquidacion'),
 ]

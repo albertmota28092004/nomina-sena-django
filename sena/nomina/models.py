@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
@@ -14,47 +15,53 @@ class Usuario(models.Model):
         (2, 'Colaborador')
     )
     CARGOS = (
-        (1, "No aplica"),
-        (2, "Almacenista"),
-        (3, "Analista de ingeniería"),
-        (4, "Aprendiz etapa lectiva"),
-        (5, "Aprendiz etapa práctica"),
-        (6, "Auditor"),
-        (7, "Auxiliar contable"),
-        (8, "Auxiliar de almacén"),
-        (9, "Auxiliar de bodega"),
-        (10, "Auxiliar de calidad"),
-        (11, "Auxiliar de diseño"),
-        (12, "Auxiliar de gestión humana"),
-        (13, "Auxiliar de ingeniería"),
-        (14, "Auxiliar de mecánica"),
-        (15, "Auxiliar de servicios generales"),
-        (16, "Coordinador de área"),
-        (17, "Despachador"),
-        (18, "Diseñadora"),
-        (19, "Domiciliario"),
-        (20, "Gerente"),
-        (21, "Jefe de calidad"),
-        (22, "Jefe de compras"),
-        (23, "Jefe de despachos"),
-        (24, "Jefe de Gestión Humana"),
-        (25, "Jefe de planta"),
-        (26, "Mecánico"),
-        (27, "Operario de corte"),
-        (28, "Operario de empaque"),
-        (29, "Operario de extendido"),
-        (30, "Operario de máquina"),
-        (31, "Operario de máquinas especiales"),
-        (32, "Operario de muestras"),
-        (33, "Operario de terminación"),
-        (34, "Operario manual"),
-        (35, "Patinador"),
-        (36, "Patronista"),
-        (37, "Recepcionista"),
-        (38, "Revisora"),
-        (39, "Secretaria"),
-        (40, "Supervisor"),
-        (41, "Vigilante"),
+        (1, "Almacenista"),
+        (2, "Analista de ingeniería"),
+        (3, "Aprendiz etapa lectiva"),
+        (4, "Aprendiz etapa práctica"),
+        (5, "Auditor(a)"),
+        (6, "Auxiliar contable"),
+        (7, "Auxiliar de almacén"),
+        (8, "Auxiliar de bodega"),
+        (9, "Auxiliar de calidad"),
+        (10, "Auxiliar de diseño"),
+        (11, "Auxiliar de gestión humana"),
+        (12, "Auxiliar de ingeniería"),
+        (13, "Auxiliar de mecánica"),
+        (14, "Auxiliar de servicios generales"),
+        (15, "Coordinador(a) de área"),
+        (16, "Despachador"),
+        (17, "Diseñador(a)"),
+        (18, "Domiciliario(a)"),
+        (19, "Gerente"),
+        (20, "Jefe de calidad"),
+        (21, "Jefe de compras"),
+        (22, "Jefe de despachos"),
+        (23, "Jefe de Gestión Humana"),
+        (24, "Jefe de planta"),
+        (25, "Mecánico(a)"),
+        (26, "Operario(a) de corte"),
+        (27, "Operario(a) de empaque"),
+        (28, "Operario(a) de extendido"),
+        (29, "Operario(a) de máquina"),
+        (30, "Operario(a) de máquinas especiales"),
+        (31, "Operario(a) de muestras"),
+        (32, "Operario(a) de terminación"),
+        (33, "Operario(a) manual"),
+        (34, "Patinador(a)"),
+        (35, "Patronista"),
+        (36, "Recepcionista"),
+        (37, "Revisor(a)"),
+        (38, "Secretario(a)"),
+        (39, "Supervisor(a)"),
+        (40, "Vigilante"),
+    )
+
+    CLASE_CONTRATO = (
+        (1, "Término fijo inferior a 1 año"),
+        (2, "Término fijo superior a 1 año"),
+        (3, "Contrato por obra y labor"),
+        (4, "Contrato indefinido")
     )
     cedula = models.PositiveIntegerField(unique=True)
     nombre = models.CharField(max_length=256)
@@ -65,6 +72,11 @@ class Usuario(models.Model):
     rol = models.PositiveIntegerField(choices=ROLES, default=2)
     cargo = models.PositiveIntegerField(null=True, blank=True, choices=CARGOS, default=1)
     fecha_ingreso = models.DateField(default=timezone.now)
+    riesgo = models.FloatField(default=0, null=True, blank=True)
+    fecha_fin_contrato = models.DateField(null=True, blank=True)
+    tipo_contrato = models.PositiveIntegerField(choices=CLASE_CONTRATO, null=True, blank=True)
+    fecha_retiro = models.DateField(null=True, blank=True)
+    motivo_retiro = models.CharField(max_length=256, null=True, blank=True)
 
     def get_cargo_display(self):
         return dict(self.CARGOS).get(self.cargo, "Cargo desconocido")
@@ -72,17 +84,27 @@ class Usuario(models.Model):
     def get_rol_display(self):
         return dict(self.ROLES).get(self.rol, "Rol desconocido")
 
+    def clean(self):
+        super().clean()  # Llamar al método `clean` del padre para asegurar la limpieza base.
+
+        if self.rol == 'Colaborador':
+            required_fields = {
+                'riesgo': self.riesgo,
+                'tipo_contrato': self.tipo_contrato,
+            }
+
+            # Verificar que cada campo requerido esté completado
+            for field_name, value in required_fields.items():
+                if not value:
+                    raise ValidationError({
+                        field_name: f'Este campo es obligatorio cuando el rol es "Colaborador".'
+                    })
+
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 
 
 class Novedad(models.Model):
-    CLASE_CONTRATO = (
-        (1, "Término fijo inferior a 1 año"),
-        (2, "Término fijo superior a 1 año"),
-        (3, "Contrato por obra y labor"),
-        (4, "Contrato indefinido")
-    )
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'rol': 2})
     salario = models.IntegerField()
     dias_incapacidad = models.PositiveIntegerField(null=True, blank=True, default=0)
@@ -101,11 +123,6 @@ class Novedad(models.Model):
     libranzas = models.PositiveIntegerField(null=True, blank=True, default=0)
     cooperativas = models.PositiveIntegerField(null=True, blank=True, default=0)
     otros = models.PositiveIntegerField(null=True, blank=True, default=0)
-    riesgo = models.FloatField(default=0)
-    fecha_fin_contrato = models.DateField(null=True, blank=True)
-    tipo_contrato = models.PositiveIntegerField(choices=CLASE_CONTRATO)
-    fecha_retiro = models.DateField(null=True, blank=True)
-    motivo_retiro = models.CharField(max_length=256, null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
 
@@ -299,6 +316,7 @@ class Nomina(models.Model):
     devengado = models.ForeignKey('Devengado', on_delete=models.CASCADE)
     deduccion = models.ForeignKey('Deduccion', on_delete=models.CASCADE)
 
+
     @property
     def total_devengado(self):
         return self.devengado.total_devengado()
@@ -317,7 +335,7 @@ class Nomina(models.Model):
 
     @property
     def riesgo(self):
-        return self.novedad.riesgo
+        return self.novedad.usuario.riesgo
 
     @property
     def salud(self):

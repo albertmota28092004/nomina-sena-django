@@ -39,7 +39,7 @@
             font-size: 40px;
         }
 
-        .info_colaborador, .devengados, .deducciones, .total {
+        .info_colaborador, .devengados, .deducciones, .parafiscales, .provisiones, .total {
             border: 1px solid #C7C7C7;
             width: 100%;
         }
@@ -299,31 +299,30 @@
                     <tr>
                         <td class="text-center">CESANTÍAS</td>
                         <td class="text-center">15</td>
-                        <td class="text-center">{{ nomina.cesantias|round_number:2|intcomma }}</td>
+                        <td class="text-center">{{ cesantias|round_number:2|intcomma }}</td>
                     </tr>
                     <tr>
                         <td class="text-center">INTERESES CESANTÍAS</td>
                         <td class="text-center">15</td>
-                        <td class="text-center">{{ nomina.intereses_cesantias|round_number:2|intcomma }}</td>
+                        <td class="text-center">{{ intereses_cesantias|round_number:2|intcomma }}</td>
                     </tr>
                     <tr>
                         <td class="text-center">PRIMAS DE SERVICIO</td>
                         <td class="text-center">15</td>
-                        <td class="text-center">{{ primas_servicio|round_number:2|intcomma }}</td>
+                        <td class="text-center">{{ prima_servicio|round_number:2|intcomma }}</td>
                     </tr>
                     <tr>
                         <td class="text-center">VACACIONES</td>
                         <td class="text-center">15</td>
-                        <td class="text-center">{{ nomina.vacaciones|round_number:2|intcomma }}</td>
+                        <td class="text-center">{{ vacaciones|round_number:2|intcomma }}</td>
                     </tr>
-                    <table class="table total">
-                        <tr>
-                            <th colspan="3" class="text-center">TOTAL A PAGAR: {{ nomina.total_a_pagar|round_number:2|intcomma }}</th>
-                        </tr>
-                    </table>
+                    <th colspan="3" class="text-center">TOTAL LIQUIDACIÓN: {{ total_liquidacion|round_number:2|intcomma }}</th>
                 </table>
-
-
+                <table class="table total">
+                    <tr>
+                        <th colspan="3" class="text-center">TOTAL A PAGAR: {{ neto_pagado|round_number:2|intcomma }}</th>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>

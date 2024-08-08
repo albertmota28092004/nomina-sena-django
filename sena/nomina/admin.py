@@ -6,7 +6,8 @@ from django.utils.html import mark_safe
 # Register your models here.
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso']
+    list_display = ['id', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso', 'riesgo',
+                     'fecha_fin_contrato', 'tipo_contrato', 'fecha_retiro', 'motivo_retiro']
 
     def ver_foto(self, obj):
         try:
@@ -20,8 +21,7 @@ class NovedadAdmin(admin.ModelAdmin):
                     'horas_extras_diurnas', 'horas_extras_diurnas_dom_fes', 'horas_extras_nocturnas',
                     'horas_extras_nocturnas_dom_fes', 'horas_recargo_nocturno', 'horas_recargo_nocturno_dom_fes',
                     'horas_recargo_diurno_dom_fes', 'comisiones', 'comisiones_porcentaje', 'bonificaciones',
-                    'embargos_judiciales', 'libranzas', 'cooperativas', 'otros', 'riesgo',
-                     'fecha_fin_contrato', 'tipo_contrato', 'fecha_retiro', 'motivo_retiro',
+                    'embargos_judiciales', 'libranzas', 'cooperativas', 'otros',
                     'fecha_inicio', 'fecha_fin']
 
 

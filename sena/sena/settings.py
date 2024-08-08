@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'django-insecure-xhds4)0_ilr64%-coqig@!um$(e5kc_4k_4=l1ka!z*=6tre@o
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -51,6 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'nomina.middleware.ContentSecurityPolicyMiddleware',
     'nomina.middleware.DebugHeadersMiddleware',
+    'nomina.middleware.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'sena.urls'
@@ -73,7 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sena.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -83,7 +81,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -103,7 +100,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -114,7 +110,6 @@ TIME_ZONE = 'America/Bogota'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -133,3 +128,5 @@ MEDIA_ROOT = BASE_DIR / 'uploads/'
 MEDIA_URL = '/media/'
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+X_FRAME_OPTIONS = 'ALLOWALL'
