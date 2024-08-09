@@ -4,21 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="solucionados los errores, está melo por ahora">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/nomina-sena-django.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/nomina-sena-django.iml" afterDir="false" />
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="problema en la fecha fin de liquidacion_view">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/middleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/middleware.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion-archivo.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion-archivo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/sena/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/sena/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -248,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721756106116</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="problema en la fecha fin de liquidacion_view">
+      <option name="closed" value="true" />
+      <created>1723142269245</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1723142269245</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -280,6 +283,7 @@
     <MESSAGE value="esto no estaba en el repo xd" />
     <MESSAGE value="cositas con errores" />
     <MESSAGE value="solucionados los errores, está melo por ahora" />
-    <option name="LAST_COMMIT_MESSAGE" value="solucionados los errores, está melo por ahora" />
+    <MESSAGE value="problema en la fecha fin de liquidacion_view" />
+    <option name="LAST_COMMIT_MESSAGE" value="problema en la fecha fin de liquidacion_view" />
   </component>
 </project>

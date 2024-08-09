@@ -33,6 +33,19 @@
     h4 {
         color: #a7a7a7;
     }
+
+    .liquidar_empleado {
+        width: 500px;
+        height: 80px;
+        font-size: 40px;
+        background-color: #442B1C;
+        color: #EBECE4;
+    }
+
+    .liquidar_empleado:hover {
+        border: 2px dashed #442B1C;
+        color: #442B1C;
+    }
 </style>
 
 <div class="contenedor_liquidacion">
@@ -44,8 +57,9 @@
         <h3>{{ usuario.get_cargo_display }}</h3>
         <h4>En la empresa desde:</h4>
         <h3>{{ usuario.fecha_ingreso }}</h3>
-        <h4>Liquidación</h4>
-        <button data-toggle="modal" data-target="#liquidacionModal" data-id="{{ usuario.id }}" onclick="showLiquidacionModal({{ usuario.id }})" class="btn btn-dark">Visualizar</button>
+        <h4>Recibo de Liquidación</h4>
+        <button data-toggle="modal" data-target="#liquidacionModal" data-id="{{ usuario.id }}" onclick="showLiquidacionModal({{ usuario.id }})" class="btn btn-dark">Visualizar</button> <br><br>
+        <a href="{% url 'nomina:liquidar_colaborador' usuario.id %}" class="btn liquidar_empleado">Liquidar colaborador</a>
     </div>
 </div>
 

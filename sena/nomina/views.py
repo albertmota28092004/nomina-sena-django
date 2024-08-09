@@ -10,7 +10,7 @@ from django.db import IntegrityError, transaction
 import datetime
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, Max
 from django.urls import reverse
 from django.contrib import messages
 from .models import *
@@ -195,27 +195,24 @@ def liquidacion_archivo(request, id):
 def liquidacion_view(request, id):
     usuario = get_object_or_404(Usuario, id=id)
 
-    # Obtener todas las nóminas relacionadas con el usuario y ordenar por fecha de creación
-    nominas = Nomina.objects.filter(novedad__usuario=usuario).order_by(
-        '-fecha_fin')  # Asegúrate de que 'fecha_creacion' es el campo correcto
+    # Obtener todas las nóminas relacionadas con el usuario, ordenadas por la fecha fin de la novedad
+    nominas = Nomina.objects.filter(novedad__usuario=usuario).order_by('-novedad__fecha_fin')
 
-    if not nominas:
-        return HttpResponse("No se encontraron nóminas para el usuario.", status=404)
-
-    # Obtener la última nómina
-    nomina = nominas.first()
+    if nominas.exists():
+        nomina = nominas.first()  # Obtener la nómina más reciente
+    else:
+        return HttpResponse('No se encontraron nóminas para el usuario.', status=404)
 
     # Obtener todas las novedades relacionadas con el usuario
-    novedades = nomina.novedad_set.all()
-
-    # Calcular días trabajados
+    novedades = Novedad.objects.filter(usuario=usuario)
     dias_trabajados = sum(novedad.dias_trabajados for novedad in novedades)
 
-    # Calcular otros valores
-    cesantias = (nomina.novedad.salario * dias_trabajados) / 360
+    # Calcular las cesantías y otros valores
+    salario = nomina.novedad.salario
+    cesantias = (salario * dias_trabajados) / 360
     intereses_cesantias = (cesantias * 0.12 * dias_trabajados) / 360
-    prima_servicio = (nomina.novedad.salario * dias_trabajados) / 360
-    vacaciones = (nomina.novedad.salario * dias_trabajados) / 720
+    prima_servicio = (salario * dias_trabajados) / 360
+    vacaciones = (salario * dias_trabajados) / 720
     total_liquidacion = cesantias + intereses_cesantias + prima_servicio + vacaciones
     neto_pagado = total_liquidacion + nomina.total_a_pagar
 
@@ -239,6 +236,85 @@ def liquidacion_view(request, id):
     if pisa_status.err:
         return HttpResponse(f'Error al generar el PDF: {pisa_status.err}')
     return response
+
+
+def liquidar_colaborador(request, id):
+    usuario = Usuario.objects.get(pk=id)
+    nominas = Nomina.objects.filter(novedad__usuario=usuario).order_by('-novedad__fecha_fin')
+
+    if nominas.exists():
+        nomina = nominas.first()  # Obtener la nómina más reciente
+    else:
+        return HttpResponse('No se encontraron nóminas para el usuario.', status=404)
+
+    salario = nomina.novedad.salario
+    dias_incapacidad = nomina.novedad.dias_incapacidad or 0
+    dias_trabajados = nomina.novedad.dias_trabajados
+    horas_extras_diurnas = nomina.novedad.horas_extras_diurnas or 0
+    horas_extras_diurnas_dom_fes = nomina.novedad.horas_extras_diurnas_dom_fes or 0
+    horas_extras_nocturnas = nomina.novedad.horas_extras_nocturnas or 0
+    horas_extras_nocturnas_dom_fes = nomina.novedad.horas_extras_nocturnas_dom_fes or 0
+    horas_recargo_nocturno = nomina.novedad.horas_recargo_nocturno or 0
+    horas_recargo_nocturno_dom_fes = nomina.novedad.horas_recargo_nocturno_dom_fes or 0
+    horas_recargo_diurno_dom_fes = nomina.novedad.horas_recargo_diurno_dom_fes or 0
+    comisiones = nomina.novedad.comisiones or 0
+    comisiones_porcentaje = nomina.novedad.comisiones_porcentaje or None
+    bonificaciones = nomina.novedad.bonificaciones or 0
+    embargos_judiciales = nomina.novedad.embargos_judiciales or 0
+    libranzas = nomina.novedad.libranzas or 0
+    cooperativas = nomina.novedad.cooperativas or 0
+    otros = nomina.novedad.otros or 0
+    fecha_inicio = nomina.novedad.fecha_inicio
+    fecha_fin = nomina.novedad.fecha_fin
+
+    try:
+        nov = Novedad(
+            usuario=usuario,
+            salario=salario,
+            dias_incapacidad=dias_incapacidad,
+            dias_trabajados=dias_trabajados,
+            horas_extras_diurnas=horas_extras_diurnas,
+            horas_extras_diurnas_dom_fes=horas_extras_diurnas_dom_fes,
+            horas_extras_nocturnas=horas_extras_nocturnas,
+            horas_extras_nocturnas_dom_fes=horas_extras_nocturnas_dom_fes,
+            horas_recargo_nocturno=horas_recargo_nocturno,
+            horas_recargo_nocturno_dom_fes=horas_recargo_nocturno_dom_fes,
+            horas_recargo_diurno_dom_fes=horas_recargo_diurno_dom_fes,
+            comisiones=comisiones,
+            comisiones_porcentaje=comisiones_porcentaje,
+            bonificaciones=bonificaciones,
+            embargos_judiciales=embargos_judiciales,
+            libranzas=libranzas,
+            cooperativas=cooperativas,
+            otros=otros,
+            fecha_inicio=fecha_inicio,
+            fecha_fin=fecha_fin
+        )
+        nov.save()
+        messages.success(request, "Colaborador liquidado correctamente!!")
+    except Exception as e:
+        messages.error(request, f"Error. {e}")
+
+    try:
+        q = Usuario.objects.get(pk=id)
+        q.nombre = usuario.nombre
+        q.apellido = usuario.apellido
+        q.correo = usuario.correo
+        q.contrasena = usuario.contrasena
+        q.rol = usuario.rol
+        q.foto = usuario.foto
+        q.cargo = usuario.cargo
+        q.riesgo = usuario.riesgo
+        q.fecha_fin_contrato = timezone.now()
+        q.tipo_contrato = usuario.tipo_contrato
+        q.fecha_retiro = timezone.now()
+        q.motivo_retiro = 'Retiro voluntario'
+        q.save()
+        messages.success(request, "Actualizado correctamente!!")
+    except Exception as e:
+        messages.error(request, f"Error. {e}")
+
+    return HttpResponseRedirect(reverse("nomina:colaboradores"))
 
 
 def descargar_liquidacion(request, id):
@@ -543,22 +619,26 @@ def novedades_nomina(request):
         novedades = Novedad.objects.annotate(month=TruncMonth('fecha_fin')).values('month').annotate(
             c=Count('id')).order_by('-month')
         novedades_por_mes = {}
+
         for novedad in novedades:
             mes = novedad['month']
             novedades_mes = Novedad.objects.filter(fecha_fin__month=mes.month, fecha_fin__year=mes.year)
             novedades_por_mes[mes] = novedades_mes
         usuarios = Usuario.objects.filter(rol=2)
-        clase_contrato = Novedad.CLASE_CONTRATO
+
+        fechas_ocupadas_inicio = list(Novedad.objects.values_list('fecha_inicio', flat=True))
+        fechas_ocupadas_fin = list(Novedad.objects.values_list('fecha_fin', flat=True))
+
         contexto = {
             "novedades_por_mes": novedades_por_mes,
             'usuarios': usuarios,
-            'CLASE_CONTRATO': clase_contrato
+            'fechas_ocupadas_inicio': fechas_ocupadas_inicio,
+            'fechas_ocupadas_fin': fechas_ocupadas_fin,
         }
         return render(request, 'nomina/novedad/novedades_nomina.html', contexto)
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))
-
 
 def novedad_guardar(request):
     if request.method == "POST":

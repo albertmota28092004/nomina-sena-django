@@ -32,5 +32,6 @@ urlpatterns = [
     path('provisiones/<int:id>/', views.provisiones, name="provisiones"),
     path('liquidacion/<int:id>/', views.liquidacion, name="liquidacion"),
     path('liquidacion-archivo/<int:id>/', views.liquidacion_view, name='liquidacion_view'),
+    path('liquidar_colaborador/<int:id>/', views.liquidar_colaborador, name='liquidar_colaborador'),
     path('descargar-liquidacion/<int:id>/', views.descargar_liquidacion, name='descargar_liquidacion'),
 ]

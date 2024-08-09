@@ -26,6 +26,11 @@
         padding: 20px;
     }
 
+    th {
+        background-color: #442B1C;
+        color: #EBECE4;
+    }
+
     .card {
         background-color: #EBECE4;
         margin: 10px;
@@ -35,6 +40,19 @@
         color: #EBECE4 !important;
     }
 
+    /* Botón de scroll */
+    #scrollToEndBtn {
+        margin-top: 10px;
+        padding: 10px 20px;
+        cursor: pointer;
+        background-color: #442B1C;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        position: relative;
+        margin-left: 97% !important;
+        top: 0 !important;
+    }
 </style>
 
 <body style="background-color: #442B1C;">
@@ -51,8 +69,17 @@
     {% if nominas %}
     {% if request.session.logueo.nombre_rol == "Administrador" %}
         <div class="card shadow mb-4">
-            <div class="card-body">
+            <div id="tableContainer" class="card-body">
+                <button id="scrollToEndBtn"><i class="fa-solid fa-right-long"></i></button>
                 <div class="table-responsive">
+                    <table>
+                        <tr>
+                            <th>Desde: </th>
+                            <td>{{ nominas.first.novedad.fecha_inicio }}</td>
+                            <th>Hasta: </th>
+                            <td>{{ nominas.first.novedad.fecha_fin }}</td>
+                        </tr>
+                    </table>
                     <table width="100%" cellspacing="0">
                         <thead>
                         <tr>
@@ -128,7 +155,7 @@
                             <td>{{ nomina.devengado.total_horas_extras_recargo|round_number:2|intcomma }}</td>
                             <td>{{ nomina.devengado.comisiones_valor|round_number:2|intcomma }}</td>
                             <td>{{ nomina.novedad.bonificaciones|round_number:2|default:0|intcomma }}</td>
-                            <td>{{ nomina.devengado.total_devengado|round_number:2|intcomma }}</td>
+                            <td><strong>{{ nomina.devengado.total_devengado|round_number:2|intcomma }}</strong></td>
                             <td>{{ nomina.deduccion.salud|round_number:2|intcomma }}</td>
                             <td>{{ nomina.deduccion.pension|round_number:2|intcomma }}</td>
                             <td>{{ nomina.deduccion.fsp|round_number:2|intcomma }}</td>
@@ -138,8 +165,8 @@
                             <td>{{ nomina.deduccion.libranzas|round_number:2|intcomma|default:0 }}</td>
                             <td>{{ nomina.deduccion.cooperativas|round_number:2|intcomma|default:0 }}</td>
                             <td>{{ nomina.deduccion.otros|round_number:2|intcomma|default:0 }}</td>
-                            <td>{{ nomina.deduccion.total_deduccion|round_number:2|intcomma }}</td>
-                            <td>{{ nomina.total_a_pagar|round_number:2|intcomma }}</td>
+                            <td><strong>{{ nomina.deduccion.total_deduccion|round_number:2|intcomma }}</strong></td>
+                            <td><strong>{{ nomina.total_a_pagar|round_number:2|intcomma }}</strong></td>
                             <td>
                                 <button class="btn btn-dark" data-toggle="modal" data-target="#reciboModal"
                                         data-id="{{ nomina.id }}" onclick="showReciboModal({{ nomina.id }})">
@@ -299,7 +326,14 @@
         </div>
         {% endif %}
     {% endif %}
-
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('scrollToEndBtn').addEventListener('click', function () {
+            const container = document.getElementById('tableContainer');
+            container.scrollLeft = container.scrollWidth;
+        });
+    });
+</script>
 
 <script>
     function showReciboModal(nominaId) {

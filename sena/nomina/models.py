@@ -105,7 +105,7 @@ class Usuario(models.Model):
 
 
 class Novedad(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'rol': 2})
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'rol': 2, 'fecha_retiro__isnull': True})
     salario = models.IntegerField()
     dias_incapacidad = models.PositiveIntegerField(null=True, blank=True, default=0)
     dias_trabajados = models.PositiveIntegerField()
