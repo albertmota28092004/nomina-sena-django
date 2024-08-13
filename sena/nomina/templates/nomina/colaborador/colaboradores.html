@@ -4,75 +4,89 @@
 {% block contenedor %}
 
 <style>
-        .boton_regresar, .boton_mas {
-            background-color: #EBECE4;
-        }
+    .boton_regresar, .boton_mas {
+        background-color: #EBECE4;
+    }
 
-        .boton_regresar:hover, .boton_mas:hover {
-            background-color: #000000;
-            color: #EBECE4;
-        }
+    .boton_regresar:hover, .boton_mas:hover {
+        background-color: #000000;
+        color: #EBECE4;
+    }
 
-        .contenedor_colaboradores {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 70px;
-        }
+    .contenedor_colaboradores {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 70px;
+    }
 
-        .contenedor_colaborador {
-            text-align: center;
-            width: 300px;
-            overflow: hidden;
-            border-radius: 20px 20px 0 0px;
-            --tw-shadow: 0px 10px 10px 0px #ccc;
-            --tw-shadow-colored: 0px 10px 10px 0px #000000;
-            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-        }
+    .contenedor_colaborador {
+        text-align: center;
+        width: 300px;
+        overflow: hidden;
+        border-radius: 20px 20px 0 0px;
+        --tw-shadow: 0px 10px 10px 0px #ccc;
+        --tw-shadow-colored: 0px 10px 10px 0px #000000;
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 
-        .img-colaborador {
-            margin: auto;
-            width: 300px !important;
-            height: 300px;
-        }
+    }
 
-        #ver_mas_info {
-            background-color: #EBECE4;
-            text-align: center;
-            flex-direction: column;
-            width: 300px !important;
-            display: none;
-            position: absolute;
-            padding: 20px;
-            --tw-shadow: 0px 10px 10px 0px #ccc;
-            --tw-shadow-colored: 0px 10px 10px 0px #000000;
-            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-            border-radius: 0 0px 20px 20px;
-        }
+    .img-colaborador {
+        margin: auto;
+        width: 300px !important;
+        height: 300px;
+    }
 
-        h4 {
-            width: 100% !important;
-            white-space: nowrap;
+    #ver_mas_info {
+        background-color: #EBECE4;
+        text-align: center;
+        flex-direction: column;
+        width: 300px !important;
+        display: none;
+        position: absolute;
+        padding: 20px;
+        --tw-shadow-colored: 0px 10px 10px 0px #000000;
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        border-radius: 0 0px 20px 20px;
+    }
 
-        }
+    h4 {
+        width: 100% !important;
+        white-space: nowrap;
 
-        h6 {
-            font-weight: normal !important;
-            font-size: 14px;
-        }
+    }
 
-        .info_colaborador {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 10px;
-        }
+    h6 {
+        font-weight: normal !important;
+        font-size: 14px;
+    }
 
-        .card {
-            background-color: #EBECE4;
-        }
+    .info_colaborador {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
 
-        .modal-content {
-            background-color: #EBECE4 !important;
-        }
+    .card {
+        background-color: #EBECE4;
+    }
+
+    .modal-content {
+        background-color: #EBECE4 !important;
+    }
+
+    .boton_colaboradores_retirados {
+        height: 50px;
+        width: 200px;
+        margin-left: 1300px;
+    }
+
+    #retirados {
+        display: none;
+    }
+
+    #activos {
+        display: block;
+    }
 </style>
 
 <body style="background-color: #442B1C;">
@@ -83,7 +97,7 @@
             Regresar <i class="fa-solid fa-reply"></i>
         </a>
         <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Colaboradores</h1>
-        <button class="btn btn-light rounded boton_mas" data-bs-toggle="modal" data-bs-target="#colaboradorModal" >
+        <button class="btn btn-light rounded boton_mas" data-bs-toggle="modal" data-bs-target="#colaboradorModal">
             Crear Colaborador
         </button>
     </div>
@@ -156,56 +170,106 @@
 </div>
 
 <!-- Contenido principal -->
-    <div class="card shadow mb-4">
-        <div class="card-body contenedor_colaboradores">
-            {% if data %}
-                {% for c in data %}
-                    <div class="contenedor_colaborador">
-                        <div>
-                            <img class="img-colaborador" src="{{ c.foto.url }}" alt="">
-                        </div>
-                        <div class="info_colaborador">
-                            <h4>{{ c.nombre }} {{ c.apellido }}</h4>
-                            <div>
-                                <button id="abrirModal" class="btn" data-bs-toggle="modal" data-bs-target="#editarModal{{ c.id }}"><i class="bi bi-pencil-fill"></i></button>
-                                <a href="javascript:confirmar_eliminar('{{ c.id }}', '{% url 'nomina:colaborador_eliminar' c.id %}');" class="btn"><i class="bi bi-trash-fill"></i></a>
-                                <a href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');"><i class="fa-solid fa-right-to-bracket"></i></a>
-                            </div>
-                        </div>
-                        <div>
-                            <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
-                                Ver más <i class="fa-solid fa-angle-down"></i>
+<div class="card shadow mb-4">
+    <div class="card-body contenedor_colaboradores">
+        {% for c in data %}
+        <div id="activos">
+            <div class="contenedor_colaborador">
+                <div>
+                    <img class="img-colaborador" src="{{ c.foto.url }}" alt="">
+                </div>
+                <div class="info_colaborador">
+                    <h4>{{ c.nombre }} {{ c.apellido }}</h4>
+                    <div>
+                        <button id="abrirModal" class="btn" data-bs-toggle="modal"
+                                data-bs-target="#editarModal{{ c.id }}"><i class="bi bi-pencil-fill"></i></button>
+                        <a href="javascript:confirmar_eliminar('{{ c.id }}', '{% url 'nomina:colaborador_eliminar' c.id %}');"
+                           class="btn"><i class="bi bi-trash-fill"></i></a>
+                        <a href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');"><i
+                                class="fa-solid fa-right-to-bracket"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
+                        Ver más <i class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <div id="ver_mas_info">
+                        <h6>{{ c.get_cargo_display }}</h6>
+                        <h6>Fecha de ingreso: {{ c.fecha_ingreso }}</h6>
+                        <h6>Fecha de retiro: {{ c.fecha_retiro }}</h6>
+                        <h6>Motivo de retiro: {{ c.motivo_retiro }}</h6>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Editar Colaborador -->
+            <div class="modal fade" id="editarModal{{ c.id }}" tabindex="-1"
+                 aria-labelledby="editarModalLabel{{ c.id }}"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="editarModalLabel{{ c.id }}">Editar Colaborador</h1>
+                            <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close">
                             </button>
-                            <div id="ver_mas_info">
-                                <h6>{{ c.correo }}</h6>
-                                <h6>{{ c.get_cargo_display }}</h6>
-                                <h6>{{ c.fecha_ingreso }}</h6>
-                            </div>
+                        </div>
+                        <div class="modal-body" id="contenidoModalBody">
+                            {% include 'nomina/colaborador/colaborador-editar.html' with data=c %}
                         </div>
                     </div>
-                    <!-- Modal Editar Colaborador -->
-                    <div class="modal fade" id="editarModal{{ c.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ c.id }}"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="editarModalLabel{{ c.id }}">Editar Colaborador</h1>
-                                    <button type="button" class="btn btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close">
-                                    </button>
-                                </div>
-                                <div class="modal-body" id="contenidoModalBody">
-                                    {% include 'nomina/colaborador/colaborador-editar.html' with data=c %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                {% endfor %}
-            {% endif %}
+                </div>
+            </div>
         </div>
+        {% endfor %}
+        {% for r in retirados %}
+        <div id="retirados">
+            <div class="contenedor_colaborador">
+                <div>
+                    <img class="img-colaborador" src="{{ r.foto.url }}" alt="">
+                </div>
+                <div class="info_colaborador">
+                    <h4>{{ r.nombre }} {{ r.apellido }}</h4>
+                </div>
+                <div>
+                    <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
+                        Ver más <i class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <div id="ver_mas_info">
+                        <h6>{{ c.get_cargo_display }}</h6>
+                        <h6>Fecha de ingreso: {{ f.fecha_ingreso }}</h6>
+                        <h6>Fecha de retiro: {{ f.fecha_retiro }}</h6>
+                        <h6>Motivo de retiro: {{ f.motivo_retiro }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <button id="btnRetirados" class="btn btn-dark boton_colaboradores_retirados" onclick="mostrarRetirados()">
+            Colaboradores retirados
+        </button>
     </div>
+</div>
+
+
+<script>
+    function mostrarRetirados() {
+        const btnRetirados = document.getElementById("btnRetirados");
+        const retirados = document.getElementById("retirados");
+        const activos = document.getElementById("activos");
+
+        if (activos.style.display === 'none') {
+            // Mostrar activos y ocultar retirados
+            activos.style.display = 'block';
+            retirados.style.display = 'none';
+            btnRetirados.textContent = 'Colaboradores retirados'; // Cambia el texto del botón si es necesario
+        } else {
+            // Ocultar activos y mostrar retirados
+            activos.style.display = 'none';
+            retirados.style.display = 'block';
+            btnRetirados.textContent = 'Colaboradores activos'; // Cambia el texto del botón si es necesario
+        }
+    }
+</script>
 
 <script>
     function verMasButton(button) {
@@ -219,13 +283,7 @@
         }
     }
 
-        function confirmar_liquidar(id, url) {
-        if (confirm("¿Estás seguro de que deseas liquidar a este colaborador?")) {
-            window.location.href = url;
-        }
-    }
 </script>
-
 
 
 </body>

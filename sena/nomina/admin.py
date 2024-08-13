@@ -7,7 +7,7 @@ from django.utils.html import mark_safe
 
 class UsuarioAdmin(admin.ModelAdmin):
     list_display = ['id', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso', 'riesgo',
-                     'fecha_fin_contrato', 'tipo_contrato', 'fecha_retiro', 'motivo_retiro']
+                     'fecha_fin_contrato', 'tipo_contrato', 'retirado', 'fecha_retiro', 'motivo_retiro']
 
     def ver_foto(self, obj):
         try:

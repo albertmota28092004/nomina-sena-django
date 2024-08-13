@@ -75,8 +75,10 @@ class Usuario(models.Model):
     riesgo = models.FloatField(default=0, null=True, blank=True)
     fecha_fin_contrato = models.DateField(null=True, blank=True)
     tipo_contrato = models.PositiveIntegerField(choices=CLASE_CONTRATO, null=True, blank=True)
+    retirado = models.BooleanField(default=False)
     fecha_retiro = models.DateField(null=True, blank=True)
     motivo_retiro = models.CharField(max_length=256, null=True, blank=True)
+
 
     def get_cargo_display(self):
         return dict(self.CARGOS).get(self.cargo, "Cargo desconocido")

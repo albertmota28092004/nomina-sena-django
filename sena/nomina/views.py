@@ -307,6 +307,7 @@ def liquidar_colaborador(request, id):
         q.riesgo = usuario.riesgo
         q.fecha_fin_contrato = timezone.now()
         q.tipo_contrato = usuario.tipo_contrato
+        q.retirado = True
         q.fecha_retiro = timezone.now()
         q.motivo_retiro = 'Retiro voluntario'
         q.save()
@@ -341,10 +342,12 @@ def descargar_liquidacion(request, id):
 
 def colaboradores(request):
     if request.session.get("logueo", False):
-        q = Usuario.objects.filter(rol=2)
+        q = Usuario.objects.filter(rol=2).filter(retirado=False)
+        q2 = Usuario.objects.filter(rol=2 ).filter(retirado=True)
+        print(f'Usuarios retirados: {q2}')
         cargos = Usuario.CARGOS
         roles = Usuario.ROLES
-        contexto = {"data": q, 'CARGOS': cargos, 'ROLES': roles, }
+        contexto = {"data": q, 'retirados': q2, 'CARGOS': cargos, 'ROLES': roles, }
         return render(request, 'nomina/colaborador/colaboradores.html', contexto)
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
@@ -624,7 +627,7 @@ def novedades_nomina(request):
             mes = novedad['month']
             novedades_mes = Novedad.objects.filter(fecha_fin__month=mes.month, fecha_fin__year=mes.year)
             novedades_por_mes[mes] = novedades_mes
-        usuarios = Usuario.objects.filter(rol=2)
+        usuarios = Usuario.objects.filter(rol=2).filter(retirado=False)
 
         fechas_ocupadas_inicio = list(Novedad.objects.values_list('fecha_inicio', flat=True))
         fechas_ocupadas_fin = list(Novedad.objects.values_list('fecha_fin', flat=True))
