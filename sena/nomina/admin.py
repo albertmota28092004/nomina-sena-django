@@ -6,8 +6,9 @@ from django.utils.html import mark_safe
 # Register your models here.
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso', 'riesgo',
-                     'fecha_fin_contrato', 'tipo_contrato', 'retirado', 'fecha_retiro', 'motivo_retiro']
+    list_display = ['id', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso',
+                    'riesgo',
+                    'tipo_contrato', 'fecha_fin_contrato', 'activo', 'fecha_retiro', 'motivo_retiro']
 
     def ver_foto(self, obj):
         try:
@@ -42,7 +43,8 @@ class DeduccionAdmin(admin.ModelAdmin):
 
 class NominaAdmin(admin.ModelAdmin):
     list_display = ['id', 'novedad', 'salud', 'pension', 'arl', 'sena', 'icbf',
-                    'caja_compensacion', "cesantias", "intereses_cesantias", "primas_servicio", "vacaciones", 'total_a_pagar']
+                    'caja_compensacion', "cesantias", "intereses_cesantias", "primas_servicio", "vacaciones",
+                    'total_a_pagar']
 
 
 admin.site.register(Usuario, UsuarioAdmin)

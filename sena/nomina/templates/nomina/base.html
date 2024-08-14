@@ -128,6 +128,22 @@
         }
     }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#fecha_inicio_novedad", {
+            dateFormat: "d-m-Y",
+            locale: "es",
+        });
+
+        flatpickr("#fecha_fin_novedad", {
+            dateFormat: "d-m-Y",
+            locale: "es",
+        });
+
+        flatpickr("#fecha_fin_contrato", {
+            dateFormat: "d-m-Y",
+            locale: "es",
+        });
+    });
 </script>
 <!-- ==== WOW JS ==== -->
 <script src="{% static 'nomina/js/wow.min.js' %}"></script>

@@ -14,9 +14,10 @@
     }
 
     .contenedor_colaboradores {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 70px;
+        display: flex;
+        flex-direction: row;
+        gap: 50px;
+        justify-content: space-between;
     }
 
     .contenedor_colaborador {
@@ -77,16 +78,41 @@
     .boton_colaboradores_retirados {
         height: 50px;
         width: 200px;
-        margin-left: 1300px;
+        margin-left: auto;
     }
 
     #retirados {
+        gap: 50px;
         display: none;
     }
 
     #activos {
-        display: block;
+        gap: 50px;
+        display: flex;
     }
+
+    .menu-acciones {
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+
+    .menu-acciones button, .menu-acciones a {
+        display: block;
+        width: 100%;
+        padding: 5px 10px;
+        text-align: left;
+        background-color: transparent;
+        border: none;
+        color: #333;
+        text-decoration: none;
+    }
+
+    .menu-acciones button:hover, .menu-acciones a:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+    }
+
 </style>
 
 <body style="background-color: #442B1C;">
@@ -118,49 +144,84 @@
             <div class="modal-body">
                 <form action="{% url 'nomina:colaborador_guardar' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
+                    <p><strong style="color:red;">*</strong>: Obligatorio</p>
                     <div class="mb-3" hidden>
                         <label for="nombre" class="form-label">ID:</label>
                         <input type="text" class="form-control" id="id"
                                placeholder="Ingresa nombre" name="id" value="{{ data.id }}">
                     </div>
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="nombre"
-                               placeholder="Ingresa nombre" name="nombre">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Apellido:</label>
-                        <input type="text" class="form-control" id="apellido"
-                               placeholder="Ingresa apellido" name="apellido">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Cédula:</label>
+                        <label class="form-label">Cédula: <strong style="color:red;">*</strong></label>
                         <input type="number" class="form-control" id="cedula"
                                placeholder="Ingresa cédula" name="cedula">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Correo:</label>
+                        <label class="form-label">Nombre: <strong style="color:red;">*</strong></label>
+                        <input type="text" class="form-control" id="nombre"
+                               placeholder="Ingresa nombre" name="nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Apellido: <strong style="color:red;">*</strong></label>
+                        <input type="text" class="form-control" id="apellido"
+                               placeholder="Ingresa apellido" name="apellido">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correo: <strong style="color:red;">*</strong></label>
                         <input type="text" class="form-control" id="correo"
                                placeholder="Ingresa correo" name="correo">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Contraseña</label>
-                        <input type="text" class="form-control" id="contrasena"
-                               placeholder="Ingresa contraseña" name="contrasena">
+                        <label class="form-label">Contraseña: <strong style="color:red;">*</strong></label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="contrasena" placeholder="Ingresa contraseña" name="contrasena">
+                            <span class="input-group-text" onclick="togglePassword('contrasena')">
+                                <i class="fa fa-eye" id="eye-contrasena"></i>
+                            </span>
+                        </div>
+                        <span id="mensajeError"></span>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Foto:</label>
+                        <label class="form-label">Confirmar contraseña: <strong style="color:red;">*</strong></label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="confirmar_contrasena" placeholder="Confirma contraseña" name="confirmar_contrasena" onkeyup="validatePassword()">
+                            <span class="input-group-text" onclick="togglePassword('confirmar_contrasena')">
+                                <i class="fa fa-eye" id="eye-confirmar_contrasena"></i>
+                            </span>
+                        </div>
+                        <div id="password-match" style="color:red;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Foto: <strong style="color:red;">*</strong></label>
                         <input type="file" class="form-control" id="foto"
                                placeholder="Ingresa foto" name="foto" accept="image/*">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Cargo:</label>
+                        <label class="form-label">Cargo: <strong style="color:red;">*</strong></label>
                         <select class="form-control" id="cargo" name="cargo">
                             {% for key, value in CARGOS %}
                             <option value="{{ key }}" {% if data.cargo == key %} selected {% endif %}>{{ value }}
                             </option>
                             {% endfor %}
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
+                        <input type="number" step="0.001" class="form-control" id="riesgo"
+                               placeholder="Ingresa el riesgo" name="riesgo">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de contrato: <strong style="color:red;">*</strong></label>
+                        <select class="form-control" id="tipo_contrato" name="tipo_contrato">
+                            {% for key, value in CLASE_CONTRATO %}
+                            <option value="{{ key }}" {% if data.tipo_contrato == key %} selected {% endif %}>{{ value }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha fin del contrato:</label>
+                        <input type="date" class="form-control" id="fecha_fin_contrato"
+                               placeholder="Ingresa la fecha fin del contrato" name="fecha_fin_contrato">
                     </div>
                     <button type="submit" class="btn btn-primary">Crear</button>
                 </form>
@@ -172,32 +233,47 @@
 <!-- Contenido principal -->
 <div class="card shadow mb-4">
     <div class="card-body contenedor_colaboradores">
-        {% for c in data %}
         <div id="activos">
+            {% for c in data %}
             <div class="contenedor_colaborador">
-                <div>
+                <div style="position: relative;">
                     <img class="img-colaborador" src="{{ c.foto.url }}" alt="">
+                    <!-- Ícono de tres puntos en la esquina superior derecha -->
+                    <div style="position: absolute; top: 10px; right: 10px; cursor: pointer; background-color: #fff; padding: 10px 20px; border-radius: 500px;" onclick="toggleMenu({{ c.id }})">
+                        <i class="fa fa-ellipsis-v" ></i>
+                    </div>
+
+                    <!-- Menú desplegable -->
+                    <div id="menu-{{ c.id }}" class="menu-acciones" style="display: none; position: absolute; top: 30px; right: 10px; background-color: white; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); z-index: 100;">
+                        <button title="Editar colaborador" class="btn" data-bs-toggle="modal" data-bs-target="#editarModal{{ c.id }}">
+                            <i class="bi bi-pencil-fill"></i> Editar
+                        </button>
+                        <a title="Liquidar colaborador" class="btn" href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');">
+                            <i class="bi bi-receipt"></i> Liquidar
+                        </a>
+                    </div>
                 </div>
                 <div class="info_colaborador">
                     <h4>{{ c.nombre }} {{ c.apellido }}</h4>
-                    <div>
-                        <button id="abrirModal" class="btn" data-bs-toggle="modal"
+                    <h6>{{ c.get_cargo_display }}</h6>
+                    <!--<div>
+                        <button title="Editar colaborador" id="abrirModal" class="btn" data-bs-toggle="modal"
                                 data-bs-target="#editarModal{{ c.id }}"><i class="bi bi-pencil-fill"></i></button>
-                        <a href="javascript:confirmar_eliminar('{{ c.id }}', '{% url 'nomina:colaborador_eliminar' c.id %}');"
-                           class="btn"><i class="bi bi-trash-fill"></i></a>
-                        <a href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');"><i
-                                class="fa-solid fa-right-to-bracket"></i></a>
-                    </div>
+                        <a title="Liquidar colaborador" class="btn" href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');"><i class="bi bi-receipt"></i></a>
+                    </div>-->
                 </div>
                 <div>
                     <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
                         Ver más <i class="fa-solid fa-angle-down"></i>
                     </button>
                     <div id="ver_mas_info">
-                        <h6>{{ c.get_cargo_display }}</h6>
                         <h6>Fecha de ingreso: {{ c.fecha_ingreso }}</h6>
-                        <h6>Fecha de retiro: {{ c.fecha_retiro }}</h6>
-                        <h6>Motivo de retiro: {{ c.motivo_retiro }}</h6>
+                        <h6>Correo: {{ c.correo }}</h6>
+                        <h6>Riesgo: {{ c.riesgo }}</h6>
+                        <h6>Tipo de contrato: {{ c.get_tipo_contrato_display }}</h6>
+                        {% if c.fecha_fin_contrato %}
+                        <h6>Fecha fin de contrato: {{ c.fecha_fin_contrato }}</h6>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -219,31 +295,32 @@
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-        {% for r in retirados %}
         <div id="retirados">
+            {% for r in retirados %}
             <div class="contenedor_colaborador">
                 <div>
                     <img class="img-colaborador" src="{{ r.foto.url }}" alt="">
                 </div>
                 <div class="info_colaborador">
                     <h4>{{ r.nombre }} {{ r.apellido }}</h4>
+                    <h6>{{ r.get_cargo_display }}</h6>
                 </div>
                 <div>
                     <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
                         Ver más <i class="fa-solid fa-angle-down"></i>
                     </button>
                     <div id="ver_mas_info">
-                        <h6>{{ c.get_cargo_display }}</h6>
-                        <h6>Fecha de ingreso: {{ f.fecha_ingreso }}</h6>
-                        <h6>Fecha de retiro: {{ f.fecha_retiro }}</h6>
-                        <h6>Motivo de retiro: {{ f.motivo_retiro }}</h6>
+                        <h6>Fecha de ingreso: {{ r.fecha_ingreso }}</h6>
+                        <h6>Fecha de retiro: {{ r.fecha_retiro }}</h6>
+                        <h6>Motivo de retiro: {{ r.motivo_retiro }}</h6>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+
         <button id="btnRetirados" class="btn btn-dark boton_colaboradores_retirados" onclick="mostrarRetirados()">
             Colaboradores retirados
         </button>
@@ -259,19 +336,23 @@
 
         if (activos.style.display === 'none') {
             // Mostrar activos y ocultar retirados
-            activos.style.display = 'block';
+            activos.style.display = 'flex';
             retirados.style.display = 'none';
             btnRetirados.textContent = 'Colaboradores retirados'; // Cambia el texto del botón si es necesario
         } else {
             // Ocultar activos y mostrar retirados
             activos.style.display = 'none';
-            retirados.style.display = 'block';
+            retirados.style.display = 'flex';
             btnRetirados.textContent = 'Colaboradores activos'; // Cambia el texto del botón si es necesario
         }
     }
-</script>
 
-<script>
+    function confirmar_liquidar(id, url) {
+        if (confirm("¿Estás seguro de que deseas liquidar a este colaborador?")) {
+            window.location.href = url;
+        }
+    }
+
     function verMasButton(button) {
         var info = button.nextElementSibling;
         if (info.style.display === "none" || info.style.display === "") {
@@ -282,6 +363,66 @@
             button.innerHTML = "Ver más <i class='fa-solid fa-angle-down'></i>";
         }
     }
+
+    function togglePassword(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const eyeIcon = document.getElementById(`eye-${fieldId}`);
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = "password";
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
+
+    function validatePassword() {
+        const password = document.getElementById("contrasena").value;
+        const confirmPassword = document.getElementById("confirmar_contrasena").value;
+        const message = document.getElementById("password-match");
+
+        if (password === confirmPassword) {
+            message.textContent = "Las contraseñas coinciden.";
+            message.style.color = "green";
+        } else {
+            message.textContent = "Las contraseñas no coinciden.";
+            message.style.color = "red";
+        }
+    }
+
+    function validarContrasena() {
+        const contrasena = document.getElementById('contrasena').value;
+        const mensajeError = document.getElementById('mensajeError');
+
+        // Expresión regular para validar la contraseña
+        const regex = /^(?=.*[A-Z])(?=.*[\W_])(?=.*[a-zA-Z0-9]).{8,}$/;
+
+        if (!regex.test(contrasena)) {
+            mensajeError.textContent = "La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula y un símbolo.";
+            mensajeError.style.color = "red";
+            return false;
+        } else {
+            mensajeError.textContent = "";
+            return true;
+        }
+    }
+
+    function toggleMenu(id) {
+        var menu = document.getElementById("menu-" + id);
+        if (menu.style.display === "none" || menu.style.display === "") {
+            menu.style.display = "block";
+        } else {
+            menu.style.display = "none";
+        }
+    }
+
+
+    // Escuchar el evento 'input' en el campo de la contraseña para validar en tiempo real
+    document.getElementById('contrasena').addEventListener('input', validarContrasena);
+    document.getElementById('contrasena').addEventListener('input', validatePassword);
+    document.getElementById('confirmar_contrasena').addEventListener('input', validatePassword);
 
 </script>
 

@@ -204,10 +204,6 @@
                         <th>Libranzas</th>
                         <th>Cooperativas</th>
                         <th>Otros</th>
-                        <th>Riesgo (%)</th>
-                        <th>Fecha ingreso</th>
-                        <th>Fecha fin contrato</th>
-                        <th>Tipo contrato</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -216,6 +212,7 @@
                         <td>
                             <button class="btn" id="abrirModalEditarNovedad" data-bs-toggle="modal" data-bs-target="#editarModalNovedad{{ i.id }}"><i class="bi bi-pencil-fill"></i></button>
                             <a href="javascript:confirmar_eliminar('{{ i.id }}', '{% url 'nomina:novedad_eliminar' i.id %}');" class="btn"><i class="bi bi-trash-fill"></i></a>
+                            <a href="{% url 'nomina:nomina_listar' i.fecha_inicio i.fecha_fin %}" class="btn">Ver nómina</a>
                         </td>
                         <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}"></td>
                         <td>{{ i.fecha_fin }}</td>
@@ -262,9 +259,6 @@
                         {% else %}
                             <td></td>
                         {% endif %}
-                        <td>{{ i.usuario.riesgo }}</td>
-                        <td>{{ i.usuario.fecha_ingreso }}</td>
-                        <td>{{ i.usuario.get_tipo_contrato_display }}</td>
                     </tr>
                     <!-- Modal Editar Novedad -->
                     <div class="modal fade" id="editarModalNovedad{{ i.id }}" tabindex="-1" aria-labelledby="editarModalNovedadLabel{{ i.id }}"
@@ -311,22 +305,9 @@
         });
     });
 
+
+
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        flatpickr("#fecha_inicio_novedad", {
-            dateFormat: "d-m-Y",
-            locale: "es",
-        });
-
-        flatpickr("#fecha_fin_novedad", {
-            dateFormat: "d-m-Y",
-            locale: "es",
-        });
-    });
-</script>
-
-
-</body>
 
 {% endblock %}

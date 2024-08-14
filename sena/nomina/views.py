@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
@@ -160,6 +161,12 @@ def liquidacion(request, id):
     if request.session.get("logueo", False):
         usuario = Usuario.objects.get(pk=id)
         nomina = Nomina.objects.filter(novedad__usuario=usuario)
+        novedad = Novedad.objects.filter(usuario=usuario).exists()
+
+        if not novedad:
+            messages.warning(request, 'Este colaborador necesita tener una nómina para poder ser liquidado.')
+            return redirect('nomina:colaboradores')
+
         contexto = {'usuario': usuario, 'nomina': nomina}
         return render(request, 'nomina/liquidacion/liquidacion.html', contexto)
 
@@ -307,7 +314,7 @@ def liquidar_colaborador(request, id):
         q.riesgo = usuario.riesgo
         q.fecha_fin_contrato = timezone.now()
         q.tipo_contrato = usuario.tipo_contrato
-        q.retirado = True
+        q.activo = False
         q.fecha_retiro = timezone.now()
         q.motivo_retiro = 'Retiro voluntario'
         q.save()
@@ -342,12 +349,13 @@ def descargar_liquidacion(request, id):
 
 def colaboradores(request):
     if request.session.get("logueo", False):
-        q = Usuario.objects.filter(rol=2).filter(retirado=False)
-        q2 = Usuario.objects.filter(rol=2 ).filter(retirado=True)
+        q = Usuario.objects.filter(rol=2).filter(activo=True)
+        q2 = Usuario.objects.filter(rol=2 ).filter(activo=False)
         print(f'Usuarios retirados: {q2}')
         cargos = Usuario.CARGOS
         roles = Usuario.ROLES
-        contexto = {"data": q, 'retirados': q2, 'CARGOS': cargos, 'ROLES': roles, }
+        clase_contrato = Usuario.CLASE_CONTRATO
+        contexto = {"data": q, 'retirados': q2, 'CARGOS': cargos, 'CLASE_CONTRATO':clase_contrato,'ROLES': roles, }
         return render(request, 'nomina/colaborador/colaboradores.html', contexto)
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
@@ -362,14 +370,17 @@ def colaborador_guardar(request):
         cedula = request.POST.get('cedula')
         correo = request.POST.get('correo')
         contrasena = request.POST.get('contrasena')
+        confirmar_contrasena = request.POST.get('confirmar_contrasena')
         rol = 2
         foto = request.FILES.get("foto")
         cargo = request.POST.get("cargo")
-        riesgo = request.POST.get("riesgo") or 0
-        fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
+        riesgo = request.POST.get("riesgo")
         tipo_contrato = request.POST.get("tipo_contrato") or None
+        fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
         fecha_retiro = request.POST.get("fecha_retiro") or None
         motivo_retiro = request.POST.get("motivo_retiro") or None
+        if contrasena == confirmar_contrasena:
+            contrasena_oficial = contrasena
 
         if id == "":
             try:
@@ -378,13 +389,13 @@ def colaborador_guardar(request):
                     apellido=apellido,
                     correo=correo,
                     cedula=cedula,
-                    contrasena=contrasena,
+                    contrasena=contrasena_oficial,
                     rol=rol,
                     foto=foto,
                     cargo=cargo,
                     riesgo=riesgo,
-                    fecha_fin_contrato=fecha_fin_contrato,
                     tipo_contrato=tipo_contrato,
+                    fecha_fin_contrato=fecha_fin_contrato,
                     fecha_retiro=fecha_retiro,
                     motivo_retiro=motivo_retiro,
                 )
@@ -405,12 +416,13 @@ def colaborador_editar(request, id):
         cedula = request.POST.get('cedula_editar')
         correo = request.POST.get('correo_editar')
         contrasena = request.POST.get('contrasena_editar')
+        confirmar_contrasena = request.POST.get('confirmar_contrasena_editar')
         rol = 2
         foto = request.FILES.get("foto_editar")
         cargo = request.POST.get("cargo_editar")
-        riesgo = request.POST.get("riesgo_editar") or 0
-        fecha_fin_contrato = request.POST.get("fecha_fin_contrato_editar") or None
+        riesgo = request.POST.get("riesgo_editar")
         tipo_contrato = request.POST.get("tipo_contrato_editar") or None
+        fecha_fin_contrato = request.POST.get("fecha_fin_contrato_editar") or None
         fecha_retiro = request.POST.get("fecha_retiro_editar") or None
         motivo_retiro = request.POST.get("motivo_retiro_editar") or None
 
@@ -420,14 +432,17 @@ def colaborador_editar(request, id):
             q.apellido = apellido
             q.cedula = cedula
             q.correo = correo
-            q.contrasena = contrasena
+            if contrasena == confirmar_contrasena:
+                q.contrasena = contrasena
+            else:
+                messages.error(request, f"Las contraseñas no coinciden...")
             q.rol = rol
             if foto:
                 q.foto = foto
             q.cargo = cargo
             q.riesgo = riesgo
-            q.fecha_fin_contrato = fecha_fin_contrato
             q.tipo_contrato = tipo_contrato
+            q.fecha_fin_contrato = fecha_fin_contrato
             q.fecha_retiro = fecha_retiro
             q.motivo_retiro = motivo_retiro
             q.save()
@@ -502,121 +517,6 @@ def nomina_listar(request, fecha_inicio, fecha_fin):
         return HttpResponseRedirect(reverse("nomina:login"))
 
 
-"""def nomina_listar(request, id):
-    if request.session.get("logueo", False):
-        usuario_id = request.session["logueo"]["id"]
-        try:
-            usuario = Usuario.objects.get(id=usuario_id)
-
-            if usuario.rol == 2:  # Suponiendo que el rol 2 es para colaboradores
-                nominas = get_object_or_404(NominaQuincen, id=id)
-                usuarios = [nomina.novedad.usuario for nomina in nominas]
-                novedades = Novedad.objects.filter(usuario=usuario)
-                devengados = Devengado.objects.filter(novedad__usuario=usuario)
-                deducciones = Deduccion.objects.filter(novedad__usuario=usuario)
-            else:
-
-                nominas = Nomina.objects.all()
-                usuarios = [nomina.novedad.usuario for nomina in nominas]
-                novedades = Novedad.objects.filter(usuario__in=usuarios)
-                devengados = Devengado.objects.filter(novedad__usuario__in=usuarios)
-                deducciones = Deduccion.objects.filter(novedad__usuario__in=usuarios)
-
-            contexto = {
-                "usuarios": usuarios,
-                "devengado": devengados,
-                "deduccion": deducciones,
-                "novedad": novedades,
-                "nominas": nominas
-            }
-            return render(request, 'nomina/nomina/nomina-listar.html', contexto)
-        except Usuario.DoesNotExist:
-            messages.error(request, "Usuario no encontrado")
-            return HttpResponseRedirect(reverse("nomina:nomina_listar"))
-    else:
-        messages.warning(request, "Debe iniciar sesión para ver esta página.")
-        return HttpResponseRedirect(reverse("nomina:login"))"""
-"""
-def nomina_buscar(request):
-    if request.method == "POST":
-        periodo = request.POST.get("periodo")
-
-        if not periodo:
-            return redirect("nomina:nomina")
-
-        # Separar las fechas
-        try:
-            fecha_inicio, fecha_fin = periodo.split(" - ")
-            fecha_inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y").date()
-            fecha_fin = datetime.strptime(fecha_fin, "%d/%m/%Y").date()
-        except ValueError:
-            messages.error(request, "El formato de la fecha es incorrecto.")
-            return redirect("nomina:nomina")
-
-        # Filtrar las nóminas por el periodo seleccionado
-        resultados = NominaQuincena.objects.filter(
-            Q(fecha_inicio__gte=fecha_inicio) & Q(fecha_fin__lte=fecha_fin)
-        )
-
-        # Obtener todos los periodos para el formulario de búsqueda
-        periodos_raw = NominaQuincena.objects.values('fecha_inicio', 'fecha_fin').distinct()
-        periodos = [
-            f"{periodo['fecha_inicio'].strftime('%d/%m/%Y')} - {periodo['fecha_fin'].strftime('%d/%m/%Y')}"
-            for periodo in periodos_raw
-        ]
-
-        contexto = {
-            'data': resultados,
-            'periodos': periodos
-        }
-
-        return render(request, 'nomina/nomina/nomina.html', contexto)
-
-    return redirect("nomina:nomina")
-
-
-
-
-
-def nomina_guardar(request):
-    if request.method == "POST":
-        nomina_ids = request.POST.getlist("nomina[]")
-        fecha_inicio = request.POST.get("fecha_inicio")
-        fecha_fin = request.POST.get("fecha_fin")
-
-        print(f"Nomina IDs: {nomina_ids}")  # Debugging statement
-        print(f"Fecha Inicio: {fecha_inicio}")  # Debugging statement
-        print(f"Fecha Fin: {fecha_fin}")  # Debugging statement
-
-        if nomina_ids:
-            try:
-                # Crea la instancia de NominaQuincena sin asignar las nóminas aún
-                nomina_quincena = NominaQuincena(
-                    fecha_inicio=fecha_inicio,
-                    fecha_fin=fecha_fin
-                )
-                nomina_quincena.save()
-
-                # Asigna las nóminas seleccionadas a la instancia de NominaQuincena
-                nominas_seleccionadas = Nomina.objects.filter(id__in=nomina_ids)
-                nomina_quincena.nomina.set(nominas_seleccionadas)
-                nomina_quincena.save()
-
-                print(f"Nominas Seleccionadas: {nominas_seleccionadas}")  # Debugging statement
-
-                messages.success(request, "Guardado correctamente!!")
-            except Exception as e:
-                messages.error(request, f"Error. {e}")
-        else:
-            messages.error(request, "No se seleccionaron nóminas.")
-
-        return HttpResponseRedirect(reverse("nomina:nomina"))
-    else:
-        messages.warning(request, "No se enviaron datos...")
-        return HttpResponseRedirect(reverse("nomina:nomina"))
-"""
-
-
 def novedades_nomina(request):
     if request.session.get("logueo", False):
         novedades = Novedad.objects.annotate(month=TruncMonth('fecha_fin')).values('month').annotate(
@@ -627,7 +527,7 @@ def novedades_nomina(request):
             mes = novedad['month']
             novedades_mes = Novedad.objects.filter(fecha_fin__month=mes.month, fecha_fin__year=mes.year)
             novedades_por_mes[mes] = novedades_mes
-        usuarios = Usuario.objects.filter(rol=2).filter(retirado=False)
+        usuarios = Usuario.objects.filter(rol=2).filter(activo=True)
 
         fechas_ocupadas_inicio = list(Novedad.objects.values_list('fecha_inicio', flat=True))
         fechas_ocupadas_fin = list(Novedad.objects.values_list('fecha_fin', flat=True))
