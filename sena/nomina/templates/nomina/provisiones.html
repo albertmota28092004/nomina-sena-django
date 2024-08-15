@@ -64,10 +64,10 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{ data.cesantias }}</td>
-                            <td>{{ data.intereses_cesantias }}</td>
-                            <td>{{ data.primas_servicio }}</td>
-                            <td>{{ data.vacaciones }}</td>
+                            <td>{{ data.cesantias|round_number:2|intcomma }}</td>
+                            <td>{{ data.intereses_cesantias|round_number:2|intcomma }}</td>
+                            <td>{{ data.primas_servicio|round_number:2|intcomma }}</td>
+                            <td>{{ data.vacaciones|round_number:2|intcomma }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -81,22 +81,18 @@
                     <table width="100%" cellspacing="0">
                         <thead>
                         <tr>
-                            <th>Salud</th>
-                            <th>Pensión</th>
-                            <th>ARL</th>
-                            <th>Sena</th>
-                            <th>ICBF</th>
-                            <th>Caja de Compensación</th>
+                            <th>Cesantías</th>
+                            <th>Intereses de Cesantías</th>
+                            <th>Primas de Servicio</th>
+                            <th>Vacaciones</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ data.cesantias|round_number:2|intcomma }}</td>
+                            <td>{{ data.intereses_cesantias|round_number:2|intcomma }}</td>
+                            <td>{{ data.primas_servicio|round_number:2|intcomma }}</td>
+                            <td>{{ data.vacaciones|round_number:2|intcomma }}</td>
                         </tr>
                         </tbody>
                     </table>

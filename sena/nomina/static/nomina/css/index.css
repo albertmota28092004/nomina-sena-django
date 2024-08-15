@@ -2,96 +2,96 @@
 /*----------------------------Nómina----------------------------*/
 
 .contenedor-tarjeta-nomina {
-            display: grid;
-            grid-template-columns: auto auto auto auto auto auto;
-            margin: 30px;
-            gap: 20px;
-        }
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    margin: 30px;
+    gap: 20px;
+}
 
-        .tarjeta-nomina {
-            border: 2px solid #000;
-            min-height: 400px;
-            max-height: 400px;
-            min-width: 280px;
-            max-width: 280px;
-            border-radius: 30px;
-            background-color: #FFFFFF;
-            color: #000000;
-            text-align: center;
-        }
+.tarjeta-nomina {
+    border: 2px solid #000;
+    min-height: 400px;
+    max-height: 400px;
+    min-width: 280px;
+    max-width: 280px;
+    border-radius: 30px;
+    background-color: #FFFFFF;
+    color: #000000;
+    text-align: center;
+}
 
-        .tarjeta-nomina-nueva {
-            border: 2px dashed #000;
-            min-height: 400px;
-            max-height: 400px;
-            width: 280px;
-            position: relative;
-            border-radius: 30px;
-            background-color: #FFFFFF;
-            color: #000000;
-        }
+.tarjeta-nomina-nueva {
+    border: 2px dashed #000;
+    min-height: 400px;
+    max-height: 400px;
+    width: 280px;
+    position: relative;
+    border-radius: 30px;
+    background-color: #FFFFFF;
+    color: #000000;
+}
 
-        .mas {
-            color: #000000;
-            margin-top: 100px;
-            font-size: 100px;
-            position: absolute;
-            justify-content: center;
-            margin-left: 95px;
-        }
+.mas {
+    color: #000000;
+    margin-top: 100px;
+    font-size: 100px;
+    position: absolute;
+    justify-content: center;
+    margin-left: 95px;
+}
 
-        .mas:focus,
-        .mas:active {
-            border: 0 solid #00000000;
-        }
+.mas:focus,
+.mas:active {
+    border: 0 solid #00000000;
+}
 
-        .mas:hover {
-            color: #999999;
-        }
+.mas:hover {
+    color: #999999;
+}
 
-        .titulo_nomina {
-            margin-right: 70px;
-        }
+.titulo_nomina {
+    margin-right: 70px;
+}
 
-        .regresar {
-            text-decoration: none;
-            margin-left: 25px;
-            border-radius: 10px;
-            padding: 10px;
-        }
+.regresar {
+    text-decoration: none;
+    margin-left: 25px;
+    border-radius: 10px;
+    padding: 10px;
+}
 
-        .regresar:focus,
-        .regresar:active {
-            border: 0 solid #00000000;
-        }
+.regresar:focus,
+.regresar:active {
+    border: 0 solid #00000000;
+}
 
 
-        .offcanvas_nomina {
-            color: #FFFFFF;
-            background-color: #102530;
-        }
+.offcanvas_nomina {
+    color: #FFFFFF;
+    background-color: #102530;
+}
 
-        .offcanvas_nomina:focus,
-        .offcanvas_nomina:active {
-            border: 0 solid #00000000;
-        }
+.offcanvas_nomina:focus,
+.offcanvas_nomina:active {
+    border: 0 solid #00000000;
+}
 
-        .offcanvas_nomina:hover {
-            color: #000000;
-            background-color: #FFFFFF;
-        }
+.offcanvas_nomina:hover {
+    color: #000000;
+    background-color: #FFFFFF;
+}
 
-        .offcanvas-body,
-        .offcanvas-header {
-            background-color: #102530;
-        }
+.offcanvas-body,
+.offcanvas-header {
+    background-color: #102530;
+}
 
-        .equis,
-        .offcanvas-body,
-        .offcanvas-header {
-            color: #FFFFFF;
-        }
+.equis,
+.offcanvas-body,
+.offcanvas-header {
+    color: #FFFFFF;
+}
 
-        .ingresar_nomina {
-            margin-top: 80%;
-        }
+.ingresar_nomina {
+    margin-top: 80%;
+}

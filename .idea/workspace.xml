@@ -4,19 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="muchas cosas hechas xd lol uwu">
-      <change afterPath="$PROJECT_DIR$/sena/nomina/migrations/0006_remove_usuario_retirado_usuario_activo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/_MG_0043.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/descarga.jfif" afterDir="false" />
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="falta hacer buscador y ya jejejeje xd lol wuw">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaborador-editar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaborador-editar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/parafiscales.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/parafiscales.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/provisiones.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/provisiones.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -274,7 +272,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723579970863</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="falta hacer buscador y ya jejejeje xd lol wuw">
+      <option name="closed" value="true" />
+      <created>1723666092324</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1723666092324</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -310,6 +316,7 @@
     <MESSAGE value="problema en la fecha fin de liquidacion_view" />
     <MESSAGE value="solucionado xd lol uwu" />
     <MESSAGE value="muchas cosas hechas xd lol uwu" />
-    <option name="LAST_COMMIT_MESSAGE" value="muchas cosas hechas xd lol uwu" />
+    <MESSAGE value="falta hacer buscador y ya jejejeje xd lol wuw" />
+    <option name="LAST_COMMIT_MESSAGE" value="falta hacer buscador y ya jejejeje xd lol wuw" />
   </component>
 </project>

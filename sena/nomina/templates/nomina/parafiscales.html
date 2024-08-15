@@ -66,12 +66,12 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{ data.salud }}</td>
-                            <td>{{ data.pension }}</td>
-                            <td>{{ data.arl }}</td>
-                            <td>{{ data.sena }}</td>
-                            <td>{{ data.icbf }}</td>
-                            <td>{{ data.caja_compensacion }}</td>
+                            <td>{{ data.salud|round_number:2|intcomma }}</td>
+                            <td>{{ data.pension|round_number:2|intcomma }}</td>
+                            <td>{{ data.arl|round_number:2|intcomma }}</td>
+                            <td>{{ data.sena|round_number:2|intcomma }}</td>
+                            <td>{{ data.icbf|round_number:2|intcomma }}</td>
+                            <td>{{ data.caja_compensacion|round_number:2|intcomma }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -95,12 +95,12 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ data.salud|round_number:2|intcomma }}</td>
+                            <td>{{ data.pension|round_number:2|intcomma }}</td>
+                            <td>{{ data.arl|round_number:2|intcomma }}</td>
+                            <td>{{ data.sena|round_number:2|intcomma }}</td>
+                            <td>{{ data.icbf|round_number:2|intcomma }}</td>
+                            <td>{{ data.caja_compensacion|round_number:2|intcomma }}</td>
                         </tr>
                         </tbody>
                     </table>

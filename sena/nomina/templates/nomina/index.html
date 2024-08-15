@@ -5,7 +5,7 @@
 
 <style>
         body {
-           overflow: hidden;
+           overflow-x: hidden;
            background-color: #EBECE4;
         }
 
@@ -65,6 +65,12 @@
             margin-top: 80px;
         }
 
+        @media (max-height: 700px){
+            .cerrar_sesion {
+                margin-top: 40px;
+            }
+        }
+
     </style>
 </head>
 
@@ -83,7 +89,6 @@
                     <a class="btn botones_bienvenido" href="{% url 'nomina:nomina' %}">Nóminas</a>
                 {% else %}
                     <a class="btn botones_bienvenido" href="{% url 'nomina:nomina' %}">Mi nómina</a>
-                    <a class="btn botones_bienvenido" href="">Recibos</a>
                     <a class="btn botones_bienvenido" href="">Ayuda/Soporte</a>
                     <a class="btn botones_bienvenido" href="">Configuración</a>
                 {% endif %}

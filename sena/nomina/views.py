@@ -146,6 +146,7 @@ def practica(request):
 def parafiscales(request, id):
     if request.session.get("logueo", False):
         nomina = Nomina.objects.get(pk=id)
+        print(nomina)
         contexto = {'data': nomina}
         return render(request, 'nomina/parafiscales.html', contexto)
 
@@ -411,6 +412,7 @@ def colaborador_guardar(request):
 
 def colaborador_editar(request, id):
     if request.session.get("logueo", False):
+        usuario = Usuario.objects.get(pk=id)
         nombre = request.POST.get('nombre_editar')
         apellido = request.POST.get("apellido_editar")
         cedula = request.POST.get('cedula_editar')
@@ -420,7 +422,7 @@ def colaborador_editar(request, id):
         rol = 2
         foto = request.FILES.get("foto_editar")
         cargo = request.POST.get("cargo_editar")
-        riesgo = request.POST.get("riesgo_editar")
+        riesgo = request.POST.get("riesgo_editar") or usuario.riesgo
         tipo_contrato = request.POST.get("tipo_contrato_editar") or None
         fecha_fin_contrato = request.POST.get("fecha_fin_contrato_editar") or None
         fecha_retiro = request.POST.get("fecha_retiro_editar") or None
@@ -500,18 +502,32 @@ def nomina(request):
 def nomina_listar(request, fecha_inicio, fecha_fin):
     if request.session.get("logueo", False):
         usuario_id = request.session["logueo"]["id"]
-        try:
-            usuario = Usuario.objects.get(id=usuario_id)
+        usuario = Usuario.objects.get(id=usuario_id)
 
-            nominas = Nomina.objects.filter(novedad__fecha_inicio=fecha_inicio, novedad__fecha_fin=fecha_fin)
+        if usuario.rol == 1:
+            try:
+                nominas = Nomina.objects.filter(novedad__fecha_inicio=fecha_inicio, novedad__fecha_fin=fecha_fin)
 
-            contexto = {
-                "nominas": nominas
-            }
-            return render(request, 'nomina/nomina/nomina-listar.html', contexto)
-        except Usuario.DoesNotExist:
-            messages.error(request, "Usuario no encontrado")
-            return HttpResponseRedirect(reverse("nomina:nomina_listar"))
+                contexto = {
+                    "nominas": nominas
+                }
+                return render(request, 'nomina/nomina/nomina-listar.html', contexto)
+            except Usuario.DoesNotExist:
+                messages.error(request, "Usuario no encontrado")
+                return HttpResponseRedirect(reverse("nomina:nomina_listar"))
+
+        if usuario.rol == 2:
+            try:
+                nominas = Nomina.objects.filter(novedad__usuario=usuario ,novedad__fecha_inicio=fecha_inicio, novedad__fecha_fin=fecha_fin)
+
+
+                contexto = {
+                    "nominas": nominas
+                }
+                return render(request, 'nomina/nomina/nomina-listar.html', contexto)
+            except Usuario.DoesNotExist:
+                messages.error(request, "Usuario no encontrado")
+                return HttpResponseRedirect(reverse("nomina:nomina_listar"))
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))

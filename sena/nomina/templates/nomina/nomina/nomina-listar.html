@@ -249,7 +249,7 @@
                             <th>Otros</th>
                             <th>Total Deducciones</th>
                             <th>Total a Pagar</th>
-                            <th>Recibo</th>
+                            <th colspan="3">Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -300,6 +300,16 @@
                                         <i class="fa-solid fa-file-pdf"></i>
 
                                     </button>
+                                </td>
+                                <td>
+                                    <a href="{% url 'nomina:parafiscales' nomina.id %}" class="btn btn-primary">
+                                        Ver parafiscales
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'nomina:provisiones' nomina.id %}" class="btn btn-primary">
+                                        Ver provisiones
+                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}
