@@ -1,4 +1,67 @@
 
+.img-bienvenido {
+    height: 100vh;
+    width: 100vw;
+}
+
+.contenedor_info {
+    align-items: center;
+    text-align: center !important;
+    background-color: #EBECE4;
+}
+
+.logo_press {
+    margin: 50px auto;
+}
+
+.titulo_bienvenido {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #442B1C;
+}
+
+.contenedor_botones_bienvenido {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 100px;
+    align-items: center;
+}
+
+.botones_bienvenido {
+    width: 200px;
+    border: 2px solid #00000000;
+    background-color: #442B1C !important;
+    color: #FFFFFF !important;
+    font-size: 20px;
+}
+
+.botones_bienvenido:hover {
+    border: 2px dashed #442B1C !important;
+    background-color: #00000000 !important;
+    color:#442B1C !important;
+}
+
+.botones_bienvenido:active {
+    border: 2px dashed #bbbbbb;
+    background-color: #00000000;
+    color: #bbbbbb;
+}
+
+.cerrar_sesion {
+    margin-top: 80px;
+}
+
+@media (max-height: 700px){
+    .cerrar_sesion {
+        margin-top: 40px;
+    }
+}
+
+
 /*----------------------------Nómina----------------------------*/
 
 .contenedor-tarjeta-nomina {

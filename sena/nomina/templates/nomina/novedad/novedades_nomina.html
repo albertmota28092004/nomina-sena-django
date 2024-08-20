@@ -1,6 +1,7 @@
 {% extends 'nomina/base.html' %}
 {% load static %}
 {% load humanize %}
+{% load custom_filters %}
 {% block titulo %}Novedades{% endblock %}
 {% block contenedor %}
 
@@ -44,8 +45,23 @@
         text-align: center;
     }
 
-}
+    .contenedor__tarjeta_novedad {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        gap: 20px;
+    }
 
+    .tarjeta_novedad {
+        width: 200px !important;
+        height: 300px;
+        border: 2px solid #000;
+        border-radius: 50px;
+        text-align: center;
+         display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 </style>
 
 <body style="background-color: #442B1C;">
@@ -62,7 +78,6 @@
     </div>
 </nav>
 
-<!-- Modal -->
 <div class="modal fade" id="novedadModal" tabindex="-1" aria-labelledby="novedadModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -177,10 +192,19 @@
 <!-- Contenido principal -->
 <div class="card shadow mb-4">
     <div class="card-body">
-        <div class="table-responsive">
+        <div class="contenedor__tarjeta_novedad">
             {% for mes, novedades in novedades_por_mes.items %}
+            <div class="tarjeta_novedad">
                 <h2>{{ mes|date:"F"|capfirst }}</h2>
-                <table class="mb-5" id="dataTable" width="100%" cellspacing="0">
+            </div>
+            <div>
+                {% with unique_dates=novedades|map:"fecha_fin|date:'d'"|remove_duplicates %}
+                    {% for date in unique_dates %}
+                        <h2>{{ date }}</h2>
+                    {% endfor %}
+                {% endwith %}
+            </div>
+                <!--<table class="mb-5" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
                         <th></th>
@@ -260,7 +284,6 @@
                             <td></td>
                         {% endif %}
                     </tr>
-                    <!-- Modal Editar Novedad -->
                     <div class="modal fade" id="editarModalNovedad{{ i.id }}" tabindex="-1" aria-labelledby="editarModalNovedadLabel{{ i.id }}"
                              aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -279,7 +302,7 @@
                         </div>
                     {% endfor %}
                     </tbody>
-                </table>
+                </table>-->
             {% endfor %}
         </div>
     </div>

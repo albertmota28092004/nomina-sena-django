@@ -4,18 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="falta hacer buscador y ya jejejeje xd lol wuw">
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit">
+      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index-principal.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0002_remove_novedad_fecha_ingreso_usuario_fecha_ingreso.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0003_remove_novedad_clase_salario.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0005_usuario_retirado_alter_novedad_usuario_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/migrations/0006_remove_usuario_retirado_usuario_activo.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/static/src/tailwind.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/parafiscales.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/parafiscales.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/provisiones.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/provisiones.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templatetags/custom_filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templatetags/custom_filters.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +32,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
