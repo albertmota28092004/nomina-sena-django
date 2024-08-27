@@ -1,7 +1,6 @@
 {% extends 'nomina/base.html' %}
 {% load static %}
 {% load humanize %}
-{% load custom_filters %}
 {% block titulo %}Novedades{% endblock %}
 {% block contenedor %}
 
@@ -15,6 +14,21 @@
         color: #EBECE4;
     }
 
+    .card {
+            background-color: #EBECE4;
+            margin: 10px;
+        }
+
+    .table thead {
+        background-color: #EBECE4 !important;
+    }
+
+    td, th {
+        border: 1px solid #C4C7C1;
+        text-align: center;
+        white-space: nowrap;
+        padding: 20px;
+    }
 
     .contenedor-imagen-novedad {
         padding: 0 !important;
@@ -30,68 +44,6 @@
         text-align: center;
     }
 
-    .card{
-        margin-top: 50px;
-        background-color: transparent !important;
-    }
-
-    table {
-        margin-top: 100px;
-        background-color: #EBECE4 !important;
-    }
-
-    td, th {
-        border: 1px solid #C4C7C1;
-        text-align: center;
-        white-space: nowrap;
-        padding: 20px;
-    }
-
-    th {
-        background-color: #442B1C;
-        color: #EBECE4;
-    }
-
-    .contenedor__tarjeta_novedad {
-        margin-top: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 50px;
-
-    }
-
-    .tarjeta_novedad {
-        width: 200px !important;
-        height: 300px;
-        border: 2px solid #000;
-        border-radius: 50px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #EBECE4;
-    }
-
-    .tarjeta_dias {
-        display: grid;
-        grid-template-columns: auto auto;
-        gap: 5px;
-    }
-
-    .dia_novedad {
-        border: 2px solid #000;
-        padding: 10px 13px;
-        border-radius: 50px;
-        color: #EBECE4;
-        background-color: #000;
-        font-size: 20px;
-    }
-
-    .dia_novedad:hover {
-        border: 2px solid #000 !important;
-    }
 </style>
 
 <body style="background-color: #442B1C;">
@@ -108,6 +60,7 @@
     </div>
 </nav>
 
+<!-- Modal -->
 <div class="modal fade" id="novedadModal" tabindex="-1" aria-labelledby="novedadModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -220,128 +173,118 @@
 </div>
 
 <!-- Contenido principal -->
-<div class="contenedor__tarjeta_novedad wow fadeInUp">
-    {% for mes, novedades in novedades_por_mes.items %}
-    <div class="tarjeta_novedad">
-        <h2>{{ mes|date:"F"|capfirst }}</h2>
-        <div class="tarjeta_dias">
-        {% for i in novedades %}
-            <button class="btn dia_novedad" data-dia="{{ i.fecha_fin|date:'d' }}" data-mes="{{ mes|date:'m' }}" data-year="{{ mes|date:'Y' }}">{{ i.fecha_fin|date:"d" }}</button>
-        {% endfor %}
-        </div>
-    </div>
-    {% endfor %}
-</div>
 <div class="card shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">
-            <div class="contenedor__tabla_novedad">
-            <table class="mb-5" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Foto</th>
-                    <th>Fecha novedad</th>
-                    <th>Colaborador</th>
-                    <th>Salario</th>
-                    <th>Días de Incapacidad</th>
-                    <th>Días Trabajados</th>
-                    <th>H.E. Diurnas</th>
-                    <th>H.E. Diurnas Dom/Fes</th>
-                    <th>H.E. Nocturnas</th>
-                    <th>H.E. Nocturnas Dom/Fes</th>
-                    <th>H.R. Nocturno</th>
-                    <th>H.R. Nocturno Dom/Fes</th>
-                    <th>H.R. Diurno Dom/Fes</th>
-                    <th>Comisiones</th>
-                    <th>Comisiones (%)</th>
-                    <th>Bonificaciones</th>
-                    <th>Embargos Judiciales</th>
-                    <th>Libranzas</th>
-                    <th>Cooperativas</th>
-                    <th>Otros</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for i in novedades %}
-                <tr>
-                    <td>
-                        <button class="btn" id="abrirModalEditarNovedad" data-bs-toggle="modal" data-bs-target="#editarModalNovedad{{ i.id }}"><i class="bi bi-pencil-fill"></i></button>
-                        <a href="javascript:confirmar_eliminar('{{ i.id }}', '{% url 'nomina:novedad_eliminar' i.id %}');" class="btn"><i class="bi bi-trash-fill"></i></a>
-                        <a href="{% url 'nomina:nomina_listar' i.fecha_inicio i.fecha_fin %}" class="btn">Ver nómina</a>
-                    </td>
-                    <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}"></td>
-                    <td>{{ i.fecha_fin }}</td>
-                    <td>{{ i.usuario }}</td>
-                    <td>{{ i.salario|intcomma }}</td>
-                    <td>{{ i.dias_incapacidad|default:"" }}</td>
-                    <td>{{ i.dias_trabajados }}</td>
-                    <td>{{ i.horas_extras_diurnas|default:"" }}</td>
-                    <td>{{ i.horas_extras_diurnas_dom_fes|default:"" }}</td>
-                    <td>{{ i.horas_extras_nocturnas|default:"" }}</td>
-                    <td>{{ i.horas_extras_nocturnas_dom_fes|default:"" }}</td>
-                    <td>{{ i.horas_recargo_nocturno|default:"" }}</td>
-                    <td>{{ i.horas_recargo_nocturno_dom_fes|default:"" }}</td>
-                    <td>{{ i.horas_recargo_diurno_dom_fes|default:"" }}</td>
-                    {% if i.comisiones %}
-                        <td>${{ i.comisiones|default:""|intcomma }}</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                    <td>{{ i.comisiones_porcentaje|default:"" }}</td>
+            {% for mes, novedades in novedades_por_mes.items %}
+                <h2>{{ mes|date:"F"|capfirst }}</h2>
+                <table class="mb-5" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Foto</th>
+                        <th>Fecha novedad</th>
+                        <th>Colaborador</th>
+                        <th>Salario</th>
+                        <th>Días de Incapacidad</th>
+                        <th>Días Trabajados</th>
+                        <th>H.E. Diurnas</th>
+                        <th>H.E. Diurnas Dom/Fes</th>
+                        <th>H.E. Nocturnas</th>
+                        <th>H.E. Nocturnas Dom/Fes</th>
+                        <th>H.R. Nocturno</th>
+                        <th>H.R. Nocturno Dom/Fes</th>
+                        <th>H.R. Diurno Dom/Fes</th>
+                        <th>Comisiones</th>
+                        <th>Comisiones (%)</th>
+                        <th>Bonificaciones</th>
+                        <th>Embargos Judiciales</th>
+                        <th>Libranzas</th>
+                        <th>Cooperativas</th>
+                        <th>Otros</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in novedades %}
+                    <tr>
+                        <td>
+                            <button class="btn" id="abrirModalEditarNovedad" data-bs-toggle="modal" data-bs-target="#editarModalNovedad{{ i.id }}"><i class="bi bi-pencil-fill"></i></button>
+                            <a href="javascript:confirmar_eliminar('{{ i.id }}', '{% url 'nomina:novedad_eliminar' i.id %}');" class="btn"><i class="bi bi-trash-fill"></i></a>
+                            <a href="{% url 'nomina:nomina_listar' i.fecha_inicio i.fecha_fin %}" class="btn">Ver nómina</a>
+                        </td>
+                        <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}"></td>
+                        <td>{{ i.fecha_fin }}</td>
+                        <td>{{ i.usuario }}</td>
+                        <td>{{ i.salario|intcomma }}</td>
+                        <td>{{ i.dias_incapacidad|default:"" }}</td>
+                        <td>{{ i.dias_trabajados }}</td>
+                        <td>{{ i.horas_extras_diurnas|default:"" }}</td>
+                        <td>{{ i.horas_extras_diurnas_dom_fes|default:"" }}</td>
+                        <td>{{ i.horas_extras_nocturnas|default:"" }}</td>
+                        <td>{{ i.horas_extras_nocturnas_dom_fes|default:"" }}</td>
+                        <td>{{ i.horas_recargo_nocturno|default:"" }}</td>
+                        <td>{{ i.horas_recargo_nocturno_dom_fes|default:"" }}</td>
+                        <td>{{ i.horas_recargo_diurno_dom_fes|default:"" }}</td>
+                        {% if i.comisiones %}
+                            <td>${{ i.comisiones|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ i.comisiones_porcentaje|default:"" }}</td>
 
-                    {% if i.bonificaciones %}
-                        <td>${{ i.bonificaciones|default:""|intcomma }}</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                    {% if i.embargos_judiciales %}
-                        <td>${{ i.embargos_judiciales|default:""|intcomma }}</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                    {% if i.libranzas %}
-                        <td>${{ i.libranzas|default:""|intcomma }}</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                    {% if i.cooperativas %}
-                        <td>${{ i.cooperativas|default:""|intcomma }}</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                    {% if i.otros %}
-                        <td>${{ i.otros|default:""|intcomma }}</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                </tr>
-                <div class="modal fade" id="editarModalNovedad{{ i.id }}" tabindex="-1" aria-labelledby="editarModalNovedadLabel{{ i.id }}"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="editarModalNovedadLabel{{ i.id }}">Editar Colaborador</h1>
-                                    <button type="button" class="btn btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close">
-                                    </button>
-                                </div>
-                                <div class="modal-body" id="contenidoModalBody">
-                                    {% include 'nomina/novedad/novedades_editar.html' with data=i %}
+                        {% if i.bonificaciones %}
+                            <td>${{ i.bonificaciones|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if i.embargos_judiciales %}
+                            <td>${{ i.embargos_judiciales|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if i.libranzas %}
+                            <td>${{ i.libranzas|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if i.cooperativas %}
+                            <td>${{ i.cooperativas|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if i.otros %}
+                            <td>${{ i.otros|default:""|intcomma }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                    <!-- Modal Editar Novedad -->
+                    <div class="modal fade" id="editarModalNovedad{{ i.id }}" tabindex="-1" aria-labelledby="editarModalNovedadLabel{{ i.id }}"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="editarModalNovedadLabel{{ i.id }}">Editar Colaborador</h1>
+                                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" id="contenidoModalBody">
+                                        {% include 'nomina/novedad/novedades_editar.html' with data=i %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
         </div>
     </div>
 </div>
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const step1 = document.getElementById('step1');
@@ -360,24 +303,8 @@
         });
     });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // Eliminar duplicados de días en la tarjeta de novedad
-        document.querySelectorAll('.tarjeta_novedad').forEach(function(tarjeta) {
-            let diasUnicos = new Set();
-
-            tarjeta.querySelectorAll('.dia_novedad').forEach(function(boton) {
-                let dia = boton.textContent.trim();
-
-                if (diasUnicos.has(dia)) {
-                    boton.style.display = 'none';
-                } else {
-                    diasUnicos.add(dia);
-                }
-            });
-        });
-    });
-
 
 </script>
+<script>
 
 {% endblock %}
