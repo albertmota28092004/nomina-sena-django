@@ -1,0 +1,253 @@
+{% extends 'nomina/base.html' %}
+{% load static %}
+{% block titulo %}Colaboradores{% endblock %}
+{% block contenedor %}
+
+<style>
+    .boton_regresar, .boton_mas {
+        background-color: #EBECE4;
+    }
+
+    .boton_regresar:hover, .boton_mas:hover {
+        background-color: #000000;
+        color: #EBECE4;
+    }
+
+    .card {
+        background-color: #EBECE4;
+    }
+
+    .contenedor_todo {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .contenedor_colaboradores {
+        display: flex;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias filas */
+        gap: 20px; /* Ajusta el espacio entre las tarjetas según sea necesario */
+        justify-content: space-between; /* Distribuye el espacio entre las tarjetas */
+    }
+
+    .contenedor_colaborador {
+        text-align: center;
+        width: calc(33.333% - 20px); /* Ajusta el ancho para tres columnas con espacio entre ellas */
+        overflow: hidden;
+        border-radius: 20px 20px 0 0px;
+        --tw-shadow: 0px 10px 10px 0px #ccc;
+        --tw-shadow-colored: 0px 10px 10px 0px #000000;
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        box-sizing: border-box; /* Incluye el padding y border en el ancho total */
+    }
+
+    .img-colaborador {
+        margin: auto;
+        width: 100%; /* Ajusta el ancho de la imagen al contenedor */
+        height: 300px;
+        object-fit: cover; /* Ajusta la imagen para que cubra el área del contenedor */
+    }
+
+    #ver_mas_info {
+        background-color: #EBECE4;
+        text-align: center;
+        flex-direction: column;
+        width: 100%;
+        display: none;
+        position: absolute;
+        padding: 20px;
+        --tw-shadow-colored: 0px 10px 10px 0px #000000;
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        border-radius: 0 0px 20px 20px;
+    }
+
+    h4 {
+        width: 100%;
+        white-space: nowrap;
+    }
+
+    h6 {
+        font-weight: normal;
+        font-size: 14px;
+    }
+
+    .info_colaborador {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+    .modal-content {
+        background-color: #EBECE4 !important;
+    }
+
+    .boton_colaboradores_retirados {
+        height: 50px;
+        width: 200px;
+        margin-left: auto;
+    }
+
+    #retirados {
+        gap: 20px;
+        display: none;
+    }
+
+    #activos {
+        gap: 20px;
+        display: flex;
+    }
+
+    .menu-acciones {
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+
+    .menu-acciones button, .menu-acciones a {
+        display: block;
+        width: 100%;
+        padding: 5px 10px;
+        text-align: left;
+        background-color: transparent;
+        border: none;
+        color: #333;
+        text-decoration: none;
+    }
+
+    .menu-acciones button:hover, .menu-acciones a:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+    }
+</style>
+
+
+<body style="background-color: #442B1C;">
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="btn btn-light transition duration-300 ease-in-out boton_regresar" href="{% url 'nomina:index' %}">
+            Regresar <i class="fa-solid fa-reply"></i>
+        </a>
+        <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Colaboradores</h1>
+        <button class="btn btn-light rounded boton_mas">
+            Crear Colaborador
+        </button>
+    </div>
+</nav>
+
+<!-- Contenido principal -->
+<div class="card shadow mb-4 contenedor_todo">
+    <div class="card-body contenedor_colaboradores">
+        {% for empleado in empleados %}
+        <div class="contenedor_colaborador">
+            <h6>{{ empleado.cedula }}</h6>
+            <h4>{{ empleado.nombre }}</h4>
+            <h6>{{ empleado.cargo }}</h6>
+            <h6>{{ empleado.salario }}</h6>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<script>
+    function mostrarRetirados() {
+        const btnRetirados = document.getElementById("btnRetirados");
+        const retirados = document.getElementById("retirados");
+        const activos = document.getElementById("activos");
+
+        if (activos.style.display === 'none') {
+            // Mostrar activos y ocultar retirados
+            activos.style.display = 'flex';
+            retirados.style.display = 'none';
+            btnRetirados.textContent = 'Colaboradores retirados'; // Cambia el texto del botón si es necesario
+        } else {
+            // Ocultar activos y mostrar retirados
+            activos.style.display = 'none';
+            retirados.style.display = 'flex';
+            btnRetirados.textContent = 'Colaboradores activos'; // Cambia el texto del botón si es necesario
+        }
+    }
+
+    function confirmar_liquidar(id, url) {
+        if (confirm("¿Estás seguro de que deseas liquidar a este colaborador?")) {
+            window.location.href = url;
+        }
+    }
+
+    function verMasButton(button) {
+        var info = button.nextElementSibling;
+        if (info.style.display === "none" || info.style.display === "") {
+            info.style.display = "flex";
+            button.innerHTML = "Ver menos <i class='fa-solid fa-angle-up'></i>";
+        } else {
+            info.style.display = "none";
+            button.innerHTML = "Ver más <i class='fa-solid fa-angle-down'></i>";
+        }
+    }
+
+    function togglePassword(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const eyeIcon = document.getElementById(`eye-${fieldId}`);
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = "password";
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
+
+    function validatePassword() {
+        const password = document.getElementById("contrasena").value;
+        const confirmPassword = document.getElementById("confirmar_contrasena").value;
+        const message = document.getElementById("password-match");
+
+        if (password === confirmPassword) {
+            message.textContent = "Las contraseñas coinciden.";
+            message.style.color = "green";
+        } else {
+            message.textContent = "Las contraseñas no coinciden.";
+            message.style.color = "red";
+        }
+    }
+
+    function validarContrasena() {
+        const contrasena = document.getElementById('contrasena').value;
+        const mensajeError = document.getElementById('mensajeError');
+
+        // Expresión regular para validar la contraseña
+        const regex = /^(?=.*[A-Z])(?=.*[\W_])(?=.*[a-zA-Z0-9]).{8,}$/;
+
+        if (!regex.test(contrasena)) {
+            mensajeError.textContent = "La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula y un símbolo.";
+            mensajeError.style.color = "red";
+            return false;
+        } else {
+            mensajeError.textContent = "";
+            return true;
+        }
+    }
+
+    function toggleMenu(id) {
+        var menu = document.getElementById("menu-" + id);
+        if (menu.style.display === "none" || menu.style.display === "") {
+            menu.style.display = "block";
+        } else {
+            menu.style.display = "none";
+        }
+    }
+
+
+    // Escuchar el evento 'input' en el campo de la contraseña para validar en tiempo real
+    document.getElementById('contrasena').addEventListener('input', validarContrasena);
+    document.getElementById('contrasena').addEventListener('input', validatePassword);
+    document.getElementById('confirmar_contrasena').addEventListener('input', validatePassword);
+
+</script>
+
+
+</body>
+{% endblock %}

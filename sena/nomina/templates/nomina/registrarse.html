@@ -1,0 +1,128 @@
+{% extends 'nomina/base.html' %}
+{% load static %}
+{% block titulo %}Registrar administrador{% endblock %}
+{% block contenedor %}
+
+<body style="background-color: #3F281A;">
+
+    <a class="regresar transition duration-300 ease-in-out font-medium" href="{% url 'nomina:login' %}" >
+        Regresar <i class="fa-solid fa-reply"></i>
+    </a>
+    <div class="container">
+        <div class="wow fadeInUp relative mx-auto max-w-[525px] overflow-hidden rounded-xl shadow-form bg-white dark:bg-dark-2 py-8 px-8 text-center sm:px-12 md:px-[60px]"
+            data-wow-delay=".15s">
+            <div class="mb-2 text-center">
+                <a href="javascript:void(0)" class="mx-auto inline-block max-w-[160px]">
+                    <img src="{% static 'nomina/img/logo/logo-press.png' %}" alt="logo" width="80" height="80" />
+                </a>
+            </div>
+            <h1
+              class="mb-3 text-dark" style="font-size: 30px; font-weight: bold;">
+              Registrarse
+            </h1>
+            <form method="post" action="{% url 'nomina:usuario_guardar' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-[22px]">
+                    <input type="text" placeholder="ID" hidden
+                        class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" name="id"/>
+                </div>
+                <div class="input-group flex-nowrap mb-[22px]">
+                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-person-vcard-fill"></i></span>
+                  <input style="border: 2px solid #c9c9c9;" type="text" class="form-control bg-transparent" placeholder="Cédula" name="cedula" aria-label="Cédula" aria-describedby="addon-wrapping" required>
+                </div>
+                <div class="input-group flex-nowrap mb-[22px]">
+                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-person-fill"></i></span>
+                  <input style="border: 2px solid #c9c9c9;" type="text" class="form-control bg-transparent" placeholder="Nombre" name="nombre" aria-label="Nombre" aria-describedby="addon-wrapping" required>
+                </div>
+                <div class="input-group flex-nowrap mb-[22px]">
+                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-person-fill"></i></span>
+                  <input style="border: 2px solid #c9c9c9;" type="text" class="form-control bg-transparent" placeholder="Apellido" name="apellido" aria-label="Apellido" aria-describedby="addon-wrapping" required>
+                </div>
+                <div class="input-group flex-nowrap mb-[22px]">
+                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent">@</span>
+                  <input style="border: 2px solid #c9c9c9;" type="email" class="form-control bg-transparent" placeholder="Correo electrónico" name="correo" aria-label="Correo" aria-describedby="addon-wrapping" required>
+                </div>
+                <div class="input-group flex-nowrap mb-[22px]">
+                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-key-fill"></i></span>
+                  <input style="border: 2px solid #c9c9c9;" type="password" class="form-control bg-transparent" placeholder="Contraseña" id="contrasena" name="contrasena" aria-label="Contraseña" aria-describedby="addon-wrapping" required>
+                </div>
+                <div id="errorContrasena" class="text-left input-group flex-nowrap mb-[22px]" style="display: none;">
+                  <span id="mensajeContrasena"></span>
+                </div>
+                <div class="input-group flex-nowrap mb-[22px]">
+                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-key"></i></span>
+                  <input style="border: 2px solid #c9c9c9;" type="password" class="form-control bg-transparent " placeholder="Confirmar contraseña" id="confirmar_contrasena"  name="confirmar_contrasena" aria-label="Confirmar contraseña" aria-describedby="addon-wrapping" required>
+                </div>
+                <div id="errorContrasenas" class="text-left input-group flex-nowrap mb-[22px]" style="display: none;">
+                    <span id="mensajeError"></span>
+                </div>
+                <div class="input-group flex-nowrap mb-[22px]">
+                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-image-fill"></i></span>
+                  <input style="border: 2px solid #c9c9c9;" type="file" accept="image/*" class="form-control bg-transparent" placeholder="Foto" name="foto" aria-label="Foto" aria-describedby="addon-wrapping" required>
+                </div>
+                <div class="mb-4">
+                    <button value="Sign Up" type="submit"
+                        class="w-full px-5 py-3 text-white transition duration-300 ease-in-out border rounded-md cursor-pointer botones_landing">Registrar administrador</button>
+                </div>
+            </form>
+
+
+
+        </div>
+
+    </div>
+
+    <script>
+    function validatePassword() {
+        const contenedor = document.getElementById('errorContrasenas');
+        const password = document.getElementById("contrasena").value;
+        const confirmPassword = document.getElementById("confirmar_contrasena").value;
+        const message = document.getElementById("mensajeError");
+
+        if (password !== "" && confirmPassword !== "") {
+            if (password === confirmPassword) {
+                contenedor.style.display = "block"
+                message.textContent = "Las contraseñas coinciden.";
+                message.style.color = "green";
+            } else {
+                contenedor.style.display = "block"
+                message.textContent = "Las contraseñas no coinciden.";
+                message.style.color = "red";
+            }
+        } else {
+            contenedor.style.display = "none"
+            message.textContent = ""; // Ocultar el mensaje si alguno de los campos está vacío
+        }
+    }
+
+    function validarContrasena() {
+        const contenedor = document.getElementById('errorContrasena');
+        const contrasena = document.getElementById('contrasena').value;
+        const mensajeError = document.getElementById('mensajeContrasena');
+
+        // Expresión regular para validar la contraseña
+        const regex = /^(?=.*[A-Z])(?=.*[\W_])(?=.*[a-zA-Z0-9]).{8,}$/;
+
+        if (contrasena !== ""){
+            if (!regex.test(contrasena)) {
+                contenedor.style.display = "block"
+                mensajeError.textContent = "La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula y un símbolo.";
+                mensajeError.style.color = "red";
+                return false;
+            } else {
+                contenedor.style.display = "none"
+                mensajeError.textContent = "";
+                return true;
+            }
+        } else {
+            contenedor.style.display = "none"
+            mensajeError.textContent = "";
+            return true;
+        }
+    }
+
+    document.getElementById('contrasena').addEventListener('input', validatePassword);
+    document.getElementById('confirmar_contrasena').addEventListener('input', validatePassword);
+    document.getElementById('contrasena').addEventListener('input', validarContrasena);
+    </script>
+{% endblock %}

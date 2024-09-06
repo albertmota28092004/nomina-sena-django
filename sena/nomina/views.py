@@ -5,10 +5,14 @@ from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django.utils.dateparse import parse_date
 
+from django.core.mail import BadHeaderError, EmailMessage
+from django.conf import settings
 import datetime
 import pdfkit
 from django.db import IntegrityError, transaction
 import datetime
+import openpyxl
+import xlwings as xw
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Q, Max
@@ -30,6 +34,7 @@ def login(request):
     if request.method == "POST":
         correo = request.POST.get("correo_login")
         contrasena = request.POST.get("contrasena_login")
+        remember_me = request.POST.get("remember_me", False)
 
         try:
             q = Usuario.objects.get(correo=correo, contrasena=contrasena)
@@ -42,6 +47,13 @@ def login(request):
                 "id": q.id
             }
             request.session["logueo"] = datos
+
+            # Manejo del "Recordar usuario"
+            if remember_me:
+                request.session.set_expiry(1209600)  # 2 semanas
+            else:
+                request.session.set_expiry(0)  # Cerrar la sesión al cerrar el navegador
+
             return HttpResponseRedirect(reverse("nomina:index"))
         except Usuario.DoesNotExist:
             messages.error(request, "Usuario o contraseña no válidos...")
@@ -76,14 +88,18 @@ def index(request):
         return render(request, 'nomina/login.html')
 
 
-def register(request):
+def registrarse(request):
     cargos = Usuario.CARGOS
     roles = Usuario.ROLES
     context = {
         'CARGOS': cargos,
         'ROLES': roles,
     }
-    return render(request, 'nomina/register.html', context)
+    return render(request, 'nomina/registrarse.html', context)
+
+
+def crear_admin(request):
+    pass
 
 
 def convert_html_to_pdf(source_html):
@@ -133,14 +149,6 @@ def descargar_recibo(request, nomina_id):
     if pisa_status.err:
         return HttpResponse(f'Error al generar el PDF: {pisa_status.err}')
     return response
-
-
-def practica(request):
-    nomina = get_object_or_404(Nomina, novedad__usuario__id=2)
-    contexto = {
-        "nomina": nomina
-    }
-    return render(request, 'nomina/recibo.html', contexto)
 
 
 def parafiscales(request, id):
@@ -351,17 +359,61 @@ def descargar_liquidacion(request, id):
 def colaboradores(request):
     if request.session.get("logueo", False):
         q = Usuario.objects.filter(rol=2).filter(activo=True)
-        q2 = Usuario.objects.filter(rol=2 ).filter(activo=False)
-        print(f'Usuarios retirados: {q2}')
+        q2 = Usuario.objects.filter(rol=2).filter(activo=False)
+        book = openpyxl.load_workbook('nomina/excel_files/excel_copia.xlsm')
+        sheet = book['EMPLEADOS']
+        valor = sheet['B3']
         cargos = Usuario.CARGOS
         roles = Usuario.ROLES
         clase_contrato = Usuario.CLASE_CONTRATO
-        contexto = {"data": q, 'retirados': q2, 'CARGOS': cargos, 'CLASE_CONTRATO':clase_contrato,'ROLES': roles, }
+        contexto = {"data": q, 'retirados': q2, 'CARGOS': cargos, 'CLASE_CONTRATO': clase_contrato, 'ROLES': roles,
+                    'valor': valor}
         return render(request, 'nomina/colaborador/colaboradores.html', contexto)
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))
 
+
+def prueba(request):
+    if request.session.get("logueo", False):
+        # Abre el archivo Excel con xlwings
+        wb = xw.Book('nomina/excel_files/excel_copia.xlsm')
+        sheet_empleados = wb.sheets['EMPLEADOS']
+        sheet_datos = wb.sheets['DATOS']
+
+        # Lee los datos de empleados (nombre, cargo) de la hoja EMPLEADOS
+        empleados = []
+        for row in range(3, 13):  # Filas de 3 a 12
+            cedula = sheet_empleados[f'A{row}'].value
+            nombre = sheet_empleados[f'B{row}'].value
+            cargo = sheet_empleados[f'C{row}'].value
+
+            # Busca el salario correspondiente al cargo en la hoja DATOS
+            salarios_rango = sheet_datos.range('B35:C74').value  # Lee todos los cargos y salarios
+            salario = 0
+            for cargo_datos, salario_datos in salarios_rango:
+                if cargo == cargo_datos:
+                    salario = salario_datos
+                    break
+
+            empleados.append({
+                'cedula': cedula,
+                'nombre': nombre,
+                'cargo': cargo,
+                'salario': salario,
+            })
+
+        # Asegúrate de actualizar las fórmulas y cálculos
+        wb.app.calculate()
+
+        # Cierra el libro sin guardar (opcional si no deseas guardar cambios)
+        wb.close()
+
+        contexto = {'empleados': empleados}
+        return render(request, 'nomina/prueba.html', contexto)
+    else:
+        messages.warning(request, "Debe iniciar sesión para ver esta página.")
+        return redirect('nomina:login')
 
 def colaborador_guardar(request):
     if request.method == "POST":
@@ -401,6 +453,22 @@ def colaborador_guardar(request):
                     motivo_retiro=motivo_retiro,
                 )
                 usu.save()
+                destinatario = usu.correo
+
+                mensaje = f"""
+                    <h1 style='color:blue;'>¡Ya eres parte de nuestra familia <strong>PRESS</strong>!</h1>
+                    <p>Tu registro fue exitoso. Ya puedes acceder a todas nuestras funciones ingresando con tu correo electrónico y esta contraseña: {usu.contrasena}. Puedes cambiarla cuando desees.</p>
+                    <a href='https://senapress.pythonanywhere.com'>Ingresa desde este link</a>
+                """
+
+                try:
+                    msg = EmailMessage("PRESS", mensaje, settings.EMAIL_HOST_USER, [destinatario])
+                    msg.content_subtype = "html"  # Habilitar html
+                    msg.send()
+                except BadHeaderError:
+                    return HttpResponse("Invalid header found.")
+                except Exception as e:
+                    return HttpResponse(f"Error: {e}")
                 messages.success(request, "Guardado correctamente!!")
             except Exception as e:
                 messages.error(request, f"Error. {e}")
@@ -518,8 +586,8 @@ def nomina_listar(request, fecha_inicio, fecha_fin):
 
         if usuario.rol == 2:
             try:
-                nominas = Nomina.objects.filter(novedad__usuario=usuario ,novedad__fecha_inicio=fecha_inicio, novedad__fecha_fin=fecha_fin)
-
+                nominas = Nomina.objects.filter(novedad__usuario=usuario, novedad__fecha_inicio=fecha_inicio,
+                                                novedad__fecha_fin=fecha_fin)
 
                 contexto = {
                     "nominas": nominas
@@ -558,6 +626,7 @@ def novedades_nomina(request):
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))
+
 
 def novedad_guardar(request):
     if request.method == "POST":
@@ -699,13 +768,14 @@ def usuario_guardar_imagen(f, nuevo_nombre):
 def usuario_guardar(request):
     if request.method == "POST":
         id = request.POST.get("id")
+        cedula = request.POST.get("cedula")
         nombre = request.POST.get('nombre')
         apellido = request.POST.get("apellido")
         correo = request.POST.get('correo')
         contrasena = request.POST.get('contrasena')
-        rol = request.POST.get("rol")
+        rol = 1
         foto = request.FILES.get("foto")
-        cargo = request.POST.get("cargo")
+        cargo = request.POST.get("cargo") or None
         riesgo = request.POST.get("riesgo") or 0
         fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
         tipo_contrato = request.POST.get("tipo_contrato") or None
@@ -722,6 +792,7 @@ def usuario_guardar(request):
             # crear
             try:
                 usu = Usuario(
+                    cedula=cedula,
                     nombre=nombre,
                     apellido=apellido,
                     correo=correo,
@@ -737,12 +808,34 @@ def usuario_guardar(request):
                 )
                 usu.save()
                 messages.success(request, "Guardado correctamente!!")
+                try:
+                    destinatario = usu.correo
+
+                    mensaje = f"""
+                        <h1 style='color:blue;'>¡Ya eres parte de nuestra familia <strong>PRESS</strong>!</h1>
+                        <p>Tu registro fue exitoso. Ya puedes acceder a todas nuestras funciones ingresando con tu correo electrónico y esta contraseña: {usu.contrasena}. Puedes cambiarla cuando desees.</p>
+                        <a href='https://senapress.pythonanywhere.com'>Ingresa desde este link</a>
+                    """
+
+                    try:
+                        msg = EmailMessage("PRESS", mensaje, settings.EMAIL_HOST_USER, [destinatario])
+                        msg.content_subtype = "html"  # Habilitar html
+                        msg.send()
+                    except BadHeaderError:
+                        return HttpResponse("Invalid header found.")
+                    except Exception as e:
+                        return HttpResponse(f"Error: {e}")
+
+                except Exception as e:
+                    print(f"{e}")
+
             except Exception as e:
                 messages.error(request, f"Error. {e}")
         else:
             # actualizar
             try:
                 q = Usuario.objects.get(pk=id)
+                q.cedula = cedula
                 q.nombre = nombre
                 q.apellido = apellido
                 q.correo = correo

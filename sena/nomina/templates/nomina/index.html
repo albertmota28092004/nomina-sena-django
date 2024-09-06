@@ -10,7 +10,6 @@
        background-color: #EBECE4;
     }
 </style>
-</head>
 
 <body>
     <div class="contenedor_todo_bienvenido row">
@@ -25,6 +24,7 @@
                     <a class="btn botones_bienvenido" href="{% url 'nomina:colaboradores' %}">Colaboradores</a>
                     <a class="btn botones_bienvenido" href="{% url 'nomina:novedades_nomina' %}">Novedades</a>
                     <a class="btn botones_bienvenido" href="{% url 'nomina:nomina' %}">Nóminas</a>
+                    <button class="btn botones_bienvenido" data-bs-toggle="modal" data-bs-target="#masButton">Más</button>
                 {% else %}
                     <a class="btn botones_bienvenido" href="{% url 'nomina:nomina' %}">Mi nómina</a>
                 {% endif %}
@@ -52,6 +52,23 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
                     <a href="{% url 'nomina:logout' %}" class="btn btn-danger">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="masButton" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="masButtonLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="masButtonLabel"></h1>
+                    <button class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul style="text-align: center; text-decoration: none; list-display: none;">
+                        <li class="text-center"><a class="btn" href="{% url 'nomina:registrarse' %}">---------------   Registrar administrador   ---------------</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

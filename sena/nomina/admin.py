@@ -6,7 +6,7 @@ from django.utils.html import mark_safe
 # Register your models here.
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso',
+    list_display = ['id', 'cedula', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso',
                     'riesgo',
                     'tipo_contrato', 'fecha_fin_contrato', 'activo', 'fecha_retiro', 'motivo_retiro']
 

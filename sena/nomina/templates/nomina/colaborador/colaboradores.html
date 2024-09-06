@@ -13,35 +13,45 @@
         color: #EBECE4;
     }
 
-    .contenedor_colaboradores {
+    .card {
+        background-color: #EBECE4;
+    }
+
+    .contenedor_todo {
         display: flex;
         flex-direction: row;
-        gap: 50px;
-        justify-content: space-between;
+    }
+
+    .contenedor_colaboradores {
+        display: flex;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias filas */
+        gap: 20px; /* Ajusta el espacio entre las tarjetas según sea necesario */
+        justify-content: space-between; /* Distribuye el espacio entre las tarjetas */
     }
 
     .contenedor_colaborador {
         text-align: center;
-        width: 300px;
+        width: calc(33.333% - 20px); /* Ajusta el ancho para tres columnas con espacio entre ellas */
         overflow: hidden;
         border-radius: 20px 20px 0 0px;
         --tw-shadow: 0px 10px 10px 0px #ccc;
         --tw-shadow-colored: 0px 10px 10px 0px #000000;
         box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-
+        box-sizing: border-box; /* Incluye el padding y border en el ancho total */
     }
 
     .img-colaborador {
         margin: auto;
-        width: 300px !important;
+        width: 100%; /* Ajusta el ancho de la imagen al contenedor */
         height: 300px;
+        object-fit: cover; /* Ajusta la imagen para que cubra el área del contenedor */
     }
 
     #ver_mas_info {
         background-color: #EBECE4;
         text-align: center;
         flex-direction: column;
-        width: 300px !important;
+        width: 100%;
         display: none;
         position: absolute;
         padding: 20px;
@@ -51,13 +61,12 @@
     }
 
     h4 {
-        width: 100% !important;
+        width: 100%;
         white-space: nowrap;
-
     }
 
     h6 {
-        font-weight: normal !important;
+        font-weight: normal;
         font-size: 14px;
     }
 
@@ -65,10 +74,6 @@
         display: flex;
         flex-direction: column;
         margin-bottom: 10px;
-    }
-
-    .card {
-        background-color: #EBECE4;
     }
 
     .modal-content {
@@ -82,12 +87,12 @@
     }
 
     #retirados {
-        gap: 50px;
+        gap: 20px;
         display: none;
     }
 
     #activos {
-        gap: 50px;
+        gap: 20px;
         display: flex;
     }
 
@@ -112,8 +117,8 @@
         background-color: #f0f0f0;
         cursor: pointer;
     }
-
 </style>
+
 
 <body style="background-color: #442B1C;">
 
@@ -231,8 +236,9 @@
 </div>
 
 <!-- Contenido principal -->
-<div class="card shadow mb-4">
+<div class="card shadow mb-4 contenedor_todo">
     <div class="card-body contenedor_colaboradores">
+        <!-- Colaboradores activos -->
         <div id="activos">
             {% for c in data %}
             <div class="contenedor_colaborador">
@@ -297,6 +303,7 @@
             </div>
             {% endfor %}
         </div>
+        <!-- Colaboradores retirados -->
         <div id="retirados">
             {% for r in retirados %}
             <div class="contenedor_colaborador">
@@ -304,7 +311,7 @@
                     <img class="img-colaborador" src="{{ r.foto.url }}" alt="">
                 </div>
                 <div class="info_colaborador">
-                    <h4>{{ r.nombre }} {{ r.apellido }}</h4>
+                    <h4>{{ valor.value }} {{ r.apellido }}</h4>
                     <h6>{{ r.get_cargo_display }}</h6>
                 </div>
                 <div>
@@ -320,7 +327,8 @@
             </div>
             {% endfor %}
         </div>
-
+    </div>
+    <div>
         <button id="btnRetirados" class="btn btn-dark boton_colaboradores_retirados" onclick="mostrarRetirados()">
             Colaboradores retirados
         </button>
