@@ -1,6 +1,6 @@
 import openpyxl
 
-book = openpyxl.load_workbook('nomina/excel_files/excel_copia.xlsm')
+book = openpyxl.load_workbook('nomina/static/nomina/files/excel_copia.xlsm')
 sheet = book['EMPLEADOS']
 
 b3 = sheet['B3']

@@ -2,6 +2,7 @@
 {% load static %}
 {% block titulo %}Colaboradores{% endblock %}
 {% block contenedor %}
+<link href="{% static 'nomina/css/index.css' %}" rel="stylesheet">
 
 <style>
     .boton_regresar, .boton_mas {
@@ -19,19 +20,22 @@
 
     .contenedor_todo {
         display: flex;
+        position: relative;
         flex-direction: row;
+        padding: 20px;
     }
 
-    .contenedor_colaboradores {
+    .contenedor_colaboradores, #retirados{
+        margin-top: 20px;
         display: flex;
         flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias filas */
-        gap: 20px; /* Ajusta el espacio entre las tarjetas según sea necesario */
-        justify-content: space-between; /* Distribuye el espacio entre las tarjetas */
+        justify-content: flex-start; /* Asegura que los elementos se alineen al inicio */
+        gap: 30px;
     }
 
     .contenedor_colaborador {
         text-align: center;
-        width: calc(33.333% - 20px); /* Ajusta el ancho para tres columnas con espacio entre ellas */
+        width: 300px;
         overflow: hidden;
         border-radius: 20px 20px 0 0px;
         --tw-shadow: 0px 10px 10px 0px #ccc;
@@ -51,13 +55,14 @@
         background-color: #EBECE4;
         text-align: center;
         flex-direction: column;
-        width: 100%;
+        width: 300px;
         display: none;
         position: absolute;
         padding: 20px;
         --tw-shadow-colored: 0px 10px 10px 0px #000000;
         box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
         border-radius: 0 0px 20px 20px;
+        z-index: 100;
     }
 
     h4 {
@@ -70,7 +75,7 @@
         font-size: 14px;
     }
 
-    .info_colaborador {
+   .info_colaborador {
         display: flex;
         flex-direction: column;
         margin-bottom: 10px;
@@ -80,6 +85,12 @@
         background-color: #EBECE4 !important;
     }
 
+    .contenedor_boton_colaboradores_retirados {
+        position: absolute;
+        top: 0 !important;
+        right: 0 !important;
+    }
+
     .boton_colaboradores_retirados {
         height: 50px;
         width: 200px;
@@ -87,19 +98,26 @@
     }
 
     #retirados {
-        gap: 20px;
         display: none;
     }
 
-    #activos {
-        gap: 20px;
-        display: flex;
+    .contenedor_presentacion_colaborador {
+        position: relative;
+    }
+
+    .boton-menu-acciones {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 10px 20px;
+        background-color: #fff;
+        border-radius: 100px;
+        cursor: pointer;
     }
 
     .menu-acciones {
         padding: 10px;
         border-radius: 5px;
-        margin-top: 20px;
     }
 
     .menu-acciones button, .menu-acciones a {
@@ -117,23 +135,212 @@
         background-color: #f0f0f0;
         cursor: pointer;
     }
-</style>
 
+    .contenedor_crear_usuario {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+        color: #fff;
+    }
+
+    .crear_usuario_opciones {
+        margin-top: 50px;
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .link-crear-usuario {
+        border: 0 solid transparent !important;
+    }
+
+    .opciones {
+        color: #fff !important;
+        width: 200px;
+        height: 200px;
+        border-radius: 500px;
+        border: 5px solid #fff;
+        padding: 30px;
+    }
+
+    .opciones:hover {
+        color: #442B1C !important;
+        background-color: #fff;
+    }
+
+    .iconos-crear-usuario {
+        font-size: 50px;
+    }
+
+    .bi-list {
+        font-size: 25px;
+        color: #fff;
+    }
+
+    .acciones_principal {
+        cursor: pointer;
+    }
+
+</style>
 
 <body style="background-color: #442B1C;">
 
 <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
+    <div class="container-fluid d-flex align-items-center">
         <a class="btn btn-light transition duration-300 ease-in-out boton_regresar" href="{% url 'nomina:index' %}">
             Regresar <i class="fa-solid fa-reply"></i>
         </a>
+        {% if data %}
         <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Colaboradores</h1>
-        <button class="btn btn-light rounded boton_mas" data-bs-toggle="modal" data-bs-target="#colaboradorModal">
-            Crear Colaborador
-        </button>
+        <div class="acciones_principal" onclick="toggleMenuDefault()">
+            <i class="bi bi-list"></i>
+        </div>
+        <div id="toggle_menu" class="menu-acciones" style="display: none; position: absolute; top: 30px; right: 10px; background-color: white; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); z-index: 100;">
+            <button class="btn btn-light rounded" data-bs-toggle="modal" data-bs-target="#colaboradorModal">
+                <i class="bi bi-person-add"></i> Crear colaborador nuevo
+            </button>
+            <button class="btn btn-light rounded" data-bs-toggle="modal" data-bs-target="#excelModal">
+                <i class="bi bi-file-earmark-plus-fill"></i> Importar desde Excel
+            </button>
+        </div>
+        {% endif %}
     </div>
 </nav>
 
+
+{% if data %}
+<!-- Contenido principal -->
+<div class="card shadow mb-4 contenedor_todo">
+    <div id="contenedor_colaborador" class="card-body contenedor_colaboradores">
+        {% for c in data %}
+        <div class="contenedor_colaborador">
+            <div class="contenedor_presentacion_colaborador">
+                {% if c.foto %}
+                <img class="img-colaborador" src="{{ c.foto.url }}" alt="">
+                {% else %}
+                <img class="img-colaborador" src="{% static 'nomina/img/empresario1.jpg' %}" alt="">
+                {% endif %}
+                <!-- Ícono de tres puntos en la esquina superior derecha -->
+                <div class="boton-menu-acciones" onclick="toggleMenu({{ c.id }})">
+                    <i class="fa fa-ellipsis-v" ></i>
+                </div>
+
+                <!-- Menú desplegable -->
+                <div id="menu-{{ c.id }}" class="menu-acciones" style="display: none; position: absolute; top: 30px; right: 10px; background-color: white; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); z-index: 100;">
+                    <button title="Editar colaborador" class="btn" data-bs-toggle="modal" data-bs-target="#editarModal{{ c.id }}">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </button>
+                    <a title="Liquidar colaborador" class="btn" href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');">
+                        <i class="bi bi-receipt"></i> Liquidar
+                    </a>
+                </div>
+            </div>
+            <div class="info_colaborador">
+                <h4>{{ c.nombre }} {{ c.apellido }}</h4>
+                <h6>{{ c.cargo }}</h6>
+                <!--<div>
+                    <button title="Editar colaborador" id="abrirModal" class="btn" data-bs-toggle="modal"
+                            data-bs-target="#editarModal{{ c.id }}"><i class="bi bi-pencil-fill"></i></button>
+                    <a title="Liquidar colaborador" class="btn" href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');"><i class="bi bi-receipt"></i></a>
+                </div>-->
+            </div>
+            <div class="ver_mas_contenedor">
+                <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
+                    Ver más <i class="fa-solid fa-angle-down"></i>
+                </button>
+                <div id="ver_mas_info">
+                    <h6>Fecha de ingreso: {{ c.fecha_ingreso }}</h6>
+                    <h6>Correo: {{ c.correo }}</h6>
+                    <h6>Riesgo: {{ c.riesgo }}</h6>
+                    <h6>Tipo de contrato: {{ c.tipo_contrato }}</h6>
+                    {% if c.fecha_fin_contrato %}
+                    <h6>Fecha fin de contrato: {{ c.fecha_fin_contrato }}</h6>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- Modal Editar Colaborador -->
+        <div class="modal fade" id="editarModal{{ c.id }}" tabindex="-1"
+             aria-labelledby="editarModalLabel{{ c.id }}"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editarModalLabel{{ c.id }}">Editar Colaborador</h1>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body" id="contenidoModalBody">
+                        {% include 'nomina/colaborador/colaborador-editar.html' with data=c %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- Colaboradores retirados -->
+    <div id="retirados">
+        {% if retirados %}
+            {% for r in retirados %}
+            <div class="contenedor_colaborador">
+                <div>
+                    {% if r.foto %}
+                    <img class="img-colaborador" src="{{ r.foto.url }}" alt="">
+                    {% else %}
+                    <img class="img-colaborador" src="{% static 'nomina/img/empresario1.jpg' %}" alt="">
+                    {% endif %}
+                </div>
+                <div class="info_colaborador">
+                    <h4>{{ r.nombre }} {{ r.apellido }}</h4>
+                    <h6>{{ r.cargo }}</h6>
+                </div>
+                <div>
+                    <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
+                        Ver más <i class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <div id="ver_mas_info">
+                        <h6>Fecha de ingreso: {{ r.fecha_ingreso }}</h6>
+                        <h6>Fecha de retiro: {{ r.fecha_retiro }}</h6>
+                        <h6>Motivo de retiro: {{ r.motivo_retiro }}</h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        No hay colaboradores retirados...
+        {% endif %}
+    </div>
+    <div class="contenedor_boton_colaboradores_retirados">
+        <button id="btnRetirados" class="btn btn-dark boton_colaboradores_retirados" onclick="mostrarRetirados()">
+            Colaboradores retirados
+        </button>
+    </div>
+</div>
+{% else %}
+<div class="contenedor_crear_usuario">
+    <h1>Crear colaborador(es) nuevo(s)</h1>
+    <div class="crear_usuario_opciones">
+        <button class="link-crear-usuario btn" data-bs-toggle="modal" data-bs-target="#colaboradorModal">
+            <div class="opciones transition duration-100 ease-in-out ">
+                <i class="iconos-crear-usuario bi bi-person-fill"></i>
+                <p>Crear colaborador nuevo</p>
+            </div>
+        </button>
+        <button class="link-crear-usuario btn" data-bs-toggle="modal" data-bs-target="#excelModal">
+            <div class="opciones transition duration-100 ease-in-out ">
+                <i class="iconos-crear-usuario bi bi-file-earmark-spreadsheet-fill"></i>
+                <p>
+                    Importar desde Excel
+                </p>
+            </div>
+        </button>
+    </div>
+</div>
+{% endif %}
 
 <!-- Modal Crear Colaborador -->
 <div class="modal fade" id="colaboradorModal" tabindex="-1" aria-labelledby="colaboradorModalLabel"
@@ -150,11 +357,6 @@
                 <form action="{% url 'nomina:colaborador_guardar' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <p><strong style="color:red;">*</strong>: Obligatorio</p>
-                    <div class="mb-3" hidden>
-                        <label for="nombre" class="form-label">ID:</label>
-                        <input type="text" class="form-control" id="id"
-                               placeholder="Ingresa nombre" name="id" value="{{ data.id }}">
-                    </div>
                     <div class="mb-3">
                         <label class="form-label">Cédula: <strong style="color:red;">*</strong></label>
                         <input type="number" class="form-control" id="cedula"
@@ -172,28 +374,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Correo: <strong style="color:red;">*</strong></label>
-                        <input type="text" class="form-control" id="correo"
+                        <input type="email" class="form-control" id="correo"
                                placeholder="Ingresa correo" name="correo">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Contraseña: <strong style="color:red;">*</strong></label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="contrasena" placeholder="Ingresa contraseña" name="contrasena">
-                            <span class="input-group-text" onclick="togglePassword('contrasena')">
-                                <i class="fa fa-eye" id="eye-contrasena"></i>
-                            </span>
-                        </div>
-                        <span id="mensajeError"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Confirmar contraseña: <strong style="color:red;">*</strong></label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="confirmar_contrasena" placeholder="Confirma contraseña" name="confirmar_contrasena" onkeyup="validatePassword()">
-                            <span class="input-group-text" onclick="togglePassword('confirmar_contrasena')">
-                                <i class="fa fa-eye" id="eye-confirmar_contrasena"></i>
-                            </span>
-                        </div>
-                        <div id="password-match" style="color:red;"></div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Foto: <strong style="color:red;">*</strong></label>
@@ -202,12 +384,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Cargo: <strong style="color:red;">*</strong></label>
-                        <select class="form-control" id="cargo" name="cargo">
-                            {% for key, value in CARGOS %}
-                            <option value="{{ key }}" {% if data.cargo == key %} selected {% endif %}>{{ value }}
-                            </option>
-                            {% endfor %}
-                        </select>
+                        <input type="text" class="form-control" id="cargo"
+                               placeholder="Ingresa cargo" name="cargo">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
@@ -215,13 +393,14 @@
                                placeholder="Ingresa el riesgo" name="riesgo">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Salario: <strong style="color:red;">*</strong></label>
+                        <input type="number" class="form-control" id="salario"
+                               placeholder="Ingresa el salario" name="salario">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Tipo de contrato: <strong style="color:red;">*</strong></label>
-                        <select class="form-control" id="tipo_contrato" name="tipo_contrato">
-                            {% for key, value in CLASE_CONTRATO %}
-                            <option value="{{ key }}" {% if data.tipo_contrato == key %} selected {% endif %}>{{ value }}
-                            </option>
-                            {% endfor %}
-                        </select>
+                        <input type="text" class="form-control" id="tipo_contrato"
+                               placeholder="Ingresa el tipo de contrato" name="tipo_contrato">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Fecha fin del contrato:</label>
@@ -235,112 +414,48 @@
     </div>
 </div>
 
-<!-- Contenido principal -->
-<div class="card shadow mb-4 contenedor_todo">
-    <div class="card-body contenedor_colaboradores">
-        <!-- Colaboradores activos -->
-        <div id="activos">
-            {% for c in data %}
-            <div class="contenedor_colaborador">
-                <div style="position: relative;">
-                    <img class="img-colaborador" src="{{ c.foto.url }}" alt="">
-                    <!-- Ícono de tres puntos en la esquina superior derecha -->
-                    <div style="position: absolute; top: 10px; right: 10px; cursor: pointer; background-color: #fff; padding: 10px 20px; border-radius: 500px;" onclick="toggleMenu({{ c.id }})">
-                        <i class="fa fa-ellipsis-v" ></i>
-                    </div>
-
-                    <!-- Menú desplegable -->
-                    <div id="menu-{{ c.id }}" class="menu-acciones" style="display: none; position: absolute; top: 30px; right: 10px; background-color: white; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); z-index: 100;">
-                        <button title="Editar colaborador" class="btn" data-bs-toggle="modal" data-bs-target="#editarModal{{ c.id }}">
-                            <i class="bi bi-pencil-fill"></i> Editar
-                        </button>
-                        <a title="Liquidar colaborador" class="btn" href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');">
-                            <i class="bi bi-receipt"></i> Liquidar
-                        </a>
-                    </div>
-                </div>
-                <div class="info_colaborador">
-                    <h4>{{ c.nombre }} {{ c.apellido }}</h4>
-                    <h6>{{ c.get_cargo_display }}</h6>
-                    <!--<div>
-                        <button title="Editar colaborador" id="abrirModal" class="btn" data-bs-toggle="modal"
-                                data-bs-target="#editarModal{{ c.id }}"><i class="bi bi-pencil-fill"></i></button>
-                        <a title="Liquidar colaborador" class="btn" href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');"><i class="bi bi-receipt"></i></a>
-                    </div>-->
-                </div>
-                <div>
-                    <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
-                        Ver más <i class="fa-solid fa-angle-down"></i>
-                    </button>
-                    <div id="ver_mas_info">
-                        <h6>Fecha de ingreso: {{ c.fecha_ingreso }}</h6>
-                        <h6>Correo: {{ c.correo }}</h6>
-                        <h6>Riesgo: {{ c.riesgo }}</h6>
-                        <h6>Tipo de contrato: {{ c.get_tipo_contrato_display }}</h6>
-                        {% if c.fecha_fin_contrato %}
-                        <h6>Fecha fin de contrato: {{ c.fecha_fin_contrato }}</h6>
-                        {% endif %}
-                    </div>
-                </div>
+<!-- Modal Insertar Excel -->
+<div class="modal fade" id="excelModal" tabindex="-1" aria-labelledby="excelModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="excelModalLabel">Insertar Excel</h1>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
             </div>
-            <!-- Modal Editar Colaborador -->
-            <div class="modal fade" id="editarModal{{ c.id }}" tabindex="-1"
-                 aria-labelledby="editarModalLabel{{ c.id }}"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="editarModalLabel{{ c.id }}">Editar Colaborador</h1>
-                            <button type="button" class="btn btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close">
-                            </button>
-                        </div>
-                        <div class="modal-body" id="contenidoModalBody">
-                            {% include 'nomina/colaborador/colaborador-editar.html' with data=c %}
-                        </div>
+            <div class="modal-body">
+                <p>Puedes registrar a tus colaboradores por medio de Excel, descargando este formato y llenándolo con la información de tus empleados. <a href="{% static 'nomina/files/formato_colaborador.xlsm' %}" download="formato_colaborador.xlsm">Descargar formato</a></p>
+                <form method="post" action="{% url 'nomina:colaborador_guardar_excel' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="input-group flex-nowrap mb-[22px]">
+                        <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-upload"></i></span>
+                        <input style="border: 2px solid #c9c9c9;"
+                               type="file"
+                               accept=".xls,.xlsx,.xlsm,.csv"
+                               class="form-control bg-transparent"
+                               placeholder="Archivo Excel"
+                               name="archivo_excel"
+                               aria-label="Archivo Excel"
+                               aria-describedby="addon-wrapping"
+                               required>
                     </div>
-                </div>
+                    <div class="mb-4">
+                        <button value="Sign Up" type="submit"
+                            class="w-full px-5 py-3 text-white transition duration-300 ease-in-out border rounded-md cursor-pointer botones_landing">Guardar colaboradores</button>
+                    </div>
+                </form>
             </div>
-            {% endfor %}
         </div>
-        <!-- Colaboradores retirados -->
-        <div id="retirados">
-            {% for r in retirados %}
-            <div class="contenedor_colaborador">
-                <div>
-                    <img class="img-colaborador" src="{{ r.foto.url }}" alt="">
-                </div>
-                <div class="info_colaborador">
-                    <h4>{{ valor.value }} {{ r.apellido }}</h4>
-                    <h6>{{ r.get_cargo_display }}</h6>
-                </div>
-                <div>
-                    <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
-                        Ver más <i class="fa-solid fa-angle-down"></i>
-                    </button>
-                    <div id="ver_mas_info">
-                        <h6>Fecha de ingreso: {{ r.fecha_ingreso }}</h6>
-                        <h6>Fecha de retiro: {{ r.fecha_retiro }}</h6>
-                        <h6>Motivo de retiro: {{ r.motivo_retiro }}</h6>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div>
-        <button id="btnRetirados" class="btn btn-dark boton_colaboradores_retirados" onclick="mostrarRetirados()">
-            Colaboradores retirados
-        </button>
     </div>
 </div>
-
 
 <script>
     function mostrarRetirados() {
         const btnRetirados = document.getElementById("btnRetirados");
         const retirados = document.getElementById("retirados");
-        const activos = document.getElementById("activos");
+        const activos = document.getElementById("contenedor_colaborador");
 
         if (activos.style.display === 'none') {
             // Mostrar activos y ocultar retirados
@@ -426,6 +541,15 @@
         }
     }
 
+    function toggleMenuDefault() {
+        var menu = document.getElementById("toggle_menu");
+        if (menu.style.display === "none" || menu.style.display === "") {
+            menu.style.display = "block";
+        } else {
+            menu.style.display = "none";
+        }
+    }
+
 
     // Escuchar el evento 'input' en el campo de la contraseña para validar en tiempo real
     document.getElementById('contrasena').addEventListener('input', validarContrasena);
@@ -433,7 +557,6 @@
     document.getElementById('confirmar_contrasena').addEventListener('input', validatePassword);
 
 </script>
-
 
 </body>
 {% endblock %}

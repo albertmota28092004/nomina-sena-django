@@ -1,0 +1,124 @@
+{% extends 'nomina/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block titulo %}Novedades{% endblock %}
+{% block contenedor %}
+
+<style>
+    .boton_regresar, .boton_mas {
+        background-color: #EBECE4;
+    }
+
+    .boton_regresar:hover, .boton_mas:hover {
+        background-color: #000000;
+        color: #EBECE4;
+    }
+
+    .contenedor-reportar-novedad {
+        margin: 10px 100px;
+
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    .contenedor-tarjeta-reportar-novedad {
+        background-color: #EBECE4;
+        padding: 30px;
+        border-radius: 30px;
+    }
+
+    .tarjeta-reportar-novedad {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        padding: 20px;
+    }
+
+    .contenedor-imagen-reportar-novedad {
+        padding-right: 20px;
+    }
+
+    .imagen-reportar-novedad {
+        width: 200px;
+        height: 200px;
+        border-radius: 100px;
+    }
+
+    .boton-reportar-novedad {
+        margin-bottom: 20px;
+    }
+
+    .contenedor-guardar-cambios-boton {
+        text-align: center;
+    }
+
+    .guardar-cambios-boton {
+        width: 400px;
+        height: 80px;
+        font-size: 40px;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <button class="btn btn-light transition duration-300 ease-in-out boton_regresar" onclick="window.history.back();">
+                Regresar <i class="fa-solid fa-reply"></i>
+            </button>
+        </div>
+    </nav>
+  <div class="contenedor-reportar-novedad">
+      <h2>¿Hay alguna novedad para reportar en los colaboradores?</h2>
+      <div class="contenedor-tarjeta-reportar-novedad">
+          {% for i in novedades %}
+          <div class="tarjeta-reportar-novedad">
+              <div class="contenedor-imagen-reportar-novedad">
+                  {% if i.usuario.foto %}
+                  <img class="imagen-reportar-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}">
+                  {% else %}
+                  <img class="imagen-reportar-novedad" src="{% static 'nomina/img/empresario1.jpg' %}" alt="Foto de {{ i.usuario }}">
+                  {% endif %}
+              </div>
+              <div>
+                  <h6>{{ i.usuario.cedula }}</h6>
+                  <h4>{{ i.usuario }}</h4>
+                  <h5>{{ i.usuario.cargo }}</h5>
+                  {% if i.fecha_ultima_actualizacion != None %}
+                  <h5>Últ. actualización: {{ i.fecha_ultima_actualizacion }}</h5>
+                  {% endif %}
+                  <button class="btn btn-dark boton-reportar-novedad" id="abrirModalEditarNovedad" data-bs-toggle="modal" data-bs-target="#editarModalNovedad{{ i.id }}">Reportar novedad</button>
+              </div>
+          </div>
+          <div class="modal fade" id="editarModalNovedad{{ i.id }}" tabindex="-1" aria-labelledby="editarModalNovedadLabel{{ i.id }}"
+                             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editarModalNovedadLabel{{ i.id }}">Editar Colaborador</h1>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body" id="contenidoModalBody">
+                        {% include 'nomina/novedad/novedades_editar.html' with data=i %}
+                    </div>
+                </div>
+            </div>
+          </div>
+          {% endfor %}
+          <form action="{% url 'nomina:actualizar_novedades' %}" method="post" id="formGuardarCambios">
+            {% csrf_token %}
+            <div class="contenedor-guardar-cambios-boton">
+                <button class="btn btn-primary guardar-cambios-boton" type="submit">Guardar cambios</button>
+            </div>
+          </form>
+      </div>
+  </div>
+
+</body>
+
+{% endblock %}

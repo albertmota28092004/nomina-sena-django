@@ -13,241 +13,193 @@
         color: #EBECE4;
     }
 
-    .card {
-        background-color: #EBECE4;
-    }
-
-    .contenedor_todo {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .contenedor_colaboradores {
-        display: flex;
-        flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias filas */
-        gap: 20px; /* Ajusta el espacio entre las tarjetas según sea necesario */
-        justify-content: space-between; /* Distribuye el espacio entre las tarjetas */
-    }
-
-    .contenedor_colaborador {
-        text-align: center;
-        width: calc(33.333% - 20px); /* Ajusta el ancho para tres columnas con espacio entre ellas */
-        overflow: hidden;
-        border-radius: 20px 20px 0 0px;
-        --tw-shadow: 0px 10px 10px 0px #ccc;
-        --tw-shadow-colored: 0px 10px 10px 0px #000000;
-        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-        box-sizing: border-box; /* Incluye el padding y border en el ancho total */
-    }
-
-    .img-colaborador {
-        margin: auto;
-        width: 100%; /* Ajusta el ancho de la imagen al contenedor */
-        height: 300px;
-        object-fit: cover; /* Ajusta la imagen para que cubra el área del contenedor */
-    }
-
-    #ver_mas_info {
-        background-color: #EBECE4;
-        text-align: center;
-        flex-direction: column;
-        width: 100%;
-        display: none;
-        position: absolute;
-        padding: 20px;
-        --tw-shadow-colored: 0px 10px 10px 0px #000000;
-        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-        border-radius: 0 0px 20px 20px;
-    }
-
-    h4 {
-        width: 100%;
-        white-space: nowrap;
-    }
-
-    h6 {
-        font-weight: normal;
-        font-size: 14px;
-    }
-
-    .info_colaborador {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 10px;
-    }
-
-    .modal-content {
+    .table thead {
         background-color: #EBECE4 !important;
     }
 
-    .boton_colaboradores_retirados {
-        height: 50px;
-        width: 200px;
-        margin-left: auto;
+    td, th {
+        border: 1px solid #C4C7C1;
+        text-align: center;
+        white-space: nowrap;
+        padding: 20px;
     }
 
-    #retirados {
-        gap: 20px;
-        display: none;
+    th {
+        background-color: #442B1C;
+        color: #EBECE4;
     }
 
-    #activos {
-        gap: 20px;
-        display: flex;
+    .card {
+        background-color: #EBECE4;
+        margin: 10px;
     }
 
-    .menu-acciones {
-        padding: 10px;
-        border-radius: 5px;
-        margin-top: 20px;
+    h1 {
+        color: #EBECE4 !important;
     }
 
-    .menu-acciones button, .menu-acciones a {
-        display: block;
-        width: 100%;
-        padding: 5px 10px;
-        text-align: left;
-        background-color: transparent;
-        border: none;
-        color: #333;
-        text-decoration: none;
-    }
-
-    .menu-acciones button:hover, .menu-acciones a:hover {
-        background-color: #f0f0f0;
+    /* Botón de scroll */
+    #scrollToEndBtn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        padding: 10px 20px;
         cursor: pointer;
+        background-color: #442B1C;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .table-container {
+        position: relative;
+        max-height: 600px; /* Ajusta la altura según sea necesario */
+        overflow: auto;
+    }
+
+    .table-responsive {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .table-responsive table {
+        border-collapse: collapse;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .table-responsive thead th {
+        position: sticky;
+        top: 0;
+        background-color: #442B1C;
+        color: #EBECE4;
+        z-index: 10;
+    }
+
+    .table-responsive thead th, .table-responsive tbody td {
+        position: relative;
+        background-color: #EBECE4; /* Fondo para las celdas de la tabla, si es necesario */
+    }
+
+    .table-responsive .horizontal-scroll-container {
+        position: sticky;
+        top: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        z-index: 9;
     }
 </style>
 
 
-<body style="background-color: #442B1C;">
-
-<nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-        <a class="btn btn-light transition duration-300 ease-in-out boton_regresar" href="{% url 'nomina:index' %}">
-            Regresar <i class="fa-solid fa-reply"></i>
-        </a>
-        <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Colaboradores</h1>
-        <button class="btn btn-light rounded boton_mas">
-            Crear Colaborador
-        </button>
-    </div>
-</nav>
-
 <!-- Contenido principal -->
 <div class="card shadow mb-4 contenedor_todo">
-    <div class="card-body contenedor_colaboradores">
-        {% for empleado in empleados %}
+    <div id="contenedor_colaborador" class="card-body contenedor_colaboradores">
+        {% for c in data %}
         <div class="contenedor_colaborador">
-            <h6>{{ empleado.cedula }}</h6>
-            <h4>{{ empleado.nombre }}</h4>
-            <h6>{{ empleado.cargo }}</h6>
-            <h6>{{ empleado.salario }}</h6>
+            <div class="contenedor_presentacion_colaborador">
+                {% if c.foto %}
+                <img class="img-colaborador" src="{{ c.foto.url }}" alt="">
+                {% else %}
+                <img class="img-colaborador" src="{% static 'nomina/img/empresario1.jpg' %}" alt="">
+                {% endif %}
+                <!-- Ícono de tres puntos en la esquina superior derecha -->
+                <div class="boton-menu-acciones" onclick="toggleMenu({{ c.id }})">
+                    <i class="fa fa-ellipsis-v" ></i>
+                </div>
+
+                <!-- Menú desplegable -->
+                <div id="menu-{{ c.id }}" class="menu-acciones" style="display: none; position: absolute; top: 30px; right: 10px; background-color: white; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); z-index: 100;">
+                    <button title="Editar colaborador" class="btn" data-bs-toggle="modal" data-bs-target="#editarModal{{ c.id }}">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </button>
+                    <a title="Liquidar colaborador" class="btn" href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');">
+                        <i class="bi bi-receipt"></i> Liquidar
+                    </a>
+                </div>
+            </div>
+            <div class="info_colaborador">
+                <h4>{{ c.nombre }} {{ c.apellido }}</h4>
+                <h6>{{ c.cargo }}</h6>
+                <!--<div>
+                    <button title="Editar colaborador" id="abrirModal" class="btn" data-bs-toggle="modal"
+                            data-bs-target="#editarModal{{ c.id }}"><i class="bi bi-pencil-fill"></i></button>
+                    <a title="Liquidar colaborador" class="btn" href="javascript:confirmar_liquidar('{{ c.id }}', '{% url 'nomina:liquidacion' c.id %}');"><i class="bi bi-receipt"></i></a>
+                </div>-->
+            </div>
+            <div class="ver_mas_contenedor">
+                <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
+                    Ver más <i class="fa-solid fa-angle-down"></i>
+                </button>
+                <div id="ver_mas_info">
+                    <h6>Fecha de ingreso: {{ c.fecha_ingreso }}</h6>
+                    <h6>Correo: {{ c.correo }}</h6>
+                    <h6>Riesgo: {{ c.riesgo }}</h6>
+                    <h6>Tipo de contrato: {{ c.get_tipo_contrato_display }}</h6>
+                    {% if c.fecha_fin_contrato %}
+                    <h6>Fecha fin de contrato: {{ c.fecha_fin_contrato }}</h6>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- Modal Editar Colaborador -->
+        <div class="modal fade" id="editarModal{{ c.id }}" tabindex="-1"
+             aria-labelledby="editarModalLabel{{ c.id }}"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editarModalLabel{{ c.id }}">Editar Colaborador</h1>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body" id="contenidoModalBody">
+                        {% include 'nomina/colaborador/colaborador-editar.html' with data=c %}
+                    </div>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
+    <!-- Colaboradores retirados -->
+    <div id="retirados">
+        {% if retirados %}
+            {% for r in retirados %}
+            <div class="contenedor_colaborador">
+                <div>
+                    {% if r.foto %}
+                    <img class="img-colaborador" src="{{ r.foto.url }}" alt="">
+                    {% else %}
+                    <img class="img-colaborador" src="{% static 'nomina/img/empresario1.jpg' %}" alt="">
+                    {% endif %}
+                </div>
+                <div class="info_colaborador">
+                    <h4>{{ r.nombre }} {{ r.apellido }}</h4>
+                    <h6>{{ r.cargo }}</h6>
+                </div>
+                <div>
+                    <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
+                        Ver más <i class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <div id="ver_mas_info">
+                        <h6>Fecha de ingreso: {{ r.fecha_ingreso }}</h6>
+                        <h6>Fecha de retiro: {{ r.fecha_retiro }}</h6>
+                        <h6>Motivo de retiro: {{ r.motivo_retiro }}</h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        No hay colaboradores retirados...
+        {% endif %}
+    </div>
+    <div class="contenedor_boton_colaboradores_retirados">
+        <button id="btnRetirados" class="btn btn-dark boton_colaboradores_retirados" onclick="mostrarRetirados()">
+            Colaboradores retirados
+        </button>
+    </div>
 </div>
+{% else %}
 
-
-
-<script>
-    function mostrarRetirados() {
-        const btnRetirados = document.getElementById("btnRetirados");
-        const retirados = document.getElementById("retirados");
-        const activos = document.getElementById("activos");
-
-        if (activos.style.display === 'none') {
-            // Mostrar activos y ocultar retirados
-            activos.style.display = 'flex';
-            retirados.style.display = 'none';
-            btnRetirados.textContent = 'Colaboradores retirados'; // Cambia el texto del botón si es necesario
-        } else {
-            // Ocultar activos y mostrar retirados
-            activos.style.display = 'none';
-            retirados.style.display = 'flex';
-            btnRetirados.textContent = 'Colaboradores activos'; // Cambia el texto del botón si es necesario
-        }
-    }
-
-    function confirmar_liquidar(id, url) {
-        if (confirm("¿Estás seguro de que deseas liquidar a este colaborador?")) {
-            window.location.href = url;
-        }
-    }
-
-    function verMasButton(button) {
-        var info = button.nextElementSibling;
-        if (info.style.display === "none" || info.style.display === "") {
-            info.style.display = "flex";
-            button.innerHTML = "Ver menos <i class='fa-solid fa-angle-up'></i>";
-        } else {
-            info.style.display = "none";
-            button.innerHTML = "Ver más <i class='fa-solid fa-angle-down'></i>";
-        }
-    }
-
-    function togglePassword(fieldId) {
-        const passwordField = document.getElementById(fieldId);
-        const eyeIcon = document.getElementById(`eye-${fieldId}`);
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-            eyeIcon.classList.remove('fa-eye');
-            eyeIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordField.type = "password";
-            eyeIcon.classList.remove('fa-eye-slash');
-            eyeIcon.classList.add('fa-eye');
-        }
-    }
-
-    function validatePassword() {
-        const password = document.getElementById("contrasena").value;
-        const confirmPassword = document.getElementById("confirmar_contrasena").value;
-        const message = document.getElementById("password-match");
-
-        if (password === confirmPassword) {
-            message.textContent = "Las contraseñas coinciden.";
-            message.style.color = "green";
-        } else {
-            message.textContent = "Las contraseñas no coinciden.";
-            message.style.color = "red";
-        }
-    }
-
-    function validarContrasena() {
-        const contrasena = document.getElementById('contrasena').value;
-        const mensajeError = document.getElementById('mensajeError');
-
-        // Expresión regular para validar la contraseña
-        const regex = /^(?=.*[A-Z])(?=.*[\W_])(?=.*[a-zA-Z0-9]).{8,}$/;
-
-        if (!regex.test(contrasena)) {
-            mensajeError.textContent = "La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula y un símbolo.";
-            mensajeError.style.color = "red";
-            return false;
-        } else {
-            mensajeError.textContent = "";
-            return true;
-        }
-    }
-
-    function toggleMenu(id) {
-        var menu = document.getElementById("menu-" + id);
-        if (menu.style.display === "none" || menu.style.display === "") {
-            menu.style.display = "block";
-        } else {
-            menu.style.display = "none";
-        }
-    }
-
-
-    // Escuchar el evento 'input' en el campo de la contraseña para validar en tiempo real
-    document.getElementById('contrasena').addEventListener('input', validarContrasena);
-    document.getElementById('contrasena').addEventListener('input', validatePassword);
-    document.getElementById('confirmar_contrasena').addEventListener('input', validatePassword);
-
-</script>
-
-
-</body>
 {% endblock %}

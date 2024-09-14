@@ -14,55 +14,7 @@ class Usuario(models.Model):
         (1, 'Administrador'),
         (2, 'Colaborador')
     )
-    CARGOS = (
-        (1, "Almacenista"),
-        (2, "Analista de ingeniería"),
-        (3, "Aprendiz etapa lectiva"),
-        (4, "Aprendiz etapa práctica"),
-        (5, "Auditor(a)"),
-        (6, "Auxiliar contable"),
-        (7, "Auxiliar de almacén"),
-        (8, "Auxiliar de bodega"),
-        (9, "Auxiliar de calidad"),
-        (10, "Auxiliar de diseño"),
-        (11, "Auxiliar de gestión humana"),
-        (12, "Auxiliar de ingeniería"),
-        (13, "Auxiliar de mecánica"),
-        (14, "Auxiliar de servicios generales"),
-        (15, "Coordinador(a) de área"),
-        (16, "Despachador"),
-        (17, "Diseñador(a)"),
-        (18, "Domiciliario(a)"),
-        (19, "Gerente"),
-        (20, "Jefe de calidad"),
-        (21, "Jefe de compras"),
-        (22, "Jefe de despachos"),
-        (23, "Jefe de Gestión Humana"),
-        (24, "Jefe de planta"),
-        (25, "Mecánico(a)"),
-        (26, "Operario(a) de corte"),
-        (27, "Operario(a) de empaque"),
-        (28, "Operario(a) de extendido"),
-        (29, "Operario(a) de máquina"),
-        (30, "Operario(a) de máquinas especiales"),
-        (31, "Operario(a) de muestras"),
-        (32, "Operario(a) de terminación"),
-        (33, "Operario(a) manual"),
-        (34, "Patinador(a)"),
-        (35, "Patronista"),
-        (36, "Recepcionista"),
-        (37, "Revisor(a)"),
-        (38, "Secretario(a)"),
-        (39, "Supervisor(a)"),
-        (40, "Vigilante"),
-    )
 
-    CLASE_CONTRATO = (
-        (1, "Término fijo inferior a 1 año"),
-        (2, "Término fijo superior a 1 año"),
-        (3, "Contrato por obra y labor"),
-        (4, "Contrato indefinido")
-    )
     cedula = models.PositiveIntegerField(unique=True)
     nombre = models.CharField(max_length=256)
     apellido = models.CharField(max_length=256)
@@ -70,21 +22,15 @@ class Usuario(models.Model):
     contrasena = models.CharField(max_length=256)
     foto = models.ImageField(null=True, blank=True, upload_to='fotos_usuarios')
     rol = models.PositiveIntegerField(choices=ROLES, default=2)
-    cargo = models.PositiveIntegerField(null=True, blank=True, choices=CARGOS, default=1)
+    cargo = models.CharField(max_length=256, default='Administrador')
+    salario = models.IntegerField()
     fecha_ingreso = models.DateField(default=timezone.now)
     riesgo = models.FloatField(default=0, null=True, blank=True)
-    tipo_contrato = models.PositiveIntegerField(choices=CLASE_CONTRATO, null=True, blank=True)
+    tipo_contrato = models.CharField(max_length=256, default='Contrato indefinido')
     fecha_fin_contrato = models.DateField(null=True, blank=True)
     activo = models.BooleanField(default=True)
     fecha_retiro = models.DateField(null=True, blank=True)
     motivo_retiro = models.CharField(max_length=256, null=True, blank=True)
-
-
-    def get_cargo_display(self):
-        return dict(self.CARGOS).get(self.cargo, "Cargo desconocido")
-
-    def get_rol_display(self):
-        return dict(self.ROLES).get(self.rol, "Rol desconocido")
 
     def clean(self):
         super().clean()  # Llamar al método `clean` del padre para asegurar la limpieza base.
@@ -107,10 +53,13 @@ class Usuario(models.Model):
 
 
 class Novedad(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'rol': 2, 'fecha_retiro__isnull': True})
-    salario = models.IntegerField()
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE,
+                                limit_choices_to={'rol': 2, 'fecha_retiro__isnull': True})
     dias_incapacidad = models.PositiveIntegerField(null=True, blank=True, default=0)
     dias_trabajados = models.PositiveIntegerField()
+    perm_remunerado = models.CharField(max_length=256, null=True, blank=True, default="No aplica")
+    perm_no_remunerado = models.CharField(max_length=256, null=True, blank=True, default="No aplica")
+    sin_justa_causa = models.CharField(max_length=256, null=True, blank=True, default="No aplica")
     horas_extras_diurnas = models.PositiveIntegerField(null=True, blank=True, default=0)
     horas_extras_diurnas_dom_fes = models.PositiveIntegerField(null=True, blank=True, default=0)
     horas_extras_nocturnas = models.PositiveIntegerField(null=True, blank=True, default=0)
@@ -125,11 +74,15 @@ class Novedad(models.Model):
     libranzas = models.PositiveIntegerField(null=True, blank=True, default=0)
     cooperativas = models.PositiveIntegerField(null=True, blank=True, default=0)
     otros = models.PositiveIntegerField(null=True, blank=True, default=0)
-    fecha_inicio = models.DateField()
-    fecha_fin = models.DateField()
+    fecha_ultima_actualizacion = models.DateField(default=timezone.now, null=True, blank=True)
+
+    def actualizar_novedad(self):
+        # Aquí puedes realizar las actualizaciones y cambiar la fecha de la última actualización
+        self.fecha_ultima_actualizacion = timezone.now()
+        self.save()
 
     def __str__(self):
-        return f"{self.usuario} - {self.fecha_inicio} - {self.fecha_fin}"
+        return f"{self.usuario}"
 
 
 class Devengado(models.Model):
@@ -137,7 +90,7 @@ class Devengado(models.Model):
 
     @property
     def novedad_salario(self):
-        return self.novedad.salario
+        return self.novedad.usuario.salario
 
     @property
     def novedad_dias_incapacidad(self):
@@ -248,7 +201,7 @@ class Devengado(models.Model):
 class Deduccion(models.Model):
     novedad = models.ForeignKey('Novedad', on_delete=models.CASCADE)
     devengado = models.ForeignKey('Devengado', on_delete=models.CASCADE)
-    retefuente = models.CharField(max_length=256)
+    retefuente = models.CharField(max_length=256, null=True, blank=True, default="")
 
     @property
     def ibc(self):
@@ -256,7 +209,7 @@ class Deduccion(models.Model):
 
     @property
     def novedad_salario(self):
-        return self.novedad.salario
+        return self.novedad.usuario.salario
 
     @property
     def novedad_embargos_judiciales(self):
@@ -303,7 +256,6 @@ class Deduccion(models.Model):
         else:
             return 0
 
-    @property
     def total_deduccion(self):
         return (self.salud + self.pension + self.fsp +
                 self.novedad_embargos_judiciales + self.novedad_libranzas +
@@ -317,7 +269,7 @@ class Nomina(models.Model):
     novedad = models.ForeignKey('Novedad', on_delete=models.CASCADE)
     devengado = models.ForeignKey('Devengado', on_delete=models.CASCADE)
     deduccion = models.ForeignKey('Deduccion', on_delete=models.CASCADE)
-
+    fecha_nomina = models.DateField(default=timezone.now)
 
     @property
     def total_devengado(self):
@@ -325,9 +277,8 @@ class Nomina(models.Model):
 
     @property
     def total_deduccion(self):
-        return self.deduccion.total_deduccion
+        return self.deduccion.total_deduccion()
 
-    @property
     def total_a_pagar(self):
         return self.total_devengado - self.total_deduccion
 

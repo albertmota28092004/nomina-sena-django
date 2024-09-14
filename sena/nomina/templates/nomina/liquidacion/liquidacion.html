@@ -5,15 +5,13 @@
 
 <style>
     body {
-        background-color: #442B1C;
+        background-color: #EBECE4;
     }
 
     .contenedor_liquidacion {
         display: flex;
         flex-direction: column;
-        margin: 50px 600px;
         align-items: center !important;
-        background-color: #EBECE4;
         padding-top: 50px;
         border-radius: 200px 200px 0 0 ;
         height: 830px;
@@ -62,7 +60,11 @@
 </style>
 
 <div class="contenedor_liquidacion">
+    {% if usuario.foto %}
     <img class="imagen_liquidacion" src="{{ usuario.foto.url }}">
+    {% else %}
+    <img class="imagen_liquidacion" src="{% static 'nomina/img/empresario1.jpg' %}" alt="">
+    {% endif %}
     <div class="info_liquidacion">
         <h4>Nombre:</h4>
         <h3>{{ usuario.nombre }} {{ usuario.apellido }}</h3>

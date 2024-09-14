@@ -61,23 +61,19 @@
     </style>
 
 <body>
-
-
-
     <div class="row">
         <div class="col-md-12">
             <div class="recibo_contenedor table-responsive">
                 <table class="table info_colaborador">
                     <tr>
-                        <td colspan="3" class="text-start gray"><strong>Colaborador:</strong> {{ nomina.novedad.usuario.nombre }} {{ nomina.novedad.usuario.apellido }}</td>
+                        <td colspan="2" class="text-start gray"><strong>Colaborador:</strong> {{ nomina.novedad.usuario.nombre }} {{ nomina.novedad.usuario.apellido }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="text-start gray"><strong>Cédula: </strong> {{ nomina.novedad.usuario.cedula }}</td>
+                        <td colspan="2" class="text-start gray"><strong>Cédula: </strong> {{ nomina.novedad.usuario.cedula }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Cargo</strong>: {{ nomina.novedad.usuario.get_cargo_display }}</td>
-                        <td class="text-center fecha_inicio"><strong>Desde:</strong> {{ nomina.novedad.fecha_inicio|date:"d/m/Y" }}</td>
-                        <td class="text-center fecha_fin"><strong>Hasta:</strong> {{ nomina.novedad.fecha_fin|date:"d/m/Y" }}</td>
+                        <td><strong>Cargo</strong>: {{ nomina.novedad.usuario.cargo }}</td>
+                        <td class="text-center fecha_inicio"><strong>Fecha:</strong> {{ nomina.fecha_nomina|date:"d/m/Y" }}</td>
                     </tr>
                 </table>
                 <h3>DETALLE</h3>
@@ -93,7 +89,7 @@
                     <tr>
                         <td class="text-center">SALARIO BÁSICO</td>
                         <td class="text-center">{{ nomina.novedad.dias_trabajados }}</td>
-                        <td class="text-center">{{ nomina.novedad.salario|round_number:2|intcomma }}</td>
+                        <td class="text-center">{{ nomina.novedad.usuario.salario|round_number:2|intcomma }}</td>
                     </tr>
                     {% if nomina.novedad.dias_incapacidad != 0 %}
                     <tr>
@@ -200,7 +196,7 @@
                         <td class="text-center">{{ nomina.deduccion.fsp|round_number:2|intcomma }}</td>
                     </tr>
                     {% endif %}
-                    {% if nomina.deduccion.retefuente != "" %}
+                    {% if nomina.deduccion.retefuente %}
                     <tr>
                         <td class="text-center">RETEFUENTE</td>
                         <td class="text-center">15</td>

@@ -18,34 +18,24 @@
         </select>
     </div>
     <div class="mb-3">
-        <label class="form-label">Fecha Inicio Novedad: <strong style="color:red;">*</strong></label>
-        <p><strong>{{ data.fecha_inicio }}</strong></p>
-        <div class="d-flex">
-            <br>
-            <h6 style="margin-top: 10px;">Cambiar:</h6>
-            <input value="{{ data.fecha_inicio|date:'d-m-Y' }}" type="date" class="form-control w-50" name="fecha_inicio_editar">
-        </div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Fecha Fin Novedad: <strong style="color:red;">*</strong></label>
-        <p><strong>{{ data.fecha_fin }}</strong></p>
-        <div class="d-flex">
-            <br>
-            <h6 style="margin-top: 10px;">Cambiar:</h6>
-            <input value="{{ data.fecha_fin|date:'d-m-Y' }}" type="date" class="form-control w-50" name="fecha_fin_editar">
-        </div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Salario: <strong style="color:red;">*</strong></label>
-        <input value="{{ data.salario }}" type="number" class="form-control" name="salario_editar" required>
-    </div>
-    <div class="mb-3">
         <label class="form-label">Días de Incapacidad:</label>
         <input value="{{ data.dias_incapacidad }}" type="number" class="form-control" name="dias_incapacidad_editar">
     </div>
     <div class="mb-3">
         <label class="form-label">Días Trabajados: <strong style="color:red;">*</strong></label>
         <input value="{{ data.dias_trabajados }}" type="number" class="form-control" name="dias_trabajados_editar" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Permiso remunerado: </label>
+        <input value="{{ data.perm_remunerado }}" type="text" class="form-control" name="perm_remunerado_editar" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Permiso no remunerado: </label>
+        <input value="{{ data.perm_no_remunerado }}" type="text" class="form-control" name="perm_no_remunerado_editar" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Sin justa causa: </label>
+        <input value="{{ data.sin_justa_causa }}" type="text" class="form-control" name="sin_justa_causa_editar" required>
     </div>
     <div class="mb-3">
         <label class="form-label">Horas Extras Diurnas:</label>
@@ -100,52 +90,6 @@
     <div class="mb-3">
         <label class="form-label">Otros:</label>
         <input value="{{ data.otros }}" type="number" class="form-control" name="otros_editar">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
-        <input value="{{ data.riesgo }}" id="decimalInput" step="0.00001" type="number" class="form-control" name="riesgo_editar">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Fecha Fin de Contrato:</label>
-        {% if data.fecha_fin_contrato %}
-        <p><strong>{{ data.fecha_fin_contrato }}</strong></p>
-        <div class="d-flex">
-            <br>
-            <h6 style="margin-top: 10px;">Cambiar:</h6>
-            <input value="{{ data.fecha_fin_contrato|date:'d-m-Y' }}" type="date" class="form-control" name="fecha_fin_contrato_editar">
-        </div>
-        {% else %}
-        <input value="{{ data.fecha_fin_contrato|date:'d-m-Y' }}" type="date" class="form-control" name="fecha_fin_contrato_editar">
-        {% endif %}
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Tipo de Contrato: <strong style="color:red;">*</strong></label>
-        <select class="form-control" name="tipo_contrato_editar" required>
-            {% for key, value in CLASE_CONTRATO %}
-            <option value="{{ key }}" {% if data.tipo_contrato == key %} selected {% endif %}>{{ value }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Fecha de Retiro:</label>
-        {% if data.fecha_retiro %}
-        <p><strong>{{ data.fecha_retiro }}</strong></p>
-        <div class="d-flex">
-            <br>
-            <h6 style="margin-top: 10px;">Cambiar:</h6>
-            <input value="{{ data.fecha_retiro|date:'d-m-Y' }}" type="date" class="form-control" name="fecha_retiro_editar">
-        </div>
-        {% else %}
-        <input value="{{ data.fecha_retiro|date:'d-m-Y' }}" type="date" class="form-control" name="fecha_retiro_editar">
-        {% endif %}
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Motivo de Retiro:</label>
-        {% if data.motivo_retiro == None %}
-        <input value="" type="text" class="form-control" name="motivo_retiro_editar">
-        {% else %}
-        <input value="{{ data.motivo_retiro }}" type="text" class="form-control" name="motivo_retiro_editar">
-        {% endif %}
     </div>
     <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>

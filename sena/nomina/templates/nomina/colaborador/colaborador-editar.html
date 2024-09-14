@@ -50,7 +50,11 @@
     <div class="mb-3">
         <label class="form-label col-sm-6">Foto:</label>
         <div class="row">
+            {% if data.foto %}
             <img src="{{ data.foto.url }}" style="width: 200px !important; height: 200px !important;">
+            {% else %}
+            <img style="width: 200px !important; height: 200px !important;" src="{% static 'nomina/img/empresario1.jpg' %}">
+            {% endif %}
             <p class="col-sm-6">
                 Cambiar imagen: <input type="file" class="form-control"
                    placeholder="Ingresa foto" name="foto_editar" accept="image/*">
@@ -59,13 +63,14 @@
     </div>
     <div class="mb-3">
         <label class="form-label">Cargo:</label>
-        <select class="form-control" name="cargo_editar">
-            {% for key, value in CARGOS %}
-            <option value="{{ key }}" {% if data.cargo == key %} selected {% endif %}>{{ value }}</option>
-            {% endfor %}
-        </select>
+        <input type="text" class="form-control" id="cargo"
+               placeholder="Ingresa el cargo" name="cargo_editar" value="{{ data.cargo }}">
     </div>
-
+    <div class="mb-3">
+        <label class="form-label">Salario: <strong style="color:red;">*</strong></label>
+        <input type="number" class="form-control" id="salario"
+               placeholder="Ingresa el salario" name="salario_editar" value="{{ data.salario }}">
+    </div>
     {% if data.riesgo %}
     <div class="mb-3">
         <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
@@ -76,12 +81,8 @@
     {% endif %}
     <div class="mb-3">
         <label class="form-label">Tipo de contrato: <strong style="color:red;">*</strong></label>
-        <select class="form-control" id="tipo_contrato_editar" name="tipo_contrato_editar">
-            {% for key, value in CLASE_CONTRATO %}
-            <option value="{{ key }}" {% if data.tipo_contrato == key %} selected {% endif %}>{{ value }}
-            </option>
-            {% endfor %}
-        </select>
+        <input type="text" class="form-control" id="tipo_contrato"
+               placeholder="Ingresa el tipo de contrato" name="tipo_contrato_editar" value="{{ data.tipo_contrato }}">
     </div>
     <div class="mb-3">
         <label class="form-label">Fecha fin del contrato:</label>

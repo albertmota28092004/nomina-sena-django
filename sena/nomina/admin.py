@@ -6,7 +6,7 @@ from django.utils.html import mark_safe
 # Register your models here.
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id', 'cedula', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'fecha_ingreso',
+    list_display = ['id', 'cedula', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'salario', 'fecha_ingreso',
                     'riesgo',
                     'tipo_contrato', 'fecha_fin_contrato', 'activo', 'fecha_retiro', 'motivo_retiro']
 
@@ -18,12 +18,12 @@ class UsuarioAdmin(admin.ModelAdmin):
 
 
 class NovedadAdmin(admin.ModelAdmin):
-    list_display = ['id', 'usuario', 'salario', 'dias_incapacidad', 'dias_trabajados',
+    list_display = ['id', 'usuario', 'dias_incapacidad', 'dias_trabajados',
                     'horas_extras_diurnas', 'horas_extras_diurnas_dom_fes', 'horas_extras_nocturnas',
                     'horas_extras_nocturnas_dom_fes', 'horas_recargo_nocturno', 'horas_recargo_nocturno_dom_fes',
                     'horas_recargo_diurno_dom_fes', 'comisiones', 'comisiones_porcentaje', 'bonificaciones',
                     'embargos_judiciales', 'libranzas', 'cooperativas', 'otros',
-                    'fecha_inicio', 'fecha_fin']
+                    'fecha_ultima_actualizacion']
 
 
 class DevengadoAdmin(admin.ModelAdmin):
@@ -42,7 +42,7 @@ class DeduccionAdmin(admin.ModelAdmin):
 
 
 class NominaAdmin(admin.ModelAdmin):
-    list_display = ['id', 'novedad', 'salud', 'pension', 'arl', 'sena', 'icbf',
+    list_display = ['id', 'fecha_nomina', 'novedad', 'salud', 'pension', 'arl', 'sena', 'icbf',
                     'caja_compensacion', "cesantias", "intereses_cesantias", "primas_servicio", "vacaciones",
                     'total_a_pagar']
 

@@ -1,10 +1,12 @@
+import os
+
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django.utils.dateparse import parse_date
-
+from django.template.defaultfilters import date as date_filter
 from django.core.mail import BadHeaderError, EmailMessage
 from django.conf import settings
 import datetime
@@ -12,6 +14,9 @@ import pdfkit
 from django.db import IntegrityError, transaction
 import datetime
 import openpyxl
+
+from django.utils.timezone import localdate
+from openpyxl import Workbook
 import xlwings as xw
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
@@ -22,6 +27,7 @@ from .models import *
 from django.shortcuts import get_object_or_404
 from xhtml2pdf import pisa
 import io
+from io import BytesIO
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
 from urllib.parse import urlencode
@@ -89,10 +95,8 @@ def index(request):
 
 
 def registrarse(request):
-    cargos = Usuario.CARGOS
     roles = Usuario.ROLES
     context = {
-        'CARGOS': cargos,
         'ROLES': roles,
     }
     return render(request, 'nomina/registrarse.html', context)
@@ -112,8 +116,15 @@ def convert_html_to_pdf(source_html):
 
 def recibo_view(request, nomina_id):
     nomina = get_object_or_404(Nomina, id=nomina_id)
+    he_diurnas = nomina.novedad.horas_extras_diurnas or 0
+    he_diurnas_df = nomina.novedad.horas_extras_diurnas_dom_fes or 0
+    he_nocturnas = nomina.novedad.horas_extras_nocturnas or 0
+    he_nocturnas_df = nomina.novedad.horas_extras_nocturnas_dom_fes or 0
+    hr_diurno_df = nomina.novedad.horas_recargo_diurno_dom_fes or 0
+    hr_nocturo = nomina.novedad.horas_recargo_nocturno or 0
+    hr_nocturno_df = nomina.novedad.horas_recargo_nocturno_dom_fes or 0
 
-    totalh = nomina.novedad.horas_extras_diurnas + nomina.novedad.horas_extras_diurnas_dom_fes + nomina.novedad.horas_extras_nocturnas + nomina.novedad.horas_extras_nocturnas_dom_fes + nomina.novedad.horas_recargo_diurno_dom_fes + nomina.novedad.horas_recargo_nocturno + nomina.novedad.horas_recargo_nocturno_dom_fes
+    totalh = he_diurnas + he_diurnas_df + he_nocturnas + he_nocturnas_df + hr_diurno_df + hr_nocturo + hr_nocturno_df
 
     contexto = {
         "nomina": nomina,
@@ -123,7 +134,7 @@ def recibo_view(request, nomina_id):
     html_string = render_to_string('nomina/recibo.html', contexto)
     response = HttpResponse(content_type='application/pdf')
     response[
-        'Content-Disposition'] = f'inline; filename="Recibo_{nomina.novedad.usuario}_{nomina.novedad.fecha_fin}.pdf"'
+        'Content-Disposition'] = f'inline; filename="Recibo_{nomina.novedad.usuario}_{nomina.fecha_nomina}.pdf"'
 
     pisa_status = pisa.CreatePDF(html_string, dest=response)
     if pisa_status.err:
@@ -212,7 +223,7 @@ def liquidacion_view(request, id):
     usuario = get_object_or_404(Usuario, id=id)
 
     # Obtener todas las nóminas relacionadas con el usuario, ordenadas por la fecha fin de la novedad
-    nominas = Nomina.objects.filter(novedad__usuario=usuario).order_by('-novedad__fecha_fin')
+    nominas = Nomina.objects.filter(novedad__usuario=usuario).order_by('-fecha_nomina')
 
     if nominas.exists():
         nomina = nominas.first()  # Obtener la nómina más reciente
@@ -224,13 +235,13 @@ def liquidacion_view(request, id):
     dias_trabajados = sum(novedad.dias_trabajados for novedad in novedades)
 
     # Calcular las cesantías y otros valores
-    salario = nomina.novedad.salario
+    salario = nomina.novedad.usuario.salario
     cesantias = (salario * dias_trabajados) / 360
     intereses_cesantias = (cesantias * 0.12 * dias_trabajados) / 360
     prima_servicio = (salario * dias_trabajados) / 360
     vacaciones = (salario * dias_trabajados) / 720
     total_liquidacion = cesantias + intereses_cesantias + prima_servicio + vacaciones
-    neto_pagado = total_liquidacion + nomina.total_a_pagar
+    neto_pagado = total_liquidacion + nomina.total_a_pagar()
 
     contexto = {
         'usuario': usuario,
@@ -256,14 +267,14 @@ def liquidacion_view(request, id):
 
 def liquidar_colaborador(request, id):
     usuario = Usuario.objects.get(pk=id)
-    nominas = Nomina.objects.filter(novedad__usuario=usuario).order_by('-novedad__fecha_fin')
+    nominas = Nomina.objects.filter(novedad__usuario=usuario).order_by('-fecha_nomina')
 
     if nominas.exists():
         nomina = nominas.first()  # Obtener la nómina más reciente
     else:
         return HttpResponse('No se encontraron nóminas para el usuario.', status=404)
 
-    salario = nomina.novedad.salario
+    salario = nomina.novedad.usuario.salario
     dias_incapacidad = nomina.novedad.dias_incapacidad or 0
     dias_trabajados = nomina.novedad.dias_trabajados
     horas_extras_diurnas = nomina.novedad.horas_extras_diurnas or 0
@@ -280,8 +291,6 @@ def liquidar_colaborador(request, id):
     libranzas = nomina.novedad.libranzas or 0
     cooperativas = nomina.novedad.cooperativas or 0
     otros = nomina.novedad.otros or 0
-    fecha_inicio = nomina.novedad.fecha_inicio
-    fecha_fin = nomina.novedad.fecha_fin
 
     try:
         nov = Novedad(
@@ -303,8 +312,6 @@ def liquidar_colaborador(request, id):
             libranzas=libranzas,
             cooperativas=cooperativas,
             otros=otros,
-            fecha_inicio=fecha_inicio,
-            fecha_fin=fecha_fin
         )
         nov.save()
         messages.success(request, "Colaborador liquidado correctamente!!")
@@ -320,6 +327,7 @@ def liquidar_colaborador(request, id):
         q.rol = usuario.rol
         q.foto = usuario.foto
         q.cargo = usuario.cargo
+        q.salario = usuario.salario
         q.riesgo = usuario.riesgo
         q.fecha_fin_contrato = timezone.now()
         q.tipo_contrato = usuario.tipo_contrato
@@ -327,7 +335,7 @@ def liquidar_colaborador(request, id):
         q.fecha_retiro = timezone.now()
         q.motivo_retiro = 'Retiro voluntario'
         q.save()
-        messages.success(request, "Actualizado correctamente!!")
+        messages.success(request, "Colaborador liquidado correctamente!!")
     except Exception as e:
         messages.error(request, f"Error. {e}")
 
@@ -354,20 +362,137 @@ def descargar_liquidacion(request, id):
     return response
 
 
+def descargar_excel(request):
+    # Ruta del archivo en el servidor
+    file_path = os.path.join(settings.BASE_DIR, 'static', 'nomina', 'files', 'formato_colaborador.xlsm')
+    with open(file_path, 'rb') as f:
+        response = HttpResponse(f.read(), content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename=formato_colaborador.xlsm'
+        return response
+
+
+def export_nominas_to_excel(request, fecha_nomina):
+    # Convertir la fecha recibida en un objeto de fecha
+    try:
+        fecha_nomina = datetime.strptime(fecha_nomina, '%Y-%m-%d').date()
+    except ValueError:
+        return HttpResponse("Fecha inválida", status=400)
+
+    # Crear un libro de trabajo y una hoja
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Nóminas"
+
+    # Encabezados de columna
+    headers = [
+        'Cedula', 'Nombre', 'Apellido', 'Correo', 'Rol', 'Cargo', 'Salario', 'Fecha Ingreso', 'Riesgo',
+        'Tipo Contrato', 'Fecha Fin Contrato', 'Activo', 'Fecha Retiro', 'Motivo Retiro',
+        'Dias Incapacidad', 'Dias Trabajados', 'Horas Extras Diurnas', 'Horas Extras Diurnas Dom Fes',
+        'Horas Extras Nocturnas', 'Horas Extras Nocturnas Dom Fes', 'Horas Recargo Nocturno',
+        'Horas Recargo Nocturno Dom Fes', 'Horas Recargo Diurno Dom Fes', 'Comisiones', 'Comisiones Porcentaje',
+        'Bonificaciones', 'Embargos Judiciales', 'Libranzas', 'Cooperativas', 'Otros',
+        'Salario', 'Comisiones', 'Horas Extras Diurnas ',
+        'Horas Extras Diurnas Dom Fes', 'Horas Extras Nocturnas',
+        'Horas Extras Nocturnas Dom Fes', 'Horas Recargo Nocturno',
+        'Horas Recargo Nocturnos Dom Fes', 'Horas Recargo Diurno Dom Fes',
+        'Auxilio Transporte', 'Valor Incapacidad', 'Total Devengado',
+        'Salud', 'Pensión', 'FSP', 'Total Deducción',
+        'Total a Pagar', 'IBC', 'Riesgo', 'Salud', 'Pensión', 'ARL', 'SENA', 'ICBF', 'Caja Compensación',
+        'Cesantías', 'Intereses Cesantías', 'Primas de Servicio', 'Vacaciones', 'Fecha Nómina'
+    ]
+    ws.append(headers)
+
+    # Obtener las nóminas con la fecha especificada
+    nominas = Nomina.objects.select_related('novedad__usuario').prefetch_related('devengado', 'deduccion').filter(
+        fecha_nomina=fecha_nomina)
+
+    for nomina in nominas:
+        usuario = nomina.novedad.usuario
+        novedad = nomina.novedad
+        devengado = nomina.devengado
+        deduccion = nomina.deduccion
+
+        row = [
+            usuario.cedula,
+            usuario.nombre,
+            usuario.apellido,
+            usuario.correo,
+            usuario.get_rol_display(),  # Para obtener el texto del rol
+            usuario.cargo,
+            usuario.salario,
+            usuario.fecha_ingreso.strftime('%Y-%m-%d'),
+            usuario.riesgo,
+            usuario.tipo_contrato,
+            usuario.fecha_fin_contrato.strftime('%Y-%m-%d') if usuario.fecha_fin_contrato else '',
+            usuario.activo,
+            usuario.fecha_retiro.strftime('%Y-%m-%d') if usuario.fecha_retiro else '',
+            usuario.motivo_retiro,
+            novedad.dias_incapacidad,
+            novedad.dias_trabajados,
+            novedad.horas_extras_diurnas,
+            novedad.horas_extras_diurnas_dom_fes,
+            novedad.horas_extras_nocturnas,
+            novedad.horas_extras_nocturnas_dom_fes,
+            novedad.horas_recargo_nocturno,
+            novedad.horas_recargo_nocturno_dom_fes,
+            novedad.horas_recargo_diurno_dom_fes,
+            novedad.comisiones,
+            novedad.comisiones_porcentaje,
+            novedad.bonificaciones,
+            novedad.embargos_judiciales,
+            novedad.libranzas,
+            novedad.cooperativas,
+            novedad.otros,
+            devengado.novedad_salario,
+            devengado.novedad_comisiones,
+            devengado.valor_horas_extras_diurnas(),
+            devengado.valor_horas_extras_diurnas_dom_fes(),
+            devengado.valor_horas_extras_nocturnas(),
+            devengado.valor_horas_extras_nocturnas_dom_fes(),
+            devengado.valor_horas_recargo_nocturno(),
+            devengado.valor_horas_recargo_nocturno_dom_fes(),
+            devengado.valor_horas_recargo_diurno_dom_fes(),
+            devengado.auxilio_transporte(),
+            devengado.valor_incapacidad(),
+            devengado.total_devengado(),
+            deduccion.salud,
+            deduccion.pension,
+            deduccion.fsp,
+            deduccion.total_deduccion(),
+            nomina.total_a_pagar(),
+            nomina.ibc,
+            nomina.riesgo,
+            nomina.salud,
+            nomina.pension,
+            nomina.arl,
+            nomina.sena,
+            nomina.icbf,
+            nomina.caja_compensacion,
+            nomina.cesantias,
+            nomina.intereses_cesantias,
+            nomina.primas_servicio,
+            nomina.vacaciones,
+            nomina.fecha_nomina.strftime('%Y-%m-%d')
+        ]
+        ws.append(row)
+
+    # Crear la respuesta HTTP con el archivo Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = f"nominas_{fecha_nomina}.xlsx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    wb.save(response)
+    return response
+
+
 # -------------------- Modelos --------------------------
 
 def colaboradores(request):
     if request.session.get("logueo", False):
         q = Usuario.objects.filter(rol=2).filter(activo=True)
         q2 = Usuario.objects.filter(rol=2).filter(activo=False)
-        book = openpyxl.load_workbook('nomina/excel_files/excel_copia.xlsm')
-        sheet = book['EMPLEADOS']
-        valor = sheet['B3']
-        cargos = Usuario.CARGOS
         roles = Usuario.ROLES
-        clase_contrato = Usuario.CLASE_CONTRATO
-        contexto = {"data": q, 'retirados': q2, 'CARGOS': cargos, 'CLASE_CONTRATO': clase_contrato, 'ROLES': roles,
-                    'valor': valor}
+        contexto = {"data": q, 'retirados': q2, 'ROLES': roles}
         return render(request, 'nomina/colaborador/colaboradores.html', contexto)
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
@@ -415,6 +540,7 @@ def prueba(request):
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return redirect('nomina:login')
 
+
 def colaborador_guardar(request):
     if request.method == "POST":
         id = request.POST.get("id")
@@ -422,18 +548,16 @@ def colaborador_guardar(request):
         apellido = request.POST.get("apellido")
         cedula = request.POST.get('cedula')
         correo = request.POST.get('correo')
-        contrasena = request.POST.get('contrasena')
-        confirmar_contrasena = request.POST.get('confirmar_contrasena')
+        contrasena = cedula
         rol = 2
         foto = request.FILES.get("foto")
         cargo = request.POST.get("cargo")
+        salario = request.POST.get("salario")
         riesgo = request.POST.get("riesgo")
         tipo_contrato = request.POST.get("tipo_contrato") or None
         fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
         fecha_retiro = request.POST.get("fecha_retiro") or None
         motivo_retiro = request.POST.get("motivo_retiro") or None
-        if contrasena == confirmar_contrasena:
-            contrasena_oficial = contrasena
 
         if id == "":
             try:
@@ -442,10 +566,11 @@ def colaborador_guardar(request):
                     apellido=apellido,
                     correo=correo,
                     cedula=cedula,
-                    contrasena=contrasena_oficial,
+                    contrasena=contrasena,
                     rol=rol,
                     foto=foto,
                     cargo=cargo,
+                    salario=salario,
                     riesgo=riesgo,
                     tipo_contrato=tipo_contrato,
                     fecha_fin_contrato=fecha_fin_contrato,
@@ -478,6 +603,84 @@ def colaborador_guardar(request):
         return HttpResponseRedirect(reverse("nomina:colaboradores", args=()))
 
 
+def colaborador_guardar_excel(request):
+    if request.method == "POST":
+        # Si se sube un archivo de Excel
+        archivo_excel = request.FILES.get('archivo_excel')
+        if archivo_excel:
+            try:
+                # Abre el archivo Excel
+                wb = openpyxl.load_workbook(archivo_excel)
+                hoja = wb['COLABORADORES']  # Nombre de la hoja
+                if hoja:
+                    for fila in hoja.iter_rows(min_row=4, max_row=hoja.max_row, values_only=True):
+                        cedula, nombre, apellido, correo, cargo, salario, fecha_ingreso, riesgo, tipo_contrato, fecha_fin_contrato, fecha_retiro, motivo_retiro = fila
+
+                        # Validaciones opcionales según tu lógica
+                        if not cedula or not nombre or not apellido:
+                            continue
+
+                        # Crear un nuevo colaborador
+                        col = Usuario(
+                            cedula=cedula,
+                            nombre=nombre,
+                            apellido=apellido,
+                            correo=correo,
+                            contrasena=cedula,
+                            cargo=cargo,
+                            salario=salario,
+                            fecha_ingreso=fecha_ingreso,
+                            riesgo=riesgo,
+                            tipo_contrato=tipo_contrato,
+                            fecha_fin_contrato=fecha_fin_contrato,
+                            fecha_retiro=fecha_retiro,
+                            motivo_retiro=motivo_retiro,
+                            rol=2,  # Asignar rol de colaborador
+                        )
+                        col.save()
+
+                        hoja_novedades = wb['NOVEDADES']
+                        for fila_novedad in hoja_novedades.iter_rows(min_row=4, max_row=hoja_novedades.max_row,
+                                                                     values_only=True):
+                            nov_cedula, nov_nombre, nov_apellido, nov_cargo, nov_salario, clase_salario, incapacidad, dias_trabajados, perm_remunerado, perm_no_remunerado, sin_justa_causa, he_diurna, he_diurna_dom_fes, he_nocturna, he_nocturna_dom_fes, rec_nocturno, rec_diurno_dom_fes, rec_nocturno_dom_fes, comision_venta, comision_porcentaje, bonificaciones, embargos, libranzas, cooperativas, otros, clase_riesgo, riesgo_arl, fecha_ingreso, fecha_fin_contrato, tipo_contrato, fecha_retiro, motivo_retiro = fila_novedad
+
+                            # Verifica si la cédula de la novedad coincide con el colaborador
+                            if nov_cedula == cedula:
+                                # Crear una nueva novedad para el colaborador
+                                nov = Novedad(
+                                    usuario=col,
+                                    dias_incapacidad=incapacidad,
+                                    dias_trabajados=dias_trabajados,
+                                    perm_remunerado=perm_remunerado,
+                                    perm_no_remunerado=perm_no_remunerado,
+                                    sin_justa_causa=sin_justa_causa,
+                                    horas_extras_diurnas=he_diurna,
+                                    horas_extras_diurnas_dom_fes=he_diurna_dom_fes,
+                                    horas_extras_nocturnas=he_nocturna,
+                                    horas_extras_nocturnas_dom_fes=he_nocturna_dom_fes,
+                                    horas_recargo_nocturno=rec_nocturno,
+                                    horas_recargo_diurno_dom_fes=rec_diurno_dom_fes,
+                                    horas_recargo_nocturno_dom_fes=rec_nocturno_dom_fes,
+                                    comisiones=comision_venta,
+                                    comisiones_porcentaje=comision_porcentaje,
+                                    bonificaciones=bonificaciones,
+                                    embargos_judiciales=embargos,
+                                    libranzas=libranzas,
+                                    cooperativas=cooperativas,
+                                    otros=otros,
+                                )
+                                nov.save()
+                    messages.success(request, "Colaboradores importados con éxito")
+                    return redirect('nomina:colaboradores')
+                else:
+                    messages.warning(request, "El archivo de Excel no cumple con el formato requerido.")
+            except Exception as e:
+                messages.error(request, f"Error al cargar el archivo Excel: {str(e)}")
+                return redirect('nomina:colaboradores')
+
+    return render(request, 'nomina/colaborador_form.html')
+
+
 def colaborador_editar(request, id):
     if request.session.get("logueo", False):
         usuario = Usuario.objects.get(pk=id)
@@ -490,6 +693,7 @@ def colaborador_editar(request, id):
         rol = 2
         foto = request.FILES.get("foto_editar")
         cargo = request.POST.get("cargo_editar")
+        salario = request.POST.get("salario_editar")
         riesgo = request.POST.get("riesgo_editar") or usuario.riesgo
         tipo_contrato = request.POST.get("tipo_contrato_editar") or None
         fecha_fin_contrato = request.POST.get("fecha_fin_contrato_editar") or None
@@ -510,6 +714,7 @@ def colaborador_editar(request, id):
             if foto:
                 q.foto = foto
             q.cargo = cargo
+            q.salario = salario
             q.riesgo = riesgo
             q.tipo_contrato = tipo_contrato
             q.fecha_fin_contrato = fecha_fin_contrato
@@ -533,94 +738,13 @@ def colaborador_eliminar(request, id):
     return HttpResponseRedirect(reverse("nomina:colaboradores", args=()))
 
 
-def nomina(request):
-    if request.session.get("logueo", False):
-        usuario_id = request.session["logueo"]["id"]
-        try:
-            usuario = Usuario.objects.get(id=usuario_id)
-
-            if usuario.rol == 2:  # Suponiendo que el rol 2 es para colaboradores
-                novedades = Novedad.objects.filter(usuario=usuario)
-                total_a_pagar_usuario = sum(n.total_a_pagar for n in Nomina.objects.filter(novedad__usuario=usuario))
-            else:
-                novedades = Novedad.objects.all()
-                total_a_pagar_usuario = None
-
-            # Agrupar nóminas por periodo
-            nominas_por_periodo = {}
-            for novedad in novedades:
-                periodo = (novedad.fecha_inicio, novedad.fecha_fin)
-                if periodo not in nominas_por_periodo:
-                    nominas_por_periodo[periodo] = []
-                nominas_por_periodo[periodo].append(novedad.usuario)
-
-            contexto = {
-                "nominas_por_periodo": nominas_por_periodo,
-                "total_a_pagar_usuario": total_a_pagar_usuario
-            }
-            return render(request, 'nomina/nomina/nomina.html', contexto)
-        except Usuario.DoesNotExist:
-            messages.error(request, "Usuario no encontrado")
-            return HttpResponseRedirect(reverse("nomina:login"))
-    else:
-        messages.warning(request, "Debe iniciar sesión para ver esta página.")
-        return HttpResponseRedirect(reverse("nomina:login"))
-
-
-def nomina_listar(request, fecha_inicio, fecha_fin):
-    if request.session.get("logueo", False):
-        usuario_id = request.session["logueo"]["id"]
-        usuario = Usuario.objects.get(id=usuario_id)
-
-        if usuario.rol == 1:
-            try:
-                nominas = Nomina.objects.filter(novedad__fecha_inicio=fecha_inicio, novedad__fecha_fin=fecha_fin)
-
-                contexto = {
-                    "nominas": nominas
-                }
-                return render(request, 'nomina/nomina/nomina-listar.html', contexto)
-            except Usuario.DoesNotExist:
-                messages.error(request, "Usuario no encontrado")
-                return HttpResponseRedirect(reverse("nomina:nomina_listar"))
-
-        if usuario.rol == 2:
-            try:
-                nominas = Nomina.objects.filter(novedad__usuario=usuario, novedad__fecha_inicio=fecha_inicio,
-                                                novedad__fecha_fin=fecha_fin)
-
-                contexto = {
-                    "nominas": nominas
-                }
-                return render(request, 'nomina/nomina/nomina-listar.html', contexto)
-            except Usuario.DoesNotExist:
-                messages.error(request, "Usuario no encontrado")
-                return HttpResponseRedirect(reverse("nomina:nomina_listar"))
-    else:
-        messages.warning(request, "Debe iniciar sesión para ver esta página.")
-        return HttpResponseRedirect(reverse("nomina:login"))
-
-
 def novedades_nomina(request):
     if request.session.get("logueo", False):
-        novedades = Novedad.objects.annotate(month=TruncMonth('fecha_fin')).values('month').annotate(
-            c=Count('id')).order_by('-month')
-        novedades_por_mes = {}
-
-        for novedad in novedades:
-            mes = novedad['month']
-            novedades_mes = Novedad.objects.filter(fecha_fin__month=mes.month, fecha_fin__year=mes.year)
-            novedades_por_mes[mes] = novedades_mes
-        usuarios = Usuario.objects.filter(rol=2).filter(activo=True)
-
-        fechas_ocupadas_inicio = list(Novedad.objects.values_list('fecha_inicio', flat=True))
-        fechas_ocupadas_fin = list(Novedad.objects.values_list('fecha_fin', flat=True))
-
+        novedades = Novedad.objects.all()
+        usuarios = Usuario.objects.filter(rol=2)
         contexto = {
-            "novedades_por_mes": novedades_por_mes,
-            'usuarios': usuarios,
-            'fechas_ocupadas_inicio': fechas_ocupadas_inicio,
-            'fechas_ocupadas_fin': fechas_ocupadas_fin,
+            "novedades": novedades,
+            "usuarios": usuarios
         }
         return render(request, 'nomina/novedad/novedades_nomina.html', contexto)
     else:
@@ -632,9 +756,11 @@ def novedad_guardar(request):
     if request.method == "POST":
         usuario_id = request.POST.get("usuario")
         usuario = Usuario.objects.get(id=usuario_id)
-        salario = request.POST.get("salario")
         dias_incapacidad = request.POST.get("dias_incapacidad") or 0
-        dias_trabajados = request.POST.get("dias_trabajados")
+        dias_trabajados = request.POST.get("dias_trabajados") or 15
+        perm_remunerado = request.POST.get("perm_remunerado") or None
+        perm_no_remunerado = request.POST.get("perm_no_remunerado") or None
+        sin_justa_causa = request.POST.get("sin_justa_causa") or None
         horas_extras_diurnas = request.POST.get("horas_extras_diurnas") or 0
         horas_extras_diurnas_dom_fes = request.POST.get("horas_extras_diurnas_dom_fes") or 0
         horas_extras_nocturnas = request.POST.get("horas_extras_nocturnas") or 0
@@ -649,15 +775,15 @@ def novedad_guardar(request):
         libranzas = request.POST.get("libranzas") or 0
         cooperativas = request.POST.get("libranzas") or 0
         otros = request.POST.get("otros") or 0
-        fecha_inicio = request.POST.get("fecha_inicio")
-        fecha_fin = request.POST.get("fecha_fin")
 
         try:
             nov = Novedad(
                 usuario=usuario,
-                salario=salario,
                 dias_incapacidad=dias_incapacidad,
                 dias_trabajados=dias_trabajados,
+                perm_remunerado=perm_remunerado,
+                perm_no_remunerado=perm_no_remunerado,
+                sin_justa_causa=sin_justa_causa,
                 horas_extras_diurnas=horas_extras_diurnas,
                 horas_extras_diurnas_dom_fes=horas_extras_diurnas_dom_fes,
                 horas_extras_nocturnas=horas_extras_nocturnas,
@@ -672,8 +798,6 @@ def novedad_guardar(request):
                 libranzas=libranzas,
                 cooperativas=cooperativas,
                 otros=otros,
-                fecha_inicio=fecha_inicio,
-                fecha_fin=fecha_fin
             )
             nov.save()
             messages.success(request, "Guardado correctamente!!")
@@ -691,32 +815,39 @@ def novedad_editar(request, id):
         novedad = get_object_or_404(Novedad, id=id)
         usuario_id = request.POST.get("usuario_editar")
         usuario = Usuario.objects.get(id=usuario_id)
-        salario = request.POST.get("salario_editar")
-        dias_incapacidad = request.POST.get("dias_incapacidad_editar") or 0
-        dias_trabajados = request.POST.get("dias_trabajados_editar")
-        horas_extras_diurnas = request.POST.get("horas_extras_diurnas_editar") or 0
-        horas_extras_diurnas_dom_fes = request.POST.get("horas_extras_diurnas_dom_fes_editar") or 0
-        horas_extras_nocturnas = request.POST.get("horas_extras_nocturnas_editar") or 0
-        horas_extras_nocturnas_dom_fes = request.POST.get("horas_extras_nocturnas_dom_fes_editar") or 0
-        horas_recargo_nocturno = request.POST.get("horas_recargo_nocturno_editar") or 0
-        horas_recargo_nocturno_dom_fes = request.POST.get("horas_recargo_nocturno_dom_fes_editar") or 0
-        horas_recargo_diurno_dom_fes = request.POST.get("horas_recargo_diurno_dom_fes_editar") or 0
-        comisiones = request.POST.get("comisiones_editar") or 0
-        comisiones_porcentaje = request.POST.get("comisiones_porcentaje_editar") or None
-        bonificaciones = request.POST.get("bonificaciones_editar") or 0
-        embargos_judiciales = request.POST.get("embargos_judiciales_editar") or 0
-        libranzas = request.POST.get("libranzas_editar") or 0
-        cooperativas = request.POST.get("libranzas_editar") or 0
-        otros = request.POST.get("otros_editar") or 0
-        fecha_inicio = request.POST.get("fecha_inicio_editar") or novedad.fecha_inicio
-        fecha_fin = request.POST.get("fecha_fin_editar") or novedad.fecha_fin
+        dias_incapacidad = request.POST.get("dias_incapacidad_editar") or novedad.dias_incapacidad
+        dias_trabajados = request.POST.get("dias_trabajados_editar") or novedad.dias_trabajados
+        perm_remunerado = request.POST.get("perm_remunerado_editar") or novedad.perm_remunerado
+        perm_no_remunerado = request.POST.get("perm_no_remunerado_editar") or novedad.perm_no_remunerado
+        sin_justa_causa = request.POST.get("sin_justa_causa_editar") or novedad.sin_justa_causa
+        horas_extras_diurnas = request.POST.get("horas_extras_diurnas_editar") or novedad.horas_extras_diurnas
+        horas_extras_diurnas_dom_fes = request.POST.get(
+            "horas_extras_diurnas_dom_fes_editar") or novedad.horas_extras_diurnas_dom_fes
+        horas_extras_nocturnas = request.POST.get("horas_extras_nocturnas_editar") or novedad.horas_extras_nocturnas
+        horas_extras_nocturnas_dom_fes = request.POST.get(
+            "horas_extras_nocturnas_dom_fes_editar") or novedad.horas_extras_nocturnas_dom_fes
+        horas_recargo_nocturno = request.POST.get("horas_recargo_nocturno_editar") or novedad.horas_recargo_nocturno
+        horas_recargo_nocturno_dom_fes = request.POST.get(
+            "horas_recargo_nocturno_dom_fes_editar") or novedad.horas_recargo_nocturno_dom_fes
+        horas_recargo_diurno_dom_fes = request.POST.get(
+            "horas_recargo_diurno_dom_fes_editar") or novedad.horas_recargo_diurno_dom_fes
+        comisiones = request.POST.get("comisiones_editar") or novedad.comisiones
+        comisiones_porcentaje = request.POST.get("comisiones_porcentaje_editar") or novedad.comisiones_porcentaje
+        bonificaciones = request.POST.get("bonificaciones_editar") or novedad.bonificaciones
+        embargos_judiciales = request.POST.get("embargos_judiciales_editar") or novedad.embargos_judiciales
+        libranzas = request.POST.get("libranzas_editar") or novedad.libranzas
+        cooperativas = request.POST.get("cooperativas_editar") or novedad.cooperativas
+        otros = request.POST.get("otros_editar") or novedad.otros
 
         try:
+            # Actualizar la novedad
             q = Novedad.objects.get(pk=id)
             q.usuario = usuario
-            q.salario = salario
             q.dias_incapacidad = dias_incapacidad
             q.dias_trabajados = dias_trabajados
+            q.perm_remunerado = perm_remunerado
+            q.perm_no_remunerado = perm_no_remunerado
+            q.sin_justa_causa = sin_justa_causa
             q.horas_extras_diurnas = horas_extras_diurnas
             q.horas_extras_diurnas_dom_fes = horas_extras_diurnas_dom_fes
             q.horas_extras_nocturnas = horas_extras_nocturnas
@@ -731,14 +862,14 @@ def novedad_editar(request, id):
             q.libranzas = libranzas
             q.cooperativas = cooperativas
             q.otros = otros
-            q.fecha_inicio = fecha_inicio
-            q.fecha_fin = fecha_fin
+            q.fecha_ultima_actualizacion = timezone.now()  # Actualizamos la fecha de última actualización
             q.save()
-            messages.success(request, "Actualizado correctamente!!")
+
+            messages.success(request, f"La novedad de {usuario} fue actualizada!")
         except Exception as e:
             messages.error(request, f"Error. {e}")
 
-        return redirect('nomina:novedades_nomina')
+        return redirect('nomina:reportar_novedad')
 
 
 def novedad_eliminar(request, id):
@@ -749,6 +880,133 @@ def novedad_eliminar(request, id):
     except Exception as e:
         messages.error(request, f"Error. {e}")
     return HttpResponseRedirect(reverse("nomina:novedades_nomina", args=()))
+
+
+def reportar_novedad(request):
+    if request.session.get("logueo", False):
+        novedades = Novedad.objects.all()
+        usuarios = Usuario.objects.filter(rol=2)
+        contexto = {
+            "novedades": novedades,
+            "usuarios": usuarios
+        }
+        return render(request, 'nomina/novedad/reportar_novedad.html', contexto)
+    else:
+        messages.warning(request, "Debe iniciar sesión para ver esta página.")
+        return HttpResponseRedirect(reverse("nomina:login"))
+
+
+def actualizar_novedades(request):
+    if request.method == 'POST':
+        # Obtener la fecha actual
+        fecha_actual = timezone.now()
+
+        # Actualizar la fecha_ultima_actualizacion de todas las novedades
+        novedades = Novedad.objects.all()
+        novedades.update(fecha_ultima_actualizacion=fecha_actual)
+
+        # Crear devengados, deducciones y nóminas para cada novedad
+        for novedad in novedades:
+            # Crear el devengado
+            devengado = Devengado.objects.create(novedad=novedad)
+
+            # Crear la deducción
+            deduccion = Deduccion.objects.create(novedad=novedad, devengado=devengado, retefuente='Valor ejemplo')
+
+            # Crear la nómina
+            Nomina.objects.create(
+                novedad=novedad,
+                devengado=devengado,
+                deduccion=deduccion,
+                fecha_nomina=novedad.fecha_ultima_actualizacion
+            )
+
+        messages.success(request, f"Se reportaron las novedades y nóminas de la fecha: {fecha_actual}")
+    return redirect('nomina:novedades_nomina')
+
+
+def nomina(request):
+    if request.session.get("logueo", False):
+        usuario_id = request.session["logueo"]["id"]
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+
+            if usuario.rol == 2:  # Suponiendo que el rol 2 es para colaboradores
+                nominas = Nomina.objects.filter(novedad__usuario=usuario)
+                total_a_pagar_usuario = sum(n.total_a_pagar() for n in nominas)
+            else:
+                nominas = Nomina.objects.all()
+                total_a_pagar_usuario = None
+
+            # Agrupar nóminas por fecha de nómina
+            nominas_por_fecha_nomina = {}
+            for nomina in nominas:
+                fecha_nomina = nomina.fecha_nomina
+                if fecha_nomina not in nominas_por_fecha_nomina:
+                    nominas_por_fecha_nomina[fecha_nomina] = []
+                nominas_por_fecha_nomina[fecha_nomina].append(nomina)
+
+            # Verificar si hay nóminas
+            if not nominas_por_fecha_nomina:
+                mensaje = "No hay nóminas disponibles."
+            else:
+                mensaje = None
+
+            contexto = {
+                "nominas_por_fecha_nomina": nominas_por_fecha_nomina,
+                "total_a_pagar_usuario": total_a_pagar_usuario,
+                "mensaje": mensaje
+            }
+            return render(request, 'nomina/nomina/nomina.html', contexto)
+        except Usuario.DoesNotExist:
+            messages.error(request, "Usuario no encontrado")
+            return HttpResponseRedirect(reverse("nomina:login"))
+    else:
+        messages.warning(request, "Debe iniciar sesión para ver esta página.")
+        return HttpResponseRedirect(reverse("nomina:login"))
+
+
+def nomina_listar(request, fecha_nomina):
+    if request.session.get("logueo", False):
+        usuario_id = request.session["logueo"]["id"]
+        usuario = Usuario.objects.get(id=usuario_id)
+
+        if usuario.rol == 1:
+            try:
+                nominas = Nomina.objects.filter(fecha_nomina=fecha_nomina)
+
+                contexto = {
+                    "nominas": nominas,
+                    "fecha_ultima_actualizacion": fecha_nomina
+                }
+
+                if not nominas:
+                    contexto['mensaje'] = "No hay nóminas disponibles para esta fecha."
+
+                return render(request, 'nomina/nomina/nomina-listar.html', contexto)
+
+            except Usuario.DoesNotExist:
+                messages.error(request, "Usuario no encontrado")
+                return HttpResponseRedirect(reverse("nomina:nomina_listar"))
+
+        if usuario.rol == 2:
+            try:
+                nominas = Nomina.objects.filter(novedad__usuario=usuario)
+
+                contexto = {
+                    "nominas": nominas
+                }
+
+                if not nominas:
+                    contexto['mensaje'] = "No hay nóminas disponibles para este usuario."
+
+                return render(request, 'nomina/nomina/nomina-listar.html', contexto)
+            except Usuario.DoesNotExist:
+                messages.error(request, "Usuario no encontrado")
+                return HttpResponseRedirect(reverse("nomina:nomina_listar"))
+    else:
+        messages.warning(request, "Debe iniciar sesión para ver esta página.")
+        return HttpResponseRedirect(reverse("nomina:login"))
 
 
 def usuario_listar(request):

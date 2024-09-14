@@ -2011,6 +2011,10 @@ body {
   transition-duration: 300ms;
 }
 
+.duration-100{
+  transition-duration: 100ms;
+}
+
 .ease-in-out{
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -3135,4 +3139,8 @@ body {
     margin: 0 10px;
     font-weight: bold;
     color: #fff;
+}
+
+.logo-presentacion {
+    margin-top: 50px;
 }
