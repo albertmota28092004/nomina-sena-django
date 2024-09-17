@@ -180,7 +180,7 @@
                     <td><strong>{{ nomina.deduccion.total_deduccion|round_number:2|intcomma }}</strong></td>
                     <td><strong>{{ nomina.total_a_pagar|round_number:2|intcomma }}</strong></td>
                     <td>
-                        <button class="btn btn-dark" data-toggle="modal" data-target="#reciboModal"
+                        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reciboModal"
                                 data-id="{{ nomina.id }}" onclick="showReciboModal({{ nomina.id }})">
                             Previsualizar
                             <i class="fa-solid fa-file-pdf"></i>
@@ -208,7 +208,7 @@
                                 <button style="margin-left: 5px;" title="Para descargar el recibo, presiona el botón descargar con el ícono de la flecha hacia abajo">
                                     <i class="fa-solid fa-circle-info"></i>
                                 </button>
-                                <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <iframe id="reciboIframe" src="" width="100%" height="500px" style="border: none;"></iframe>
@@ -304,7 +304,7 @@
                                 <td>{{ nomina.deduccion.total_deduccion|round_number:2|intcomma }}</td>
                                 <td>{{ nomina.total_a_pagar|round_number:2|intcomma }}</td>
                                 <td>
-                                    <button class="btn btn-dark" data-toggle="modal" data-target="#reciboModal"
+                                    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reciboModal"
                                             data-id="{{ nomina.id }}" onclick="showReciboModal({{ nomina.id }})">
                                         Previsualizar
                                         <i class="fa-solid fa-file-pdf"></i>
@@ -331,7 +331,7 @@
                                             <button style="margin-left: 5px;" title="Para descargar el recibo, presiona el botón descargar con el ícono de la flecha hacia abajo">
                                                 <i class="fa-solid fa-circle-info"></i>
                                             </button>
-                                            <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                            <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <iframe id="reciboIframe" src="" width="100%" height="500px" style="border: none;"></iframe>
