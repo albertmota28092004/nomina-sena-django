@@ -26,6 +26,7 @@ urlpatterns = [
     path('novedades_nomina/', views.novedades_nomina, name='novedades_nomina'),
     path("novedad_guardar/", views.novedad_guardar, name="novedad_guardar"),
     path("novedad_editar/<int:id>/", views.novedad_editar, name="novedad_editar"),
+    path("editar_porcentaje_incapacidad/<int:id>/", views.editar_porcentaje_incapacidad, name="editar_porcentaje_incapacidad"),
     path("novedad_eliminar/<int:id>/", views.novedad_eliminar, name="novedad_eliminar"),
     path("reportar_novedad", views.reportar_novedad, name="reportar_novedad"),
     path("actualizar_novedades", views.actualizar_novedades, name="actualizar_novedades"),

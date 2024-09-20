@@ -75,6 +75,7 @@ class Novedad(models.Model):
     cooperativas = models.PositiveIntegerField(null=True, blank=True, default=0)
     otros = models.PositiveIntegerField(null=True, blank=True, default=0)
     fecha_ultima_actualizacion = models.DateField(default=timezone.now, null=True, blank=True)
+    incapacidad_porcentaje = models.FloatField(default=0.6666)
 
     def actualizar_novedad(self):
         # Aquí puedes realizar las actualizaciones y cambiar la fecha de la última actualización
@@ -140,8 +141,12 @@ class Devengado(models.Model):
     def novedad_bonificaciones(self):
         return self.novedad.bonificaciones or 0
 
+    @property
+    def incapacidad_porcentaje(self):
+        return self.novedad.incapacidad_porcentaje
+
     def valor_incapacidad(self):
-        valor_incapacidad = ((self.novedad_salario / 30) * 0.6666)
+        valor_incapacidad = ((self.novedad_salario / 30) * self.incapacidad_porcentaje)
         if valor_incapacidad < 43333:
             return 43333 * self.novedad_dias_incapacidad
         else:
