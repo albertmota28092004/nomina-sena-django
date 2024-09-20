@@ -871,63 +871,26 @@ def novedad_editar(request, id):
 
         return redirect('nomina:reportar_novedad')
 
+
 def editar_porcentaje_incapacidad(request, id):
     if request.session.get("logueo", False):
         novedad = get_object_or_404(Novedad, id=id)
-        usuario = Usuario.objects.filter(id=novedad.usuario.id)
-        dias_incapacidad = novedad.dias_incapacidad
-        dias_trabajados = novedad.dias_trabajados
-        perm_remunerado = novedad.perm_remunerado
-        perm_no_remunerado = novedad.perm_no_remunerado
-        sin_justa_causa = novedad.sin_justa_causa
-        horas_extras_diurnas = novedad.horas_extras_diurnas
-        horas_extras_diurnas_dom_fes = novedad.horas_extras_diurnas_dom_fes
-        horas_extras_nocturnas =  novedad.horas_extras_nocturnas
-        horas_extras_nocturnas_dom_fes = novedad.horas_extras_nocturnas_dom_fes
-        horas_recargo_nocturno = novedad.horas_recargo_nocturno
-        horas_recargo_nocturno_dom_fes = novedad.horas_recargo_nocturno_dom_fes
-        horas_recargo_diurno_dom_fes = novedad.horas_recargo_diurno_dom_fes
-        comisiones = novedad.comisiones
-        comisiones_porcentaje = novedad.comisiones_porcentaje
-        bonificaciones = novedad.bonificaciones
-        embargos_judiciales =  novedad.embargos_judiciales
-        libranzas = novedad.libranzas
-        cooperativas = novedad.cooperativas
-        otros = novedad.otros
+        nomina = Nomina.objects.filter(novedad=novedad).first()
+        fecha_nomina = nomina.fecha_nomina.strftime('%Y-%m-%d')
+
         incapacidad_porcentaje = request.POST.get("incapacidad_porcentaje_editar")
 
-        try:
-            # Actualizar la novedad
-            q = Novedad.objects.get(pk=id)
-            q.usuario = usuario
-            q.dias_incapacidad = dias_incapacidad
-            q.dias_trabajados = dias_trabajados
-            q.perm_remunerado = perm_remunerado
-            q.perm_no_remunerado = perm_no_remunerado
-            q.sin_justa_causa = sin_justa_causa
-            q.horas_extras_diurnas = horas_extras_diurnas
-            q.horas_extras_diurnas_dom_fes = horas_extras_diurnas_dom_fes
-            q.horas_extras_nocturnas = horas_extras_nocturnas
-            q.horas_extras_nocturnas_dom_fes = horas_extras_nocturnas_dom_fes
-            q.horas_recargo_nocturno = horas_recargo_nocturno
-            q.horas_recargo_nocturno_dom_fes = horas_recargo_nocturno_dom_fes
-            q.horas_recargo_diurno_dom_fes = horas_recargo_diurno_dom_fes
-            q.comisiones = comisiones
-            q.comisiones_porcentaje = comisiones_porcentaje
-            q.bonificaciones = bonificaciones
-            q.embargos_judiciales = embargos_judiciales
-            q.libranzas = libranzas
-            q.cooperativas = cooperativas
-            q.otros = otros
-            q.fecha_ultima_actualizacion = timezone.now()  # Actualizamos la fecha de última actualización
-            q.incapacidad_porcentaje = incapacidad_porcentaje
-            q.save()
+        if incapacidad_porcentaje:
+            try:
+                novedad.incapacidad_porcentaje = float(float(incapacidad_porcentaje) / 100)
+                novedad.fecha_ultima_actualizacion = timezone.now()  # Actualizamos la fecha de última actualización
+                novedad.save()
 
-            messages.success(request, f"La novedad de {usuario} fue actualizada!")
-        except Exception as e:
-            messages.error(request, f"Error. {e}")
+                messages.success(request, f"La novedad de {novedad.usuario} fue actualizada!")
+            except Exception as e:
+                messages.error(request, f"Error. {e}")
 
-        return HttpResponseRedirect(reverse("nomina:nomina_listar"))
+        return HttpResponseRedirect(reverse("nomina:nomina_listar", args=[fecha_nomina]))
 
 
 def novedad_eliminar(request, id):

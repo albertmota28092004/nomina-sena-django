@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit 14/09">
-      <change afterPath="$PROJECT_DIR$/sena/venv/Scripts/python.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/venv/Scripts/pythonw.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/venv/pyvenv.cfg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/nomina-sena-django.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/nomina-sena-django.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -61,19 +54,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Python.prueba.executor": "Run",
-    "Python.x.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/alber/PycharmProjects/nomina-sena-django/sena",
-    "settings.editor.selected.configurable": "com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.prueba.executor&quot;: &quot;Run&quot;,
+    &quot;Python.x.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/alber/PycharmProjects/nomina-sena-django/sena&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
       <console-settings module-name="nomina-sena-django" is-module-sdk="true">
@@ -153,7 +146,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-884f5ed5d46b-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.22855.92" />
+        <option value="bundled-python-sdk-0509580d9d50-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.14494.241" />
       </set>
     </attachedChunks>
   </component>

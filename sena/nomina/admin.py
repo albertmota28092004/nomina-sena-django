@@ -18,12 +18,12 @@ class UsuarioAdmin(admin.ModelAdmin):
 
 
 class NovedadAdmin(admin.ModelAdmin):
-    list_display = ['id', 'usuario', 'dias_incapacidad', 'dias_trabajados',
+    list_display = ['id', 'usuario', 'dias_incapacidad', 'incapacidad_porcentaje', 'dias_trabajados',
                     'horas_extras_diurnas', 'horas_extras_diurnas_dom_fes', 'horas_extras_nocturnas',
                     'horas_extras_nocturnas_dom_fes', 'horas_recargo_nocturno', 'horas_recargo_nocturno_dom_fes',
                     'horas_recargo_diurno_dom_fes', 'comisiones', 'comisiones_porcentaje', 'bonificaciones',
                     'embargos_judiciales', 'libranzas', 'cooperativas', 'otros',
-                    'fecha_ultima_actualizacion']
+                    'fecha_ultima_actualizacion', ]
 
 
 class DevengadoAdmin(admin.ModelAdmin):
