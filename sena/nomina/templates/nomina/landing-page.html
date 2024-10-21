@@ -14,10 +14,6 @@
     <link rel="stylesheet" href="{% static 'nomina/css/styles.css' %}"/>
     <script src="{% static 'nomina/js/wow.min.js' %}"></script>
     <style>
-        * {
-            overflow: hidden;
-        }
-
         .logo-presentacion {
             margin-top: 5px;
             margin-bottom: 20px;
@@ -38,19 +34,6 @@
             </h1>
             <ul class="mb-10 items-center justify-center gap-2">
               <li>
-                <a href="https://links.tailgrids.com/play-download"
-                  class=" descargar-ahora inline-flex items-center justify-center rounded-md bg-white px-10 py-[14px] text-center font-bold text-primary shadow-button transition duration-100 ease-in-out ">
-                  Descargar ahora
-                </a>
-              </li>
-              <li class="flex items-center justify-center">
-                <div class="flex items-center justify-center">
-                  <span class="line"></span>
-                  <span class="circle">O</span>
-                  <span class="line"></span>
-                </div>
-              </li>
-              <li>
                 <a href="{% url 'nomina:login' %}"
                   class=" descargar-ahora inline-flex items-center justify-center rounded-md bg-white px-10 py-[14px] text-center font-bold text-primary shadow-button transition duration-100 ease-in-out ">
                   Ingresa al sitio web
@@ -64,12 +47,9 @@
   </div>
   <!-- ====== All Scripts -->
   <script src="{% static 'nomina/vendor/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'nomina/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'nomina/js/swiper-bundle.min.js' %}"></script>
-  <script src="{% static 'nomina/js/main.js' %}"></script>
   <!-- Core plugin JavaScript-->
   <script src="{% static 'nomina/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-  <script src="{% static 'nomina/js/landing-page-scripts.js' %}"></script>
   <script>
       new WOW().init();
   </script>

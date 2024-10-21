@@ -78,50 +78,14 @@
 
 </div>
 <script>
-    $(document).ready(function() {
-       // Mostrar el spinner cuando se inicia una solicitud de página
-       $(document).on('click', 'a', function() {
-           $('#spinnerOverlay').removeClass('d-none');
-       });
 
-       // Ocultar el spinner cuando la página haya terminado de cargarse
-       $(window).on('load', function() {
-           $('#spinnerOverlay').addClass('d-none');
-       });
-
-       // Ocultar el spinner si se cancela la navegación
-       $(window).on('beforeunload', function() {
-           $('#spinnerOverlay').addClass('d-none');
-       });
-    });
-
-    /*---------------------------------------------------*/
 
     function confirmar_eliminar(id, url) {
         if (confirm("¿Estás seguro de que deseas eliminarlo?")) {
             window.location.href = url;
         }
     }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        flatpickr("#fecha_inicio_novedad", {
-            dateFormat: "d-m-Y",
-            locale: "es",
-        });
-
-        flatpickr("#fecha_fin_novedad", {
-            dateFormat: "d-m-Y",
-            locale: "es",
-        });
-
-        flatpickr("#fecha_fin_contrato", {
-            dateFormat: "d-m-Y",
-            locale: "es",
-        });
-    });
 </script>
-<script src="{% static 'nomina/js/main.js' %}"></script>
-<script src="{% static 'nomina/js/landing-page-scripts.js' %}"></script>
 
 <!-- Libraries JS -->
 <script src="{% static 'nomina/vendor/jquery/jquery.min.js' %}"></script>

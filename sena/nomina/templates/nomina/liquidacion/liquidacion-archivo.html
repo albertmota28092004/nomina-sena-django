@@ -199,13 +199,6 @@
                         <td class="text-center">{{ nomina.deduccion.fsp|round_number:2|intcomma }}</td>
                     </tr>
                     {% endif %}
-                    {% if nomina.deduccion.retefuente != "" or nomina.deduccion.retefuente != None %}
-                    <tr>
-                        <td class="text-center">RETEFUENTE</td>
-                        <td class="text-center">15</td>
-                        <td class="text-center">{{ nomina.deduccion.retefuente }}</td>
-                    </tr>
-                    {% endif %}
                     {% if nomina.novedad.embargos_judiciales != 0 %}
                     <tr>
                         <td class="text-center">EMBARGOS JUDICIALES</td>

@@ -89,7 +89,18 @@ def landing_page(request):
 
 def index(request):
     if request.session.get("logueo", False):
-        return render(request, "nomina/index.html")
+        # Obtén el porcentaje de incapacidad de cualquiera de las novedades
+        incapacidad_porcentaje = Novedad.objects.values_list('incapacidad_porcentaje', flat=True).first()
+
+        # Si no hay novedades, el porcentaje es 100% por defecto
+        if incapacidad_porcentaje is None:
+            incapacidad_porcentaje = 1.0  # Porcentaje por defecto 100% (como flotante)
+
+        context = {
+            'incapacidad_porcentaje': incapacidad_porcentaje * 100,  # Lo multiplicas por 100 para mostrarlo correctamente
+        }
+
+        return render(request, "nomina/index.html", context)
     else:
         return render(request, 'nomina/login.html')
 
@@ -103,7 +114,58 @@ def registrarse(request):
 
 
 def crear_admin(request):
-    pass
+    if request.method == "POST":
+        cedula = request.POST.get("cedula")
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get("apellido")
+        correo = request.POST.get('correo')
+        salario = request.POST.get('salario')
+        contrasena = cedula
+        rol = 1
+        foto = request.FILES.get("foto")
+
+        try:
+            usu = Usuario(
+                cedula=cedula,
+                nombre=nombre,
+                apellido=apellido,
+                correo=correo,
+                salario=salario,
+                contrasena=contrasena,
+                rol=rol,
+                foto=foto,
+            )
+            usu.save()
+            messages.success(request, "Guardado correctamente!!")
+            try:
+                destinatario = usu.correo
+
+                mensaje = f"""
+                    <h1 style='color:blue;'>¡Ya eres parte de nuestra familia <strong>PRESS</strong>!</h1>
+                    <p>Tu registro fue exitoso. Ya puedes acceder a todas nuestras funciones ingresando con tu correo electrónico y esta contraseña: {usu.contrasena}. Puedes cambiarla cuando desees.</p>
+                    <a href='https://senapress.pythonanywhere.com'>Ingresa desde este link</a>
+                """
+
+                try:
+                    msg = EmailMessage("PRESS", mensaje, settings.EMAIL_HOST_USER, [destinatario])
+                    msg.content_subtype = "html"  # Habilitar html
+                    msg.send()
+                except BadHeaderError:
+                    return HttpResponse("Invalid header found.")
+                except Exception as e:
+                    return HttpResponse(f"Error: {e}")
+
+            except Exception as e:
+                print(f"{e}")
+
+        except Exception as e:
+            messages.error(request, f"Error. {e}")
+
+        return HttpResponseRedirect(reverse("nomina:index", args=()))
+
+    else:
+        messages.warning(request, "No se enviarion datos...")
+        return HttpResponseRedirect(reverse("nomina:usuario_formulario", args=()))
 
 
 def convert_html_to_pdf(source_html):
@@ -484,6 +546,45 @@ def export_nominas_to_excel(request, fecha_nomina):
     wb.save(response)
     return response
 
+def recuperar_contrasena(request):
+    if request.method == "POST":
+        correo = request.POST.get("correo_recuperar")
+        try:
+            # Buscar al colaborador por correo
+            colaborador = Usuario.objects.get(correo=correo)
+
+            # Preparar el mensaje con la contraseña del usuario
+            destinatario = correo
+            mensaje = f"""
+                <h1 style='color:blue;'>¡Hola, <strong>{colaborador.nombre}</strong>!</h1>
+                <p>Tu contraseña fue recuperada exitosamente, esta es tu contraseña: {colaborador.contrasena}</p>
+                <a href='https://senapress.pythonanywhere.com'>Ingresa desde este link</a>
+            """
+
+            # Intentar enviar el correo
+            try:
+                msg = EmailMessage("PRESS - Recuperación de contraseña", mensaje, settings.EMAIL_HOST_USER, [destinatario])
+                msg.content_subtype = "html"  # Habilitar HTML en el mensaje
+                msg.send()
+                messages.success(request, "¡El correo con tu contraseña fue enviado exitosamente!")
+            except BadHeaderError:
+                return HttpResponse("Se encontró un encabezado inválido.")
+            except Exception as e:
+                return HttpResponse(f"Error al enviar el correo: {e}")
+
+        except Usuario.DoesNotExist:
+            # Si el correo no está registrado
+            messages.warning(request, "El correo ingresado no coincide con ningún usuario.")
+        except Exception as e:
+            # En caso de un error inesperado
+            messages.error(request, f"Error: {e}")
+
+        return redirect('nomina:login')
+
+    return render(request, 'nomina/login.html')
+
+
+
 
 # -------------------- Modelos --------------------------
 
@@ -543,7 +644,6 @@ def prueba(request):
 
 def colaborador_guardar(request):
     if request.method == "POST":
-        id = request.POST.get("id")
         nombre = request.POST.get('nombre')
         apellido = request.POST.get("apellido")
         cedula = request.POST.get('cedula')
@@ -559,44 +659,43 @@ def colaborador_guardar(request):
         fecha_retiro = request.POST.get("fecha_retiro") or None
         motivo_retiro = request.POST.get("motivo_retiro") or None
 
-        if id == "":
+        try:
+            usu = Usuario(
+                nombre=nombre,
+                apellido=apellido,
+                correo=correo,
+                cedula=cedula,
+                contrasena=contrasena,
+                rol=rol,
+                foto=foto,
+                cargo=cargo,
+                salario=salario,
+                riesgo=riesgo,
+                tipo_contrato=tipo_contrato,
+                fecha_fin_contrato=fecha_fin_contrato,
+                fecha_retiro=fecha_retiro,
+                motivo_retiro=motivo_retiro,
+            )
+            usu.save()
+            destinatario = usu.correo
+
+            mensaje = f"""
+                <h1 style='color:blue;'>¡Ya eres parte de nuestra familia <strong>PRESS</strong>!</h1>
+                <p>Tu registro fue exitoso. Ya puedes acceder a todas nuestras funciones ingresando con tu correo electrónico y esta contraseña: {usu.contrasena}. Puedes cambiarla cuando desees.</p>
+                <a href='https://senapress.pythonanywhere.com'>Ingresa desde este link</a>
+            """
+
             try:
-                usu = Usuario(
-                    nombre=nombre,
-                    apellido=apellido,
-                    correo=correo,
-                    cedula=cedula,
-                    contrasena=contrasena,
-                    rol=rol,
-                    foto=foto,
-                    cargo=cargo,
-                    salario=salario,
-                    riesgo=riesgo,
-                    tipo_contrato=tipo_contrato,
-                    fecha_fin_contrato=fecha_fin_contrato,
-                    fecha_retiro=fecha_retiro,
-                    motivo_retiro=motivo_retiro,
-                )
-                usu.save()
-                destinatario = usu.correo
-
-                mensaje = f"""
-                    <h1 style='color:blue;'>¡Ya eres parte de nuestra familia <strong>PRESS</strong>!</h1>
-                    <p>Tu registro fue exitoso. Ya puedes acceder a todas nuestras funciones ingresando con tu correo electrónico y esta contraseña: {usu.contrasena}. Puedes cambiarla cuando desees.</p>
-                    <a href='https://senapress.pythonanywhere.com'>Ingresa desde este link</a>
-                """
-
-                try:
-                    msg = EmailMessage("PRESS", mensaje, settings.EMAIL_HOST_USER, [destinatario])
-                    msg.content_subtype = "html"  # Habilitar html
-                    msg.send()
-                except BadHeaderError:
-                    return HttpResponse("Invalid header found.")
-                except Exception as e:
-                    return HttpResponse(f"Error: {e}")
-                messages.success(request, "Guardado correctamente!!")
+                msg = EmailMessage("PRESS", mensaje, settings.EMAIL_HOST_USER, [destinatario])
+                msg.content_subtype = "html"  # Habilitar html
+                msg.send()
+            except BadHeaderError:
+                return HttpResponse("Invalid header found.")
             except Exception as e:
-                messages.error(request, f"Error. {e}")
+                return HttpResponse(f"Error: {e}")
+            messages.success(request, "Guardado correctamente!!")
+        except Exception as e:
+            messages.error(request, f"Error. {e}")
         return HttpResponseRedirect(reverse("nomina:colaboradores", args=()))
     else:
         messages.warning(request, "No se enviarion datos...")
@@ -614,64 +713,81 @@ def colaborador_guardar_excel(request):
                 hoja = wb['COLABORADORES']  # Nombre de la hoja
                 if hoja:
                     for fila in hoja.iter_rows(min_row=4, max_row=hoja.max_row, values_only=True):
-                        cedula, nombre, apellido, correo, cargo, salario, fecha_ingreso, riesgo, tipo_contrato, fecha_fin_contrato, fecha_retiro, motivo_retiro = fila
+                        if len(fila) < 12:
+                            # Si la fila no tiene suficientes columnas, la ignoramos
+                            messages.warning(request, "Fila de COLABORADORES con número incorrecto de columnas.")
+                            continue
+
+                        cedula, nombre, apellido, correo, cargo, salario, fecha_ingreso, riesgo, tipo_contrato, fecha_fin_contrato, fecha_retiro, motivo_retiro = fila[:12]  # Solo tomamos las primeras 12 columnas
 
                         # Validaciones opcionales según tu lógica
                         if not cedula or not nombre or not apellido:
                             continue
 
-                        # Crear un nuevo colaborador
-                        col = Usuario(
+                        # Crear o actualizar un colaborador
+                        col, creado = Usuario.objects.update_or_create(
                             cedula=cedula,
-                            nombre=nombre,
-                            apellido=apellido,
-                            correo=correo,
-                            contrasena=cedula,
-                            cargo=cargo,
-                            salario=salario,
-                            fecha_ingreso=fecha_ingreso,
-                            riesgo=riesgo,
-                            tipo_contrato=tipo_contrato,
-                            fecha_fin_contrato=fecha_fin_contrato,
-                            fecha_retiro=fecha_retiro,
-                            motivo_retiro=motivo_retiro,
-                            rol=2,  # Asignar rol de colaborador
+                            defaults={
+                                'nombre': nombre,
+                                'apellido': apellido,
+                                'correo': correo,
+                                'contrasena': cedula,
+                                'cargo': cargo,
+                                'salario': salario,
+                                'fecha_ingreso': fecha_ingreso,
+                                'riesgo': riesgo,
+                                'tipo_contrato': tipo_contrato,
+                                'fecha_fin_contrato': fecha_fin_contrato,
+                                'fecha_retiro': fecha_retiro,
+                                'motivo_retiro': motivo_retiro,
+                                'rol': 2,  # Asignar rol de colaborador
+                            }
                         )
-                        col.save()
 
-                        hoja_novedades = wb['NOVEDADES']
-                        for fila_novedad in hoja_novedades.iter_rows(min_row=4, max_row=hoja_novedades.max_row,
-                                                                     values_only=True):
-                            nov_cedula, nov_nombre, nov_apellido, nov_cargo, nov_salario, clase_salario, incapacidad, dias_trabajados, perm_remunerado, perm_no_remunerado, sin_justa_causa, he_diurna, he_diurna_dom_fes, he_nocturna, he_nocturna_dom_fes, rec_nocturno, rec_diurno_dom_fes, rec_nocturno_dom_fes, comision_venta, comision_porcentaje, bonificaciones, embargos, libranzas, cooperativas, otros, clase_riesgo, riesgo_arl, fecha_ingreso, fecha_fin_contrato, tipo_contrato, fecha_retiro, motivo_retiro = fila_novedad
+                        hoja_novedades = wb['NOVEDADES']  # Accede a la hoja de novedades
+                        for fila_novedad in hoja_novedades.iter_rows(min_row=4, max_row=hoja_novedades.max_row, values_only=True):
+                            # Aseguramos que la fila de novedades tenga al menos 20 columnas
+                            if len(fila_novedad) < 20:
+                                messages.warning(request, "Fila de NOVEDADES con número incorrecto de columnas.")
+                                continue
+
+                            # Solo tomamos las primeras 20 columnas
+                            nov_cedula, incapacidad, dias_trabajados, perm_remunerado, perm_no_remunerado, sin_justa_causa, he_diurna, he_diurna_dom_fes, he_nocturna, he_nocturna_dom_fes, rec_nocturno, rec_diurno_dom_fes, rec_nocturno_dom_fes, comision_venta, comision_porcentaje, bonificaciones, embargos, libranzas, cooperativas, otros = fila_novedad[:20]
 
                             # Verifica si la cédula de la novedad coincide con el colaborador
                             if nov_cedula == cedula:
-                                # Crear una nueva novedad para el colaborador
-                                nov = Novedad(
-                                    usuario=col,
-                                    dias_incapacidad=incapacidad,
-                                    dias_trabajados=dias_trabajados,
-                                    perm_remunerado=perm_remunerado,
-                                    perm_no_remunerado=perm_no_remunerado,
-                                    sin_justa_causa=sin_justa_causa,
-                                    horas_extras_diurnas=he_diurna,
-                                    horas_extras_diurnas_dom_fes=he_diurna_dom_fes,
-                                    horas_extras_nocturnas=he_nocturna,
-                                    horas_extras_nocturnas_dom_fes=he_nocturna_dom_fes,
-                                    horas_recargo_nocturno=rec_nocturno,
-                                    horas_recargo_diurno_dom_fes=rec_diurno_dom_fes,
-                                    horas_recargo_nocturno_dom_fes=rec_nocturno_dom_fes,
-                                    comisiones=comision_venta,
-                                    comisiones_porcentaje=comision_porcentaje,
-                                    bonificaciones=bonificaciones,
-                                    embargos_judiciales=embargos,
-                                    libranzas=libranzas,
-                                    cooperativas=cooperativas,
-                                    otros=otros,
-                                )
-                                nov.save()
-                    messages.success(request, "Colaboradores importados con éxito")
+                                # Comprueba si la novedad ya existe para evitar duplicados
+                                novedad_existente = Novedad.objects.filter(usuario=col).exists()
+
+                                if not novedad_existente:
+                                    # Crear una nueva novedad para el colaborador si no existe
+                                    nov = Novedad(
+                                        usuario=col,
+                                        dias_incapacidad=incapacidad,
+                                        dias_trabajados=dias_trabajados,
+                                        perm_remunerado=perm_remunerado,
+                                        perm_no_remunerado=perm_no_remunerado,
+                                        sin_justa_causa=sin_justa_causa,
+                                        horas_extras_diurnas=he_diurna,
+                                        horas_extras_diurnas_dom_fes=he_diurna_dom_fes,
+                                        horas_extras_nocturnas=he_nocturna,
+                                        horas_extras_nocturnas_dom_fes=he_nocturna_dom_fes,
+                                        horas_recargo_nocturno=rec_nocturno,
+                                        horas_recargo_diurno_dom_fes=rec_diurno_dom_fes,
+                                        horas_recargo_nocturno_dom_fes=rec_nocturno_dom_fes,
+                                        comisiones=comision_venta,
+                                        comisiones_porcentaje=comision_porcentaje,
+                                        bonificaciones=bonificaciones,
+                                        embargos_judiciales=embargos,
+                                        libranzas=libranzas,
+                                        cooperativas=cooperativas,
+                                        otros=otros,
+                                    )
+                                    nov.save()
+
+                    messages.success(request, "Colaboradores y novedades importados con éxito")
                     return redirect('nomina:colaboradores')
+
                 else:
                     messages.warning(request, "El archivo de Excel no cumple con el formato requerido.")
             except Exception as e:
@@ -679,6 +795,8 @@ def colaborador_guardar_excel(request):
                 return redirect('nomina:colaboradores')
 
     return render(request, 'nomina/colaborador_form.html')
+
+
 
 
 def colaborador_editar(request, id):
@@ -871,26 +989,25 @@ def novedad_editar(request, id):
 
         return redirect('nomina:reportar_novedad')
 
-
-def editar_porcentaje_incapacidad(request, id):
+def editar_porcentaje_incapacidad(request):
     if request.session.get("logueo", False):
-        novedad = get_object_or_404(Novedad, id=id)
-        nomina = Nomina.objects.filter(novedad=novedad).first()
-        fecha_nomina = nomina.fecha_nomina.strftime('%Y-%m-%d')
-
+        novedades = Novedad.objects.all()
         incapacidad_porcentaje = request.POST.get("incapacidad_porcentaje_editar")
 
         if incapacidad_porcentaje:
             try:
-                novedad.incapacidad_porcentaje = float(float(incapacidad_porcentaje) / 100)
-                novedad.fecha_ultima_actualizacion = timezone.now()  # Actualizamos la fecha de última actualización
-                novedad.save()
-
-                messages.success(request, f"La novedad de {novedad.usuario} fue actualizada!")
+                porcentaje_float = float(incapacidad_porcentaje) / 100
+                # Recorre todas las novedades y actualiza el campo
+                for novedad in novedades:
+                    novedad.incapacidad_porcentaje = porcentaje_float
+                    novedad.save()
+                messages.success(request, "¡Las novedades fueron actualizadas!")
             except Exception as e:
-                messages.error(request, f"Error. {e}")
+                messages.error(request, f"Error al actualizar. {e}")
 
-        return HttpResponseRedirect(reverse("nomina:nomina_listar", args=[fecha_nomina]))
+        return HttpResponseRedirect(reverse("nomina:index"))
+
+
 
 
 def novedad_eliminar(request, id):
@@ -944,6 +1061,7 @@ def actualizar_novedades(request):
 
         messages.success(request, f"Se reportaron las novedades y nóminas de la fecha: {fecha_actual}")
     return redirect('nomina:novedades_nomina')
+
 
 
 def nomina(request):
@@ -1028,6 +1146,7 @@ def nomina_listar(request, fecha_nomina):
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")
         return HttpResponseRedirect(reverse("nomina:login"))
+
 
 
 def usuario_listar(request):

@@ -73,7 +73,7 @@
         <h4>En la empresa desde:</h4>
         <h3>{{ usuario.fecha_ingreso }}</h3>
         <h4>Recibo de Liquidación</h4>
-        <button data-toggle="modal" data-target="#liquidacionModal" data-id="{{ usuario.id }}" onclick="showLiquidacionModal({{ usuario.id }})" class="btn btn-dark">Visualizar</button> <br><br>
+        <button data-bs-toggle="modal" data-bs-target="#liquidacionModal" data-id="{{ usuario.id }}" onclick="showLiquidacionModal({{ usuario.id }})" class="btn btn-dark">Visualizar</button> <br><br>
         <a href="{% url 'nomina:liquidar_colaborador' usuario.id %}" class="btn liquidar_empleado">Liquidar colaborador</a>
     </div>
 </div>
@@ -86,7 +86,7 @@
                 <button style="margin-left: 5px;" title="Para descargar el recibo, presiona el botón descargar con el ícono de la flecha hacia abajo">
                     <i class="fa-solid fa-circle-info"></i>
                 </button>
-                <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <iframe id="liquidacionIframe" width="100%" height="500px" style="border: none;"></iframe>

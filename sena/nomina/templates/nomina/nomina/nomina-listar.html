@@ -6,18 +6,39 @@
 {% block contenedor %}
 
 <style>
-    .boton_regresar, .boton_mas {
-        background-color: #EBECE4;
-    }
 
-    .boton_regresar:hover, .boton_mas:hover {
+    .boton_regresar, .boton_mas {
         background-color: #000000;
         color: #EBECE4;
     }
 
+    .boton_regresar:hover, .boton_mas:hover {
+        background-color: #EBECE4;
+    }
+
+    .boton_inicio i {
+        font-size: 35px;
+        color: #000000;
+    }
+
+    .navbar {
+        position: fixed; /* Fija la navbar en la parte superior */
+        top: 0;          /* Alinea la navbar en la parte superior de la página */
+        width: 100%;     /* Asegura que la navbar ocupe todo el ancho de la pantalla */
+        background-color: #EBECE4;
+    }
+
+    .nomina-listar-tabla {
+        margin-top: 70px;
+    }
 
     .encabezado-tabla {
         background-color: #EBECE4 !important;
+    }
+
+    .titulo_nomina {
+
+        color: #000;
     }
 
     td, th {
@@ -30,10 +51,6 @@
     th {
         background-color: #442B1C;
         color: #EBECE4;
-    }
-
-    h1 {
-        color: #EBECE4 !important;
     }
 
     /* Botón de scroll */
@@ -49,11 +66,25 @@
         border-radius: 5px;
     }
 
-    table thead th {
+    table tr {
+
+        z-index: 10; /* Asegúrate de que el encabezado esté por encima del contenido */
+
+    }
+
+    table thead .headers {
         position: sticky;
         top: 0;
         background-color: #442B1C; /* Asegúrate de que el fondo sea el mismo que el de los encabezados */
         color: #EBECE4;
+        z-index: 10; /* Asegúrate de que el encabezado esté por encima del contenido */
+    }
+
+    table thead tr {
+        position: sticky;
+        top: 0;
+        background-color: #EBECE4; /* Asegúrate de que el fondo sea el mismo que el de los encabezados */
+        color: #442B1C;
         z-index: 10; /* Asegúrate de que el encabezado esté por encima del contenido */
     }
 
@@ -66,10 +97,15 @@
 <body style="background-color: #442B1C;">
 
     <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <button class="btn btn-light transition duration-300 ease-in-out boton_regresar" onclick="window.history.back();">
-                Regresar <i class="fa-solid fa-reply"></i>
-            </button>
+        <div class="container-fluid align-items-center">
+            <div>
+                <button class="btn btn-light transition duration-300 ease-in-out boton_regresar" onclick="window.history.back();">
+                    Regresar <i class="fa-solid fa-reply"></i>
+                </button>
+                <a class="btn transition duration-300 ease-in-out boton_inicio" href="{% url 'nomina:index' %}">
+                    <i class="bi bi-house-fill"></i>
+                </a>
+            </div>
             <h1 class="titulo_nomina m-0 flex-grow-1 text-center">Nómina</h1>
             {% if request.session.logueo.nombre_rol == "Administrador" %}
             <a href="{% url 'nomina:export_nominas_to_excel' nominas.first.fecha_nomina %}" class="btn btn-success">
@@ -150,12 +186,7 @@
                     <td>{{ nomina.novedad.dias_trabajados }}</td>
                     <td>{{ nomina.novedad.dias_incapacidad|default:0 }}</td>
                     <td>{{ nomina.devengado.ibc|round_number:2|intcomma }}</td>
-                    <td>
-                        {{ nomina.devengado.valor_incapacidad|round_number:2|intcomma }}
-                        <button title="Modificar porcentaje de incapacidad" class="btn" data-bs-toggle="modal" data-bs-target="#porcentajeModal{{ nomina.novedad.id }}">
-                            <i class="bi bi-pencil-fill"></i>
-                        </button>
-                    </td>
+                    <td>{{ nomina.devengado.valor_incapacidad|round_number:2|intcomma }}</td>
                     <td>{{ nomina.devengado.sueldo|round_number:2|intcomma }}</td>
                     <td>{{ nomina.devengado.auxilio_transporte|round_number:2|intcomma }}</td>
                     <td>{{ nomina.devengado.valor_horas_extras_diurnas|round_number:2|intcomma }}</td>
@@ -204,32 +235,6 @@
                     </td>
 
                     <!-- Porcentaje incapacidad Modal -->
-                    <div class="modal fade" id="porcentajeModal{{ nomina.novedad.id }}" tabindex="-1" aria-labelledby="porcentajeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="porcentajeModalLabel">Editar porcentaje incapacidad </h5>
-                                    <button style="margin-left: 5px;" title="Para descargar el recibo, presiona el botón descargar con el ícono de la flecha hacia abajo">
-                                        <i class="fa-solid fa-circle-info"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Aquí puedes editar el porcentaje con el cual se calcula el valor de la incapacidad, según se maneje en tu empresa.</p>
-                                    <h6>Porcentaje actual: {% if nomina.novedad.incapacidad_porcentaje == 0.6666 or nomina.novedad.incapacidad_porcentaje == 0.66 %} 66% {% else %} 100% {% endif %}</h6>
-                                    <form method="post" action="{% url 'nomina:editar_porcentaje_incapacidad' nomina.novedad.id %}">
-                                        {% csrf_token %}
-                                        <div class="d-flex" style="gap: 10px">
-                                            <h5 style="white-space: nowrap;">Cambiar porcentaje: </h5>
-                                            <input style="width: 100px;" class="form-control" type="number" name="incapacidad_porcentaje_editar" step="0.01" value="{{ nomina.novedad.incapacidad_porcentaje|floatformat:2 }}">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </tr>
                 {% endfor %}
 
@@ -255,129 +260,125 @@
             </table>
         </div>
     {% else %}
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table width="100%" cellspacing="0">
-                        <thead class="encabezado-tabla">
-                        <tr>
-                            <th>ID Usuario</th>
-                            <th>Cédula</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Cargo</th>
-                            <th>Salario</th>
-                            <th>Días trabajados</th>
-                            <th>Días de incapacidad</th>
-                            <th>IBC</th>
-                            <th>Valor incapacidad</th>
-                            <th>Sueldo</th>
-                            <th>Auxilio de Transporte</th>
-                            <th>Valor H.E. Diurnas</th>
-                            <th>Valor H.E. Diurnas Dom/Fes</th>
-                            <th>Valor H.E. Nocturnas</th>
-                            <th>Valor H.E. Nocturnas Dom/Fes</th>
-                            <th>Valor Recargo Nocturno</th>
-                            <th>Valor Recargo Nocturno Dom/Fes</th>
-                            <th>Valor Recargo Diurno Dom/Fes</th>
-                            <th>Total H.E. y Recargos</th>
-                            <th>Comisiones</th>
-                            <th>Bonificaciones</th>
-                            <th>Total Devengado</th>
-                            <th>Salud</th>
-                            <th>Pensión</th>
-                            <th>F.S.P</th>
-                            <th>Retefuente</th>
-                            <th>Embargos Judiciales</th>
-                            <th>Libranzas</th>
-                            <th>Cooperativas</th>
-                            <th>Otros</th>
-                            <th>Total Deducciones</th>
-                            <th>Total a Pagar</th>
-                            <th colspan="3">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            {% for nomina in nominas %}
-                            <tr>
-                                <td>{{ nomina.novedad.usuario.id }}</td>
-                                <td>{{ nomina.novedad.usuario.cedula }}</td>
-                                <td>{{ nomina.novedad.usuario.nombre }}</td>
-                                <td>{{ nomina.novedad.usuario.apellido }}</td>
-                                <td>{{ nomina.novedad.usuario.cargo }}</td>
-                                <td>{{ nomina.novedad.usuario.salario|intcomma|round_number:2 }}</td>
-                                <td>{{ nomina.novedad.dias_trabajados }}</td>
-                                <td>{{ nomina.novedad.dias_incapacidad|default:0 }}</td>
-                                <td>{{ nomina.devengado.ibc|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.devengado.valor_incapacidad|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.devengado.sueldo|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.devengado.auxilio_transporte|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.devengado.valor_horas_extras_diurnas|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.devengado.valor_horas_extras_diurnas_dom_fes|round_number:2|intcomma }}
-                                </td>
-                                <td>{{ nomina.devengado.valor_horas_extras_nocturnas|round_number:2|intcomma}}</td>
-                                <td>{{ nomina.devengado.valor_horas_extras_nocturnas_dom_fes|round_number:2|intcomma }}
-                                </td>
-                                <td>{{ nomina.devengado.valor_horas_recargo_nocturno|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.devengado.valor_horas_recargo_nocturno_dom_fes|round_number:2|intcomma }}
-                                </td>
-                                <td>{{ nomina.devengado.valor_horas_recargo_diurno_dom_fes|round_number:2|intcomma }}
-                                </td>
-                                <td>{{ nomina.devengado.total_horas_extras_recargo|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.devengado.comisiones_valor|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.novedad.bonificaciones|round_number:2|default:0|intcomma }}</td>
-                                <td>{{ nomina.devengado.total_devengado|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.deduccion.salud|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.deduccion.pension|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.deduccion.fsp|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.deduccion.retefuente|default:""|intcomma }}</td>
-                                <td>{{ nomina.deduccion.embargos_judiciales|round_number:2|intcomma|default:0 }}
-                                </td>
-                                <td>{{ nomina.deduccion.libranzas|round_number:2|intcomma|default:0 }}</td>
-                                <td>{{ nomina.deduccion.cooperativas|round_number:2|intcomma|default:0 }}</td>
-                                <td>{{ nomina.deduccion.otros|round_number:2|intcomma|default:0 }}</td>
-                                <td>{{ nomina.deduccion.total_deduccion|round_number:2|intcomma }}</td>
-                                <td>{{ nomina.total_a_pagar|round_number:2|intcomma }}</td>
-                                <td>
-                                    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reciboModal"
-                                            data-id="{{ nomina.id }}" onclick="showReciboModal({{ nomina.id }})">
-                                        Previsualizar
-                                        <i class="fa-solid fa-file-pdf"></i>
+        <div class="nomina-listar-tabla card shadow mb-4">
+            <table>
+                <thead class="encabezado-tabla">
+                <tr>
+                    <th>ID Usuario</th>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Cargo</th>
+                    <th>Salario</th>
+                    <th>Días trabajados</th>
+                    <th>Días de incapacidad</th>
+                    <th>IBC</th>
+                    <th>Valor incapacidad</th>
+                    <th>Sueldo</th>
+                    <th>Auxilio de Transporte</th>
+                    <th>Valor H.E. Diurnas</th>
+                    <th>Valor H.E. Diurnas Dom/Fes</th>
+                    <th>Valor H.E. Nocturnas</th>
+                    <th>Valor H.E. Nocturnas Dom/Fes</th>
+                    <th>Valor Recargo Nocturno</th>
+                    <th>Valor Recargo Nocturno Dom/Fes</th>
+                    <th>Valor Recargo Diurno Dom/Fes</th>
+                    <th>Total H.E. y Recargos</th>
+                    <th>Comisiones</th>
+                    <th>Bonificaciones</th>
+                    <th>Total Devengado</th>
+                    <th>Salud</th>
+                    <th>Pensión</th>
+                    <th>F.S.P</th>
+                    <th>Retefuente</th>
+                    <th>Embargos Judiciales</th>
+                    <th>Libranzas</th>
+                    <th>Cooperativas</th>
+                    <th>Otros</th>
+                    <th>Total Deducciones</th>
+                    <th>Total a Pagar</th>
+                    <th colspan="3">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for nomina in nominas %}
+                    <tr>
+                        <td>{{ nomina.novedad.usuario.id }}</td>
+                        <td>{{ nomina.novedad.usuario.cedula }}</td>
+                        <td>{{ nomina.novedad.usuario.nombre }}</td>
+                        <td>{{ nomina.novedad.usuario.apellido }}</td>
+                        <td>{{ nomina.novedad.usuario.cargo }}</td>
+                        <td>{{ nomina.novedad.usuario.salario|intcomma|round_number:2 }}</td>
+                        <td>{{ nomina.novedad.dias_trabajados }}</td>
+                        <td>{{ nomina.novedad.dias_incapacidad|default:0 }}</td>
+                        <td>{{ nomina.devengado.ibc|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.devengado.valor_incapacidad|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.devengado.sueldo|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.devengado.auxilio_transporte|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.devengado.valor_horas_extras_diurnas|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.devengado.valor_horas_extras_diurnas_dom_fes|round_number:2|intcomma }}
+                        </td>
+                        <td>{{ nomina.devengado.valor_horas_extras_nocturnas|round_number:2|intcomma}}</td>
+                        <td>{{ nomina.devengado.valor_horas_extras_nocturnas_dom_fes|round_number:2|intcomma }}
+                        </td>
+                        <td>{{ nomina.devengado.valor_horas_recargo_nocturno|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.devengado.valor_horas_recargo_nocturno_dom_fes|round_number:2|intcomma }}
+                        </td>
+                        <td>{{ nomina.devengado.valor_horas_recargo_diurno_dom_fes|round_number:2|intcomma }}
+                        </td>
+                        <td>{{ nomina.devengado.total_horas_extras_recargo|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.devengado.comisiones_valor|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.novedad.bonificaciones|round_number:2|default:0|intcomma }}</td>
+                        <td>{{ nomina.devengado.total_devengado|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.deduccion.salud|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.deduccion.pension|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.deduccion.fsp|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.deduccion.retefuente|default:""|intcomma }}</td>
+                        <td>{{ nomina.deduccion.embargos_judiciales|round_number:2|intcomma|default:0 }}
+                        </td>
+                        <td>{{ nomina.deduccion.libranzas|round_number:2|intcomma|default:0 }}</td>
+                        <td>{{ nomina.deduccion.cooperativas|round_number:2|intcomma|default:0 }}</td>
+                        <td>{{ nomina.deduccion.otros|round_number:2|intcomma|default:0 }}</td>
+                        <td>{{ nomina.deduccion.total_deduccion|round_number:2|intcomma }}</td>
+                        <td>{{ nomina.total_a_pagar|round_number:2|intcomma }}</td>
+                        <td>
+                            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reciboModal"
+                                    data-id="{{ nomina.id }}" onclick="showReciboModal({{ nomina.id }})">
+                                Previsualizar
+                                <i class="fa-solid fa-file-pdf"></i>
 
+                            </button>
+                        </td>
+                        <td>
+                            <a href="{% url 'nomina:parafiscales' nomina.id %}" class="btn btn-primary">
+                                Ver parafiscales
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'nomina:provisiones' nomina.id %}" class="btn btn-primary">
+                                Ver provisiones
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <div class="modal fade" id="reciboModal" tabindex="-1" aria-labelledby="reciboModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="reciboModalLabel">Recibo de Nómina</h5>
+                                    <button style="margin-left: 5px;" title="Para descargar el recibo, presiona el botón descargar con el ícono de la flecha hacia abajo">
+                                        <i class="fa-solid fa-circle-info"></i>
                                     </button>
-                                </td>
-                                <td>
-                                    <a href="{% url 'nomina:parafiscales' nomina.id %}" class="btn btn-primary">
-                                        Ver parafiscales
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="{% url 'nomina:provisiones' nomina.id %}" class="btn btn-primary">
-                                        Ver provisiones
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            <div class="modal fade" id="reciboModal" tabindex="-1" aria-labelledby="reciboModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="reciboModalLabel">Recibo de Nómina</h5>
-                                            <button style="margin-left: 5px;" title="Para descargar el recibo, presiona el botón descargar con el ícono de la flecha hacia abajo">
-                                                <i class="fa-solid fa-circle-info"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <iframe id="reciboIframe" src="" width="100%" height="500px" style="border: none;"></iframe>
-                                        </div>
-                                    </div>
+                                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <iframe id="reciboIframe" src="" width="100%" height="500px" style="border: none;"></iframe>
                                 </div>
                             </div>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                </tbody>
+            </table>
         </div>
         {% endif %}
     {% endif %}

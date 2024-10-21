@@ -43,7 +43,33 @@
                         class="w-full px-5 py-3 text-cream transition duration-300 ease-in-out border rounded-md cursor-pointer botones_landing">Ingresar</button>
                 </div>
             </form>
+            <div class="form-check input-group flex-nowrap mb-3 mb-[22px]">
+                <label class="form-check-label">
+                    <button data-bs-toggle="modal" data-bs-target="#recuperarContrasenaModal">¿Has olvidado tu contraseña?</button>
+                </label>
+            </div>
+        </div>
+    </div>
 
+    <!-- Recuperar contraseña Modal -->
+    <div class="modal fade" id="recuperarContrasenaModal" tabindex="-1" aria-labelledby="recuperarContrasenaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recuperarContrasenaModalLabel">Recuperar contraseña </h5>
+                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Ingresa el correo al cual enviaremos tu contraseña. Recuerda que debe ser el correo con el que estás registrado en el sistema</p>
+                    <form method="post" action="{% url 'nomina:recuperar_contrasena' %}">
+                        {% csrf_token %}
+                        <div class="d-flex">
+                            <input style="margin-bottom: 20px;" class="form-control" type="email" name="correo_recuperar" placeholder="Ingresa el correo...">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar correo</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </body>

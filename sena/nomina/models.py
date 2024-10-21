@@ -56,7 +56,7 @@ class Novedad(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE,
                                 limit_choices_to={'rol': 2, 'fecha_retiro__isnull': True})
     dias_incapacidad = models.PositiveIntegerField(null=True, blank=True, default=0)
-    dias_trabajados = models.PositiveIntegerField()
+    dias_trabajados = models.PositiveIntegerField(default=15)
     perm_remunerado = models.CharField(max_length=256, null=True, blank=True, default="No aplica")
     perm_no_remunerado = models.CharField(max_length=256, null=True, blank=True, default="No aplica")
     sin_justa_causa = models.CharField(max_length=256, null=True, blank=True, default="No aplica")

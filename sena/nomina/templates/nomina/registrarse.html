@@ -20,7 +20,7 @@
               class="mb-3 text-dark" style="font-size: 30px; font-weight: bold;">
               Registrarse
             </h1>
-            <form method="post" action="{% url 'nomina:usuario_guardar' %}" enctype="multipart/form-data">
+            <form method="post" action="{% url 'nomina:crear_admin' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-[22px]">
                     <input type="text" placeholder="ID" hidden
@@ -43,18 +43,8 @@
                   <input style="border: 2px solid #c9c9c9;" type="email" class="form-control bg-transparent" placeholder="Correo electrónico" name="correo" aria-label="Correo" aria-describedby="addon-wrapping" required>
                 </div>
                 <div class="input-group flex-nowrap mb-[22px]">
-                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-key-fill"></i></span>
-                  <input style="border: 2px solid #c9c9c9;" type="password" class="form-control bg-transparent" placeholder="Contraseña" id="contrasena" name="contrasena" aria-label="Contraseña" aria-describedby="addon-wrapping" required>
-                </div>
-                <div id="errorContrasena" class="text-left input-group flex-nowrap mb-[22px]" style="display: none;">
-                  <span id="mensajeContrasena"></span>
-                </div>
-                <div class="input-group flex-nowrap mb-[22px]">
-                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-key"></i></span>
-                  <input style="border: 2px solid #c9c9c9;" type="password" class="form-control bg-transparent " placeholder="Confirmar contraseña" id="confirmar_contrasena"  name="confirmar_contrasena" aria-label="Confirmar contraseña" aria-describedby="addon-wrapping" required>
-                </div>
-                <div id="errorContrasenas" class="text-left input-group flex-nowrap mb-[22px]" style="display: none;">
-                    <span id="mensajeError"></span>
+                  <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent">$</span>
+                  <input style="border: 2px solid #c9c9c9;" type="number" class="form-control bg-transparent" placeholder="Salario" name="salario" aria-label="Salario" aria-describedby="addon-wrapping" required>
                 </div>
                 <div class="input-group flex-nowrap mb-[22px]">
                   <span style="border: 2px solid #c9c9c9;"  class="input-group-text bg-transparent"><i class="bi bi-image-fill"></i></span>
@@ -72,57 +62,4 @@
 
     </div>
 
-    <script>
-    function validatePassword() {
-        const contenedor = document.getElementById('errorContrasenas');
-        const password = document.getElementById("contrasena").value;
-        const confirmPassword = document.getElementById("confirmar_contrasena").value;
-        const message = document.getElementById("mensajeError");
-
-        if (password !== "" && confirmPassword !== "") {
-            if (password === confirmPassword) {
-                contenedor.style.display = "block"
-                message.textContent = "Las contraseñas coinciden.";
-                message.style.color = "green";
-            } else {
-                contenedor.style.display = "block"
-                message.textContent = "Las contraseñas no coinciden.";
-                message.style.color = "red";
-            }
-        } else {
-            contenedor.style.display = "none"
-            message.textContent = ""; // Ocultar el mensaje si alguno de los campos está vacío
-        }
-    }
-
-    function validarContrasena() {
-        const contenedor = document.getElementById('errorContrasena');
-        const contrasena = document.getElementById('contrasena').value;
-        const mensajeError = document.getElementById('mensajeContrasena');
-
-        // Expresión regular para validar la contraseña
-        const regex = /^(?=.*[A-Z])(?=.*[\W_])(?=.*[a-zA-Z0-9]).{8,}$/;
-
-        if (contrasena !== ""){
-            if (!regex.test(contrasena)) {
-                contenedor.style.display = "block"
-                mensajeError.textContent = "La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula y un símbolo.";
-                mensajeError.style.color = "red";
-                return false;
-            } else {
-                contenedor.style.display = "none"
-                mensajeError.textContent = "";
-                return true;
-            }
-        } else {
-            contenedor.style.display = "none"
-            mensajeError.textContent = "";
-            return true;
-        }
-    }
-
-    document.getElementById('contrasena').addEventListener('input', validatePassword);
-    document.getElementById('confirmar_contrasena').addEventListener('input', validatePassword);
-    document.getElementById('contrasena').addEventListener('input', validarContrasena);
-    </script>
 {% endblock %}

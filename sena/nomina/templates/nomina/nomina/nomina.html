@@ -16,56 +16,9 @@
         color: #EBECE4;
     }
 
-    .tarjeta_nomina {
-        width: 300px !important;
-    }
-
-    .contenedor {
-            border: 2px solid #000000;
-            margin: 0 auto !important;
-            width: 450px !important;
-            display: flex;
-            align-items: center;
-            padding: 50px;
-            border-radius: 50px;
-            height: 100%;
-            background-color: #EBECE4;
-        }
-
-    h3 {
-       text-align: center;
-       margin-top: 10px;
-       color: #442B1C;
-    }
-
-    .no-results {
-        margin-top: 30px;
-        color: red;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    .buscar_usuario {
-        text-align: center;
-        align-items: center !important;
-    }
-
-    .buscar, .buscar:active, .buscar:focus {
-        background-color: #442B1C;
+    .boton_inicio i {
+        font-size: 35px;
         color: #EBECE4;
-    }
-
-    .buscar:hover{
-        color: #442B1C;
-        border: 2px dashed #442B1C;
-    }
-
-    p {
-        color: #EBECE4;
-    }
-
-    .table thead {
-        background-color: #EBECE4 !important;
     }
 
     td, th {
@@ -75,68 +28,36 @@
         padding: 20px;
     }
 
-    .card {
+    .tabla_nominas {
         background-color: #EBECE4;
-        margin: 10px;
-    }
-
-    .filtro_nomina {
-        background-color: #EBECE4;
-        padding: 8px 8px;
-        display: flex;
-        flex-direction: row;
-    }
-
-    .periodo_titulo {
-        margin-left: 10px;
-    }
-
-    .periodo_titulo, .filtro_titulo {
-        margin-top: 8px;
-    }
-
-    .periodo_select {
-        width: 210px;
-    }
-
-    .btn-danger {
-        margin-left: 10px;
+        margin: 10px auto;
+        width: 100%;
     }
 
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-        <a class="btn btn-light transition duration-300 ease-in-out boton_regresar" href="{% url 'nomina:index' %}">
-            Regresar <i class="fa-solid fa-reply"></i>
-        </a>
+        <div>
+            <a class="btn transition duration-300 ease-in-out boton_inicio" href="{% url 'nomina:index' %}">
+                <i class="bi bi-house-fill"></i>
+            </a>
+        </div>
         <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Nóminas</h1>
         <button class="boton_regresar btn btn-light" data-bs-toggle="modal" data-bs-target="#infoModal">
             <i class="bi bi-info-lg"></i>
         </button>
     </div>
 </nav>
-<!-- Info Modal -->
-<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModallLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Presionando en <strong>Ingresar</strong>, puedes visualizar los detalles de la nónima seleccionada y de cada colaborador.
-      </div>
-    </div>
-  </div>
-</div>
+
 {% if mensaje %}
     <div class="alert alert-warning" role="alert">
         {{ mensaje }}
     </div>
 {% else %}
     {% if request.session.logueo.nombre_rol == "Administrador" %}
-    <div class="card contenedor_nominas m-3">
-        <table width="100%" cellspacing="0">
+    <div class="contenedor_nominas">
+        <table class="tabla_nominas">
             <thead>
             <tr>
                 <th>Fecha de Nómina</th>
@@ -164,8 +85,8 @@
         </table>
     </div>
     {% else %}
-    <div class="card contenedor_nominas m-3">
-        <table width="100%" cellspacing="0">
+    <div class="contenedor_nominas">
+        <table class="tabla_nominas">
             <thead>
             <tr>
                 <th>Fecha de Nómina</th>
@@ -186,5 +107,19 @@
     </div>
     {% endif %}
 {% endif %}
+
+<!-- Info Modal -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModallLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Presionando en <strong>Ingresar</strong>, puedes visualizar los detalles de la nónima seleccionada y de cada colaborador.
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

@@ -14,6 +14,11 @@
         color: #EBECE4;
     }
 
+    .boton_inicio i {
+        font-size: 35px;
+        color: #EBECE4;
+    }
+
     .card {
         background-color: #EBECE4;
     }
@@ -190,9 +195,11 @@
 
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid d-flex align-items-center">
-        <a class="btn btn-light transition duration-300 ease-in-out boton_regresar" href="{% url 'nomina:index' %}">
-            Regresar <i class="fa-solid fa-reply"></i>
-        </a>
+        <div>
+            <a class="btn transition duration-300 ease-in-out boton_inicio" href="{% url 'nomina:index' %}">
+                <i class="bi bi-house-fill"></i>
+            </a>
+        </div>
         {% if data %}
         <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Colaboradores</h1>
         <div class="acciones_principal" onclick="toggleMenuDefault()">
@@ -254,7 +261,7 @@
                 <div id="ver_mas_info">
                     <h6>Fecha de ingreso: {{ c.fecha_ingreso }}</h6>
                     <h6>Correo: {{ c.correo }}</h6>
-                    <h6>Riesgo: {{ c.riesgo }}</h6>
+                    <h6>Cédula: {{ c.cedula }}</h6>
                     <h6>Tipo de contrato: {{ c.tipo_contrato }}</h6>
                     {% if c.fecha_fin_contrato %}
                     <h6>Fecha fin de contrato: {{ c.fecha_fin_contrato }}</h6>
@@ -487,51 +494,6 @@
         }
     }
 
-    function togglePassword(fieldId) {
-        const passwordField = document.getElementById(fieldId);
-        const eyeIcon = document.getElementById(`eye-${fieldId}`);
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-            eyeIcon.classList.remove('fa-eye');
-            eyeIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordField.type = "password";
-            eyeIcon.classList.remove('fa-eye-slash');
-            eyeIcon.classList.add('fa-eye');
-        }
-    }
-
-    function validatePassword() {
-        const password = document.getElementById("contrasena").value;
-        const confirmPassword = document.getElementById("confirmar_contrasena").value;
-        const message = document.getElementById("password-match");
-
-        if (password === confirmPassword) {
-            message.textContent = "Las contraseñas coinciden.";
-            message.style.color = "green";
-        } else {
-            message.textContent = "Las contraseñas no coinciden.";
-            message.style.color = "red";
-        }
-    }
-
-    function validarContrasena() {
-        const contrasena = document.getElementById('contrasena').value;
-        const mensajeError = document.getElementById('mensajeError');
-
-        // Expresión regular para validar la contraseña
-        const regex = /^(?=.*[A-Z])(?=.*[\W_])(?=.*[a-zA-Z0-9]).{8,}$/;
-
-        if (!regex.test(contrasena)) {
-            mensajeError.textContent = "La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula y un símbolo.";
-            mensajeError.style.color = "red";
-            return false;
-        } else {
-            mensajeError.textContent = "";
-            return true;
-        }
-    }
-
     function toggleMenu(id) {
         var menu = document.getElementById("menu-" + id);
         if (menu.style.display === "none" || menu.style.display === "") {
@@ -549,12 +511,6 @@
             menu.style.display = "none";
         }
     }
-
-
-    // Escuchar el evento 'input' en el campo de la contraseña para validar en tiempo real
-    document.getElementById('contrasena').addEventListener('input', validarContrasena);
-    document.getElementById('contrasena').addEventListener('input', validatePassword);
-    document.getElementById('confirmar_contrasena').addEventListener('input', validatePassword);
 
 </script>
 

@@ -6,8 +6,25 @@
   <component name="ChangeListManager">
     <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit 14/09">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/signals.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaborador-editar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaborador-editar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/landing-page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion-archivo.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion-archivo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/liquidacion/liquidacion.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/reportar_novedad.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/reportar_novedad.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/parafiscales.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/parafiscales.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/provisiones.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/provisiones.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/registrarse.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/registrarse.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,12 +51,12 @@
     &quot;assignee&quot;: &quot;albertmota28092004&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/albertmota28092004/nomina-sena-django.git&quot;,
-    &quot;accountId&quot;: &quot;5589dd23-0fcc-422d-9da0-cece2062ab94&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/albertmota28092004/nomina-sena-django.git",
+    "accountId": "1b194cb3-ed69-4190-b45e-265a3171bf12"
   }
-}</component>
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -146,7 +163,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-0509580d9d50-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.14494.241" />
+        <option value="bundled-python-sdk-884f5ed5d46b-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.22855.92" />
       </set>
     </attachedChunks>
   </component>

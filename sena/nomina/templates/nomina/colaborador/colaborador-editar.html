@@ -1,4 +1,6 @@
+{% extends 'nomina/base.html' %}
 {% load static %}
+{% block contenedor %}
 {% if data %}
 <form action="{% url 'nomina:colaborador_editar' data.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -28,26 +30,6 @@
                placeholder="Ingresa correo" value="{{ data.correo }}" name="correo_editar">
     </div>
     <div class="mb-3">
-        <label class="form-label">Contraseña: <strong style="color:red;">*</strong></label>
-        <div class="input-group">
-            <input type="password" class="form-control" id="contrasena_editar" placeholder="Ingresa contraseña" name="contrasena_editar" value="{{ data.contrasena }}">
-            <span class="input-group-text" onclick="togglePassword('contrasena')">
-                <i class="fa fa-eye" id="eye-contrasena"></i>
-            </span>
-        </div>
-        <span id="mensajeError"></span>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Confirmar contraseña: <strong style="color:red;">*</strong></label>
-        <div class="input-group">
-            <input type="password" class="form-control" id="confirmar_contrasena_editar" placeholder="Confirma contraseña" name="confirmar_contrasena_editar" onkeyup="validatePassword()" value="{{ data.contrasena }}">
-            <span class="input-group-text" onclick="togglePassword('confirmar_contrasena')">
-                <i class="fa fa-eye" id="eye-confirmar_contrasena"></i>
-            </span>
-        </div>
-        <div id="password-match" style="color:red;"></div>
-    </div>
-    <div class="mb-3">
         <label class="form-label col-sm-6">Foto:</label>
         <div class="row">
             {% if data.foto %}
@@ -63,25 +45,25 @@
     </div>
     <div class="mb-3">
         <label class="form-label">Cargo:</label>
-        <input type="text" class="form-control" id="cargo"
+        <input type="text" class="form-control" id="cargo_editar"
                placeholder="Ingresa el cargo" name="cargo_editar" value="{{ data.cargo }}">
     </div>
     <div class="mb-3">
         <label class="form-label">Salario: <strong style="color:red;">*</strong></label>
-        <input type="number" class="form-control" id="salario"
+        <input type="number" class="form-control" id="salario_editar"
                placeholder="Ingresa el salario" name="salario_editar" value="{{ data.salario }}">
     </div>
     {% if data.riesgo %}
     <div class="mb-3">
         <label class="form-label">Riesgo: <strong style="color:red;">*</strong></label>
         <h6>Valor anterior: {{ data.riesgo }}</h6>
-        Cambiar: <input type="number" step="0.001" class="form-control" id="riesgo"
+        Cambiar: <input type="number" step="0.001" class="form-control" id="riesgo_editar"
                placeholder="Ingresa el riesgo" name="riesgo_editar" value="{{ data.riesgo }}">
     </div>
     {% endif %}
     <div class="mb-3">
         <label class="form-label">Tipo de contrato: <strong style="color:red;">*</strong></label>
-        <input type="text" class="form-control" id="tipo_contrato"
+        <input type="text" class="form-control" id="tipo_contrato_editar"
                placeholder="Ingresa el tipo de contrato" name="tipo_contrato_editar" value="{{ data.tipo_contrato }}">
     </div>
     <div class="mb-3">
@@ -91,9 +73,8 @@
     </div>
     <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
-
+<!--
 <script>
-
     function togglePassword(fieldId) {
         const passwordField = document.getElementById(fieldId);
         const eyeIcon = document.getElementById(`eye-${fieldId}`);
@@ -144,4 +125,6 @@
     document.getElementById('contrasena').addEventListener('input', validatePassword);
     document.getElementById('confirmar_contrasena').addEventListener('input', validatePassword);
 </script>
+-->
 {% endif %}
+{% endblock %}
