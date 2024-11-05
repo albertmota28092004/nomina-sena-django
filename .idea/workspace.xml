@@ -4,22 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit 21/10">
-      <change afterPath="$PROJECT_DIR$/nomina.spec" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/migrations/0013_novedad_creado_por_alter_novedad_usuario.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/migrations/0014_alter_novedad_creado_por.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/migrations/0015_remove_novedad_creado_por.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/migrations/0016_usuario_creado_por.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/logo-press-blanco.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/dualshock.jpg" afterDir="false" />
+    <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit 05/11">
+      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/conferencia_motos.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/dualshock_anOEDFZ.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/ejercicio.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/manage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/reportar_novedad.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/reportar_novedad.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sena/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -386,7 +377,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729547037447</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="commit 05/11">
+      <option name="closed" value="true" />
+      <created>1730830110919</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1730830110919</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -402,7 +401,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="primer commit, desarrollo de software de nomina de escritorio" />
     <MESSAGE value="inclusión de logo y cambio de nombre a press prestigio en crecimiento" />
     <MESSAGE value="mejoras color logo etc" />
     <MESSAGE value="mejoras" />
@@ -427,6 +425,7 @@
     <MESSAGE value="commit 05/09" />
     <MESSAGE value="commit 14/09" />
     <MESSAGE value="commit 21/10" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit 21/10" />
+    <MESSAGE value="commit 05/11" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit 05/11" />
   </component>
 </project>

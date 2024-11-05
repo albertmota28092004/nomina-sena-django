@@ -654,11 +654,12 @@ def prueba(request):
 
 def colaborador_guardar(request):
     if request.method == "POST":
+        # Obtén los datos del formulario
         nombre = request.POST.get('nombre')
         apellido = request.POST.get("apellido")
         cedula = request.POST.get('cedula')
         correo = request.POST.get('correo')
-        contrasena = cedula
+        contrasena = cedula  # Cambia esto para usar un hash si es necesario
         rol = 2
         foto = request.FILES.get("foto")
         cargo = request.POST.get("cargo")
@@ -668,6 +669,13 @@ def colaborador_guardar(request):
         fecha_fin_contrato = request.POST.get("fecha_fin_contrato") or None
         fecha_retiro = request.POST.get("fecha_retiro") or None
         motivo_retiro = request.POST.get("motivo_retiro") or None
+
+        # Asegúrate de obtener el ID del administrador logueado
+        administrador_id = request.session.get("logueo", {}).get("id")
+
+        if administrador_id is None:
+            messages.error(request, "No se puede determinar quién creó el colaborador.")
+            return HttpResponseRedirect(reverse("nomina:colaboradores"))
 
         try:
             usu = Usuario(
@@ -685,8 +693,11 @@ def colaborador_guardar(request):
                 fecha_fin_contrato=fecha_fin_contrato,
                 fecha_retiro=fecha_retiro,
                 motivo_retiro=motivo_retiro,
+                creado_por_id=administrador_id  # Aquí se guarda el ID del administrador
             )
             usu.save()
+            # Resto del código para enviar correo y manejar mensajes
+
             destinatario = usu.correo
 
             mensaje = f"""
@@ -714,23 +725,26 @@ def colaborador_guardar(request):
 
 def colaborador_guardar_excel(request):
     if request.method == "POST":
-        # Si se sube un archivo de Excel
         archivo_excel = request.FILES.get('archivo_excel')
         if archivo_excel:
             try:
-                # Abre el archivo Excel
                 wb = openpyxl.load_workbook(archivo_excel)
-                hoja = wb['COLABORADORES']  # Nombre de la hoja
+                hoja = wb['COLABORADORES']
                 if hoja:
+                    # Obtener el ID del administrador logueado
+                    administrador_id = request.session.get("logueo", {}).get("id")
+
+                    if administrador_id is None:
+                        messages.error(request, "No se puede determinar quién creó los colaboradores.")
+                        return redirect('nomina:colaboradores')
+
                     for fila in hoja.iter_rows(min_row=4, max_row=hoja.max_row, values_only=True):
                         if len(fila) < 12:
-                            # Si la fila no tiene suficientes columnas, la ignoramos
                             messages.warning(request, "Fila de COLABORADORES con número incorrecto de columnas.")
                             continue
 
-                        cedula, nombre, apellido, correo, cargo, salario, fecha_ingreso, riesgo, tipo_contrato, fecha_fin_contrato, fecha_retiro, motivo_retiro = fila[:12]  # Solo tomamos las primeras 12 columnas
+                        cedula, nombre, apellido, correo, cargo, salario, fecha_ingreso, riesgo, tipo_contrato, fecha_fin_contrato, fecha_retiro, motivo_retiro = fila[:12]
 
-                        # Validaciones opcionales según tu lógica
                         if not cedula or not nombre or not apellido:
                             continue
 
@@ -741,7 +755,7 @@ def colaborador_guardar_excel(request):
                                 'nombre': nombre,
                                 'apellido': apellido,
                                 'correo': correo,
-                                'contrasena': cedula,
+                                'contrasena': cedula,  # Considera usar una contraseña encriptada
                                 'cargo': cargo,
                                 'salario': salario,
                                 'fecha_ingreso': fecha_ingreso,
@@ -751,6 +765,7 @@ def colaborador_guardar_excel(request):
                                 'fecha_retiro': fecha_retiro,
                                 'motivo_retiro': motivo_retiro,
                                 'rol': 2,  # Asignar rol de colaborador
+                                'creado_por_id': administrador_id  # Guardar el ID del administrador que creó
                             }
                         )
 
@@ -805,8 +820,6 @@ def colaborador_guardar_excel(request):
                 return redirect('nomina:colaboradores')
 
     return render(request, 'nomina/colaborador_form.html')
-
-
 
 
 def colaborador_editar(request, id):
@@ -868,8 +881,9 @@ def colaborador_eliminar(request, id):
 
 def novedades_nomina(request):
     if request.session.get("logueo", False):
-        novedades = Novedad.objects.all()
-        usuarios = Usuario.objects.filter(rol=2)
+        administrador_id = request.session["logueo"]["id"]
+        novedades = Novedad.objects.filter(usuario__creado_por_id=administrador_id)
+        usuarios = Usuario.objects.filter(rol=2, creado_por_id=administrador_id)
         contexto = {
             "novedades": novedades,
             "usuarios": usuarios
@@ -1032,8 +1046,9 @@ def novedad_eliminar(request, id):
 
 def reportar_novedad(request):
     if request.session.get("logueo", False):
-        novedades = Novedad.objects.all()
-        usuarios = Usuario.objects.filter(rol=2)
+        administrador_id = request.session["logueo"]["id"]
+        novedades = Novedad.objects.filter(usuario__creado_por_id=administrador_id)
+        usuarios = Usuario.objects.filter(rol=2, creado_por_id=administrador_id)
         contexto = {
             "novedades": novedades,
             "usuarios": usuarios
@@ -1084,7 +1099,7 @@ def nomina(request):
                 nominas = Nomina.objects.filter(novedad__usuario=usuario)
                 total_a_pagar_usuario = sum(n.total_a_pagar() for n in nominas)
             else:
-                nominas = Nomina.objects.all()
+                nominas = Nomina.objects.filter(novedad__usuario__creado_por_id=usuario_id)
                 total_a_pagar_usuario = None
 
             # Agrupar nóminas por fecha de nómina
@@ -1122,7 +1137,7 @@ def nomina_listar(request, fecha_nomina):
 
         if usuario.rol == 1:
             try:
-                nominas = Nomina.objects.filter(fecha_nomina=fecha_nomina)
+                nominas = Nomina.objects.filter(fecha_nomina=fecha_nomina, novedad__usuario__creado_por_id=usuario_id)
 
                 contexto = {
                     "nominas": nominas,
