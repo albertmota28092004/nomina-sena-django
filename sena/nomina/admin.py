@@ -6,9 +6,10 @@ from django.utils.html import mark_safe
 # Register your models here.
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['id', 'cedula', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'salario', 'fecha_ingreso',
+    list_display = ['id', 'creado_por', 'cedula', 'nombre', 'apellido', 'correo', 'contrasena', 'rol', 'ver_foto', 'cargo', 'salario', 'fecha_ingreso',
                     'riesgo',
                     'tipo_contrato', 'fecha_fin_contrato', 'activo', 'fecha_retiro', 'motivo_retiro']
+    list_filter = ['rol', 'activo', 'creado_por']
 
     def ver_foto(self, obj):
         try:

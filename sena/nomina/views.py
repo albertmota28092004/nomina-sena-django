@@ -590,10 +590,20 @@ def recuperar_contrasena(request):
 
 def colaboradores(request):
     if request.session.get("logueo", False):
-        q = Usuario.objects.filter(rol=2).filter(activo=True)
-        q2 = Usuario.objects.filter(rol=2).filter(activo=False)
+        # Obtén el ID del administrador logueado
+        administrador_id = request.session["logueo"]["id"]
+
+        # Filtra los colaboradores creados por el administrador logueado
+        q = Usuario.objects.filter(rol=2, activo=True, creado_por_id=administrador_id)
+        q2 = Usuario.objects.filter(rol=2, activo=False, creado_por_id=administrador_id)
         roles = Usuario.ROLES
-        contexto = {"data": q, 'retirados': q2, 'ROLES': roles}
+
+        contexto = {
+            "data": q,
+            'retirados': q2,
+            'ROLES': roles
+        }
+
         return render(request, 'nomina/colaborador/colaboradores.html', contexto)
     else:
         messages.warning(request, "Debe iniciar sesión para ver esta página.")

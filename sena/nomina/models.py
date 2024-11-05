@@ -31,6 +31,14 @@ class Usuario(models.Model):
     activo = models.BooleanField(default=True)
     fecha_retiro = models.DateField(null=True, blank=True)
     motivo_retiro = models.CharField(max_length=256, null=True, blank=True)
+    creado_por = models.ForeignKey(
+        'self',  # se refiere a la misma clase Usuario
+        on_delete=models.SET_NULL,
+        limit_choices_to={'rol': 1, 'fecha_retiro__isnull': True},
+        null=True,
+        blank=True,
+        related_name='creados_por'
+    )
 
     def clean(self):
         super().clean()  # Llamar al método `clean` del padre para asegurar la limpieza base.
@@ -53,8 +61,12 @@ class Usuario(models.Model):
 
 
 class Novedad(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE,
-                                limit_choices_to={'rol': 2, 'fecha_retiro__isnull': True})
+    usuario = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        limit_choices_to={'rol': 2, 'fecha_retiro__isnull': True},
+        related_name='novedades_usuario'
+    )
     dias_incapacidad = models.PositiveIntegerField(null=True, blank=True, default=0)
     dias_trabajados = models.PositiveIntegerField(default=15)
     perm_remunerado = models.CharField(max_length=256, null=True, blank=True, default="No aplica")
