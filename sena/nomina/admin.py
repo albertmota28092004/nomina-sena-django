@@ -46,6 +46,7 @@ class NominaAdmin(admin.ModelAdmin):
     list_display = ['id', 'fecha_nomina', 'novedad', 'salud', 'pension', 'arl', 'sena', 'icbf',
                     'caja_compensacion', "cesantias", "intereses_cesantias", "primas_servicio", "vacaciones",
                     'total_a_pagar']
+    list_filter = ['fecha_nomina']
 
 
 admin.site.register(Usuario, UsuarioAdmin)

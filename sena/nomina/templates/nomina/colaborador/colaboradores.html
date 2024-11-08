@@ -189,6 +189,13 @@
         cursor: pointer;
     }
 
+    .contenedor_administrador {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
 </style>
 
 <body style="background-color: #442B1C;">
@@ -212,6 +219,11 @@
             <button class="btn btn-light rounded" data-bs-toggle="modal" data-bs-target="#excelModal">
                 <i class="bi bi-file-earmark-plus-fill"></i> Importar desde Excel
             </button>
+            {% if request.session.logueo.nombre_rol == "Administrador" %}
+                <button class="btn btn-light rounded" data-bs-toggle="modal" data-bs-target="#adminModal">
+                    <i class="bi bi-people-fill"></i> Ver administradores
+                </button>
+            {% endif %}
         </div>
         {% endif %}
     </div>
@@ -458,6 +470,36 @@
     </div>
 </div>
 
+<!-- Modal Administradores -->
+<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="adminModalLabel">Administradores</h1>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="contenedor_administradores">
+                    {% for a in admins %}
+                    <div class="contenedor_administrador">
+                        <div class="imagen_administrador">
+                            <img src="{{ a.foto.url }}" width="50">
+                        </div>
+                        <div>
+                            <h3>{{ a.nombre }} {{ a.apellido }}</h3>
+                            <a class="btn btn-dark" href="javascript:confirmar_crear_novedad('{{ a.id }}', '{% url 'nomina:novedad_admin_guardar' a.id %}');">Crear novedad</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function mostrarRetirados() {
         const btnRetirados = document.getElementById("btnRetirados");
@@ -479,6 +521,12 @@
 
     function confirmar_liquidar(id, url) {
         if (confirm("¿Estás seguro de que deseas liquidar a este colaborador?")) {
+            window.location.href = url;
+        }
+    }
+
+    function confirmar_crear_novedad(id, url) {
+        if (confirm("¿Estás seguro de que deseas crear la novedad de este administrador?")) {
             window.location.href = url;
         }
     }

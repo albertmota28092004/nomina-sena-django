@@ -1,4 +1,5 @@
 import os
+from itertools import chain
 
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
@@ -177,31 +178,39 @@ def convert_html_to_pdf(source_html):
 
 
 def recibo_view(request, nomina_id):
-    nomina = get_object_or_404(Nomina, id=nomina_id)
-    he_diurnas = nomina.novedad.horas_extras_diurnas or 0
-    he_diurnas_df = nomina.novedad.horas_extras_diurnas_dom_fes or 0
-    he_nocturnas = nomina.novedad.horas_extras_nocturnas or 0
-    he_nocturnas_df = nomina.novedad.horas_extras_nocturnas_dom_fes or 0
-    hr_diurno_df = nomina.novedad.horas_recargo_diurno_dom_fes or 0
-    hr_nocturo = nomina.novedad.horas_recargo_nocturno or 0
-    hr_nocturno_df = nomina.novedad.horas_recargo_nocturno_dom_fes or 0
+    if request.session.get("logueo", False):
+        usuario_id = request.session["logueo"]["id"]
+        usuario = Usuario.objects.get(id=usuario_id)
+        nomina = get_object_or_404(Nomina, id=nomina_id)
+        he_diurnas = nomina.novedad.horas_extras_diurnas or 0
+        he_diurnas_df = nomina.novedad.horas_extras_diurnas_dom_fes or 0
+        he_nocturnas = nomina.novedad.horas_extras_nocturnas or 0
+        he_nocturnas_df = nomina.novedad.horas_extras_nocturnas_dom_fes or 0
+        hr_diurno_df = nomina.novedad.horas_recargo_diurno_dom_fes or 0
+        hr_nocturo = nomina.novedad.horas_recargo_nocturno or 0
+        hr_nocturno_df = nomina.novedad.horas_recargo_nocturno_dom_fes or 0
 
-    totalh = he_diurnas + he_diurnas_df + he_nocturnas + he_nocturnas_df + hr_diurno_df + hr_nocturo + hr_nocturno_df
+        totalh = he_diurnas + he_diurnas_df + he_nocturnas + he_nocturnas_df + hr_diurno_df + hr_nocturo + hr_nocturno_df
 
-    contexto = {
-        "nomina": nomina,
-        "totalh": totalh
-    }
+        contexto = {
+            "nomina": nomina,
+            "totalh": totalh,
+            "static_url": request.build_absolute_uri('/static/')
+        }
 
-    html_string = render_to_string('nomina/recibo.html', contexto)
-    response = HttpResponse(content_type='application/pdf')
-    response[
-        'Content-Disposition'] = f'inline; filename="Recibo_{nomina.novedad.usuario}_{nomina.fecha_nomina}.pdf"'
+        if usuario.correo == 'convergenciamotosgth@gmail.com':
+            html_string = render_to_string('nomina/recibo-motos.html', contexto)
+        else:
+            html_string = render_to_string('nomina/recibo.html', contexto)
 
-    pisa_status = pisa.CreatePDF(html_string, dest=response)
-    if pisa_status.err:
-        return HttpResponse(f'Error al generar el PDF: {pisa_status.err}')
-    return response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="Recibo_{nomina.novedad.usuario}_{nomina.fecha_nomina}.pdf"'
+
+        pisa_status = pisa.pisaDocument(io.BytesIO(html_string.encode("UTF-8")), response)
+        if pisa_status.err:
+            return HttpResponse(f'Error al generar el PDF: {pisa_status.err}')
+        return response
+
 
 
 def descargar_recibo(request, nomina_id):
@@ -596,12 +605,14 @@ def colaboradores(request):
         # Filtra los colaboradores creados por el administrador logueado
         q = Usuario.objects.filter(rol=2, activo=True, creado_por_id=administrador_id)
         q2 = Usuario.objects.filter(rol=2, activo=False, creado_por_id=administrador_id)
+        admins = Usuario.objects.filter(rol=1, activo=True)
         roles = Usuario.ROLES
 
         contexto = {
             "data": q,
             'retirados': q2,
-            'ROLES': roles
+            'ROLES': roles,
+            "admins": admins
         }
 
         return render(request, 'nomina/colaborador/colaboradores.html', contexto)
@@ -883,9 +894,11 @@ def novedades_nomina(request):
     if request.session.get("logueo", False):
         administrador_id = request.session["logueo"]["id"]
         novedades = Novedad.objects.filter(usuario__creado_por_id=administrador_id)
+        novedades_admin = Novedad.objects.filter(usuario__id=administrador_id)
         usuarios = Usuario.objects.filter(rol=2, creado_por_id=administrador_id)
         contexto = {
             "novedades": novedades,
+            "novedades_admin": novedades_admin,
             "usuarios": usuarios
         }
         return render(request, 'nomina/novedad/novedades_nomina.html', contexto)
@@ -950,6 +963,51 @@ def novedad_guardar(request):
     else:
         messages.warning(request, "No se enviaron datos...")
         return HttpResponseRedirect(reverse("nomina:novedades_nomina"))
+
+
+def novedad_admin_guardar(request, id):
+    try:
+        # Verifica si el usuario ya tiene una novedad
+        novedad_existente = Novedad.objects.filter(usuario__id=id).exists()
+
+        if novedad_existente:
+            # Si ya existe una novedad, muestra un mensaje de error
+            messages.error(request, "Este usuario ya tiene una novedad registrada.")
+            return HttpResponseRedirect(reverse("nomina:colaboradores"))
+        else:
+            # Si no existe, crea una nueva novedad
+            nov = Novedad(
+                usuario=Usuario.objects.get(id=id),
+                dias_incapacidad=0,
+                dias_trabajados=15,
+                perm_remunerado=None,
+                perm_no_remunerado=None,
+                sin_justa_causa=None,
+                horas_extras_diurnas=0,
+                horas_extras_diurnas_dom_fes=0,
+                horas_extras_nocturnas=0,
+                horas_extras_nocturnas_dom_fes=0,
+                horas_recargo_nocturno=0,
+                horas_recargo_nocturno_dom_fes=0,
+                horas_recargo_diurno_dom_fes=0,
+                comisiones=0,
+                comisiones_porcentaje=None,
+                bonificaciones=0,
+                embargos_judiciales=0,
+                libranzas=0,
+                cooperativas=0,
+                otros=0
+            )
+            nov.save()
+            # Muestra un mensaje de éxito
+            messages.success(request, "Novedad guardada correctamente!!")
+            return HttpResponseRedirect(reverse("nomina:novedades_nomina"))
+    except Exception as e:
+        # Si ocurre algún error, muestra un mensaje de error
+        messages.error(request, f"Error al guardar la novedad: {e}")
+        return HttpResponseRedirect(reverse("nomina:colaboradores"))
+    # Redirige de nuevo a la página de novedades
+
 
 
 def novedad_editar(request, id):
@@ -1048,9 +1106,11 @@ def reportar_novedad(request):
     if request.session.get("logueo", False):
         administrador_id = request.session["logueo"]["id"]
         novedades = Novedad.objects.filter(usuario__creado_por_id=administrador_id)
+        novedades_admin = Novedad.objects.filter(usuario__id=administrador_id)
         usuarios = Usuario.objects.filter(rol=2, creado_por_id=administrador_id)
         contexto = {
             "novedades": novedades,
+            "novedades_admin": novedades_admin,
             "usuarios": usuarios
         }
         return render(request, 'nomina/novedad/reportar_novedad.html', contexto)
@@ -1095,11 +1155,22 @@ def nomina(request):
         try:
             usuario = Usuario.objects.get(id=usuario_id)
 
-            if usuario.rol == 2:  # Suponiendo que el rol 2 es para colaboradores
+            if usuario.rol == 2:
                 nominas = Nomina.objects.filter(novedad__usuario=usuario)
                 total_a_pagar_usuario = sum(n.total_a_pagar() for n in nominas)
             else:
-                nominas = Nomina.objects.filter(novedad__usuario__creado_por_id=usuario_id)
+                # Obtener las nóminas de los colaboradores
+                nomina1 = Nomina.objects.filter(novedad__usuario__creado_por_id=usuario_id)
+
+                # Obtener la nómina del propio administrador
+                nomina2 = Nomina.objects.filter(novedad__usuario__id=usuario_id)
+
+                # Eliminar duplicados, si la nómina del administrador ya está en nomina1
+                if nomina2:
+                    nomina1 = nomina1.exclude(id=nomina2[0].id)
+
+                # Combinar las nóminas de los colaboradores con la del administrador
+                nominas = list(chain(nomina1, nomina2))
                 total_a_pagar_usuario = None
 
             # Agrupar nóminas por fecha de nómina
@@ -1109,6 +1180,9 @@ def nomina(request):
                 if fecha_nomina not in nominas_por_fecha_nomina:
                     nominas_por_fecha_nomina[fecha_nomina] = []
                 nominas_por_fecha_nomina[fecha_nomina].append(nomina)
+
+            # Ordenar las fechas (por defecto las fechas se ordenarán en orden ascendente)
+            nominas_por_fecha_nomina = dict(sorted(nominas_por_fecha_nomina.items()))
 
             # Verificar si hay nóminas
             if not nominas_por_fecha_nomina:
@@ -1137,7 +1211,19 @@ def nomina_listar(request, fecha_nomina):
 
         if usuario.rol == 1:
             try:
-                nominas = Nomina.objects.filter(fecha_nomina=fecha_nomina, novedad__usuario__creado_por_id=usuario_id)
+                nomina1 = Nomina.objects.filter(fecha_nomina=fecha_nomina, novedad__usuario__creado_por_id=usuario_id)
+
+                # Obtener la nómina del propio administrador
+                nomina2 = Nomina.objects.filter(fecha_nomina=fecha_nomina, novedad__usuario__id=usuario_id)
+
+                # Eliminar duplicados, si la nómina del administrador ya está en nomina1
+                if nomina2:
+                    nomina1 = nomina1.exclude(id=nomina2[0].id)
+
+                # Combinar las nóminas de los colaboradores con la del administrador
+                nominas = list(chain(nomina1, nomina2))
+
+                print(nominas[0].fecha_nomina)
 
                 contexto = {
                     "nominas": nominas,

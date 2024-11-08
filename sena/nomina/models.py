@@ -64,7 +64,7 @@ class Novedad(models.Model):
     usuario = models.ForeignKey(
         Usuario,
         on_delete=models.CASCADE,
-        limit_choices_to={'rol': 2, 'fecha_retiro__isnull': True},
+        limit_choices_to={'fecha_retiro__isnull': True},
         related_name='novedades_usuario'
     )
     dias_incapacidad = models.PositiveIntegerField(null=True, blank=True, default=0)

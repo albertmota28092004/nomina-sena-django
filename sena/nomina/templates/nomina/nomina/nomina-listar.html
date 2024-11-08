@@ -108,7 +108,7 @@
             </div>
             <h1 class="titulo_nomina m-0 flex-grow-1 text-center">Nómina</h1>
             {% if request.session.logueo.nombre_rol == "Administrador" %}
-            <a href="{% url 'nomina:export_nominas_to_excel' nominas.first.fecha_nomina %}" class="btn btn-success">
+            <a href="{% url 'nomina:export_nominas_to_excel' nominas.0.fecha_nomina %}" class="btn btn-success">
                 Descargar informe de nómina en Excel <i class="fa-solid fa-download"></i>
             </a>
             {% endif %}
@@ -125,7 +125,7 @@
             <table>
                 <tr>
                     <th>Fecha: </th>
-                    <td>{{ nominas.first.fecha_nomina }}</td>
+                    <td>{{ nominas.0.fecha_nomina }}</td>
                 </tr>
             </table>
             <table width="100%" cellspacing="0">
@@ -403,4 +403,5 @@
     }
 
 </script>
+</body>
 {% endblock %}

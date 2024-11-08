@@ -5,12 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit 05/11">
-      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/conferencia_motos.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/dualshock_anOEDFZ.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/migrations/0019_alter_novedad_usuario.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/static/nomina/img/logo/conferencia_motos.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/recibo-motos.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sena/uploads/fotos_usuarios/Imagen_-_Albert_Mota.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/nomina/nomina-listar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/novedades_nomina.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/reportar_novedad.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/novedad/reportar_novedad.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/recibo.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/recibo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sena/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +75,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/alber/PycharmProjects/nomina-sena-django/sena&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Albert/PycharmProjects/nomina-sena-django/sena/nomina/templates/nomina&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable&quot;
   }
 }</component>
@@ -79,18 +89,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Albert\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina" />
       <recent name="C:\Users\alber\PycharmProjects\nomina-sena-django\sena" />
       <recent name="C:\Users\alber\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img\footer" />
       <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
-      <recent name="C:\Users\Administrador\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\vendor" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Albert\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img\logo" />
+      <recent name="C:\Users\Albert\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
       <recent name="C:\Users\Albert\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\files" />
       <recent name="C:\Users\alber\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\files" />
       <recent name="C:\Users\alber\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img\logo" />
-      <recent name="C:\Users\alber\PycharmProjects\nomina-sena-django\sena\nomina\static\nomina\img" />
-      <recent name="C:\Users\alber\PycharmProjects\nomina-sena-django\sena\nomina\templates\nomina" />
     </key>
   </component>
   <component name="RunManager" selected="Python.views">
@@ -385,7 +395,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730830110919</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="commit 05/11">
+      <option name="closed" value="true" />
+      <created>1730843845986</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1730843845986</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

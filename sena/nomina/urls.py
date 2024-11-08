@@ -25,6 +25,7 @@ urlpatterns = [
     # path('nomina_guardar/', views.nomina_guardar, name='nomina_guardar'),
     path('novedades_nomina/', views.novedades_nomina, name='novedades_nomina'),
     path("novedad_guardar/", views.novedad_guardar, name="novedad_guardar"),
+    path("novedad_admin_guardar/<int:id>/", views.novedad_admin_guardar, name="novedad_admin_guardar"),
     path("novedad_editar/<int:id>/", views.novedad_editar, name="novedad_editar"),
     path("editar_porcentaje_incapacidad/", views.editar_porcentaje_incapacidad, name="editar_porcentaje_incapacidad"),
     path("novedad_eliminar/<int:id>/", views.novedad_eliminar, name="novedad_eliminar"),

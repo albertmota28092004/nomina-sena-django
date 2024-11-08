@@ -194,6 +194,60 @@
                     </div>
                 </div>
                 {% endfor %}
+
+                {% for i in novedades_admin %}
+                <tr>
+                    {% if i.usuario.foto %}
+                    <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{{ i.usuario.foto.url }}" alt="Foto de {{ i.usuario }}"></td>
+                    {% else %}
+                    <td class="contenedor-imagen-novedad"><img class="image-novedad" src="{% static 'nomina/img/empresario1.jpg' %}" alt="Foto de {{ i.usuario }}"></td>
+                    {% endif %}
+                    <td>{{ i.fecha_ultima_actualizacion }}</td>
+                    <td>{{ i.usuario }}</td>
+                    <td>{{ i.usuario.salario|intcomma }}</td>
+                    <td>{{ i.dias_incapacidad|default:"" }}</td>
+                    <td>{{ i.dias_trabajados }}</td>
+                    <td>{{ i.horas_extras_diurnas|default:"" }}</td>
+                    <td>{{ i.horas_extras_diurnas_dom_fes|default:"" }}</td>
+                    <td>{{ i.horas_extras_nocturnas|default:"" }}</td>
+                    <td>{{ i.horas_extras_nocturnas_dom_fes|default:"" }}</td>
+                    <td>{{ i.horas_recargo_nocturno|default:"" }}</td>
+                    <td>{{ i.horas_recargo_nocturno_dom_fes|default:"" }}</td>
+                    <td>{{ i.horas_recargo_diurno_dom_fes|default:"" }}</td>
+                    {% if i.comisiones %}
+                        <td>${{ i.comisiones|default:""|intcomma }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td>{{ i.comisiones_porcentaje|default:"" }}</td>
+
+                    {% if i.bonificaciones %}
+                        <td>${{ i.bonificaciones|default:""|intcomma }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    {% if i.embargos_judiciales %}
+                        <td>${{ i.embargos_judiciales|default:""|intcomma }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    {% if i.libranzas %}
+                        <td>${{ i.libranzas|default:""|intcomma }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    {% if i.cooperativas %}
+                        <td>${{ i.cooperativas|default:""|intcomma }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    {% if i.otros %}
+                        <td>${{ i.otros|default:""|intcomma }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
