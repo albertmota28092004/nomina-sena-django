@@ -1,6 +1,6 @@
 import os
 from itertools import chain
-
+import base64
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -192,10 +192,20 @@ def recibo_view(request, nomina_id):
 
         totalh = he_diurnas + he_diurnas_df + he_nocturnas + he_nocturnas_df + hr_diurno_df + hr_nocturo + hr_nocturno_df
 
+        logo_path = "/home/senapress/nomina-sena-django/sena/static/nomina/img/logo/conferencia_motos.png"
+        logo_data = None
+
+        # Intentar abrir y codificar la imagen en base64
+        try:
+            with open(logo_path, "rb") as image_file:
+                logo_data = base64.b64encode(image_file.read()).decode("utf-8")
+        except IOError:
+            print("No se pudo abrir el archivo de imagen.")
+
         contexto = {
             "nomina": nomina,
             "totalh": totalh,
-            "static_url": request.build_absolute_uri('/static/')
+            "logo_data": logo_data,
         }
 
         if usuario.correo == 'convergenciamotosgth@gmail.com':
@@ -842,7 +852,7 @@ def colaborador_editar(request, id):
         correo = request.POST.get('correo_editar')
         contrasena = request.POST.get('contrasena_editar')
         confirmar_contrasena = request.POST.get('confirmar_contrasena_editar')
-        rol = 2
+        rol = usuario.rol
         foto = request.FILES.get("foto_editar")
         cargo = request.POST.get("cargo_editar")
         salario = request.POST.get("salario_editar")

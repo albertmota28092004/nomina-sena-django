@@ -219,11 +219,6 @@
             <button class="btn btn-light rounded" data-bs-toggle="modal" data-bs-target="#excelModal">
                 <i class="bi bi-file-earmark-plus-fill"></i> Importar desde Excel
             </button>
-            {% if request.session.logueo.nombre_rol == "Administrador" %}
-                <button class="btn btn-light rounded" data-bs-toggle="modal" data-bs-target="#adminModal">
-                    <i class="bi bi-people-fill"></i> Ver administradores
-                </button>
-            {% endif %}
         </div>
         {% endif %}
     </div>
@@ -231,7 +226,6 @@
 
 
 {% if data %}
-<!-- Contenido principal -->
 <div class="card shadow mb-4 contenedor_todo">
     <div id="contenedor_colaborador" class="card-body contenedor_colaboradores">
         {% for c in data %}
@@ -293,7 +287,7 @@
                                 aria-label="Close">
                         </button>
                     </div>
-                    <div class="modal-body" id="contenidoModalBody">
+                    <div class="modal-body contenidoModalBody">
                         {% include 'nomina/colaborador/colaborador-editar.html' with data=c %}
                     </div>
                 </div>
@@ -360,6 +354,76 @@
     </div>
 </div>
 {% endif %}
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid d-flex align-items-center">
+        <div></div>
+        <h1 class="h3 mb-2 text-gray-800" style="color: #EBECE4;">Administradores</h1>
+        <div></div>
+    </div>
+</nav>
+
+<div class="card shadow mb-4 contenedor_todo">
+    <div class="card-body contenedor_colaboradores">
+        {% for a in admins %}
+        <div class="contenedor_colaborador">
+            <div class="contenedor_presentacion_colaborador">
+                <img class="img-colaborador" src="{{ a.foto.url }}" alt="">
+                <!-- Ícono de tres puntos en la esquina superior derecha -->
+                <div class="boton-menu-acciones" onclick="toggleMenu({{ a.id }})">
+                    <i class="fa fa-ellipsis-v" ></i>
+                </div>
+
+                <!-- Menú desplegable -->
+                <div id="menu-{{ a.id }}" class="menu-acciones" style="display: none; position: absolute; top: 30px; right: 10px; background-color: white; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); z-index: 100;">
+                    <button title="Editar administrador" class="btn" data-bs-toggle="modal" data-bs-target="#editarModal{{ a.id }}">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </button>
+                    <a class="btn" href="javascript:confirmar_crear_novedad('{{ a.id }}', '{% url 'nomina:novedad_admin_guardar' a.id %}');">
+                        <i class="bi bi-receipt"></i> Crear novedad
+                    </a>
+                </div>
+            </div>
+            <div class="info_colaborador">
+                <h4>{{ a.nombre }} {{ a.apellido }}</h4>
+            </div>
+            <div class="ver_mas_contenedor">
+                <button id="verMas" class="mb-4 link-dark" onclick="verMasButton(this)">
+                    Ver más <i class="fa-solid fa-angle-down"></i>
+                </button>
+                <div id="ver_mas_info">
+                    <h6>Fecha de ingreso: {{ a.fecha_ingreso }}</h6>
+                    <h6>Correo: {{ a.correo }}</h6>
+                    <h6>Cédula: {{ a.cedula }}</h6>
+                    <h6>Tipo de contrato: {{ a.tipo_contrato }}</h6>
+                    {% if a.fecha_fin_contrato %}
+                    <h6>Fecha fin de contrato: {{ a.fecha_fin_contrato }}</h6>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- Modal Editar Colaborador -->
+        <div class="modal fade" id="editarModal{{ a.id }}" tabindex="-1"
+             aria-labelledby="editarModalLabel{{ a.id }}"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editarModalLabel{{ a.id }}">Editar Colaborador</h1>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body contenidoModalBody">
+                        {% include 'nomina/colaborador/colaborador-editar.html' with data=a %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 
 <!-- Modal Crear Colaborador -->
 <div class="modal fade" id="colaboradorModal" tabindex="-1" aria-labelledby="colaboradorModalLabel"
@@ -470,35 +534,6 @@
     </div>
 </div>
 
-<!-- Modal Administradores -->
-<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="adminModalLabel">Administradores</h1>
-                <button type="button" class="btn btn-close" data-bs-dismiss="modal"
-                        aria-label="Close">
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="contenedor_administradores">
-                    {% for a in admins %}
-                    <div class="contenedor_administrador">
-                        <div class="imagen_administrador">
-                            <img src="{{ a.foto.url }}" width="50">
-                        </div>
-                        <div>
-                            <h3>{{ a.nombre }} {{ a.apellido }}</h3>
-                            <a class="btn btn-dark" href="javascript:confirmar_crear_novedad('{{ a.id }}', '{% url 'nomina:novedad_admin_guardar' a.id %}');">Crear novedad</a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     function mostrarRetirados() {

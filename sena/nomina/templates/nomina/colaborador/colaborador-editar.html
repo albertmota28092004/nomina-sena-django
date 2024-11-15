@@ -30,6 +30,16 @@
                placeholder="Ingresa correo" value="{{ data.correo }}" name="correo_editar">
     </div>
     <div class="mb-3">
+        <label class="form-label">Contraseña:</label>
+        <input type="password" class="form-control"
+               placeholder="Ingresa contraseña" value="{{ data.contrasena }}" name="contrasena_editar">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Confirmar contraseña:</label>
+        <input type="password" class="form-control"
+               placeholder="Ingresa la confirmación de la contraseña" value="{{ data.contrasena }}" name="confirmar_contrasena_editar">
+    </div>
+    <div class="mb-3">
         <label class="form-label col-sm-6">Foto:</label>
         <div class="row">
             {% if data.foto %}

@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="805acefa-b1a9-4c81-97e3-e7a9b6afe081" name="Changes" comment="commit 07/11">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/recibo-motos.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/recibo-motos.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/sena/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaborador-editar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaborador-editar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/templates/nomina/colaborador/colaboradores.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sena/nomina/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sena/nomina/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -397,7 +400,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731041426988</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="commit 07/11">
+      <option name="closed" value="true" />
+      <created>1731046721727</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1731046721727</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
